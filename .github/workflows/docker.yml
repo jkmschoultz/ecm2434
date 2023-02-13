@@ -13,9 +13,13 @@ jobs:
         DOCKER_PASSWORD : ${{ secrets.DOCKER_PASSWORD }}
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-    - name : docker build backend
+    - name : docker build backend -t backend
       run : |
         docker build ./API
-    - name : docker build frontend
+    - name : docker build frontend -t frontend
       run : |
         docker build ./frontend
+    - name: Push docker
+      run : |
+          docker push backend
+          docker push frontend
