@@ -15,7 +15,7 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name : docker build backend
       run : |
-        docker build ./api
+        docker build ./API
     - name : docker build frontend
       run : |
         docker build ./frontend
