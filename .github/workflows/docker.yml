@@ -15,11 +15,11 @@ jobs:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name : docker build backend
       run : |
-        docker build ./API -t ecm2434_api:latest
+        docker build ./API -t qwazzarr/ecm2434_api:latest
     - name : docker build frontend 
       run : |
-        docker build ./frontend -t ecm2434_web:latest
+        docker build ./frontend -t qwazzarr/ecm2434_web:latest
     - name: Push docker
       run : |
-          docker push ecm2434_api:latest
-          docker push ecm2434_api:latest
+          docker push qwazzarr/ecm2434_api:latest
+          docker push qwazzarr/ecm2434_api:latest
