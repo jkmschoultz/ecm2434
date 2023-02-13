@@ -22,4 +22,4 @@ jobs:
     - name: Push docker
       run : |
           docker push qwazzarr/ecm2434_api:latest
-          docker push qwazzarr/ecm2434_api:latest
+          docker push qwazzarr/ecm2434_web:latest
