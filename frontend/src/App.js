@@ -15,7 +15,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-      <p>The date is {currentDate} and the (probably wrong) time is {currentTime}.</p> <br/>
+      <p>The date is {currentDate} and the (probably wrong) time is {currentTime}. This is the change for checking docker updattes.</p> <br/>
 
       </header>
     </div>
