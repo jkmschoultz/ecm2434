@@ -1,0 +1,35 @@
+
+@font-face {
+    font-family: Inter;
+    src: url("../../assets/fonts/Inter-Regular.ttf");
+}
+.background {
+    display: flex;
+    font-family: Inter;
+    text-decoration: none;
+    height: 100vh;
+}
+
+.left {
+    display: flex;
+    flex-direction: column;
+    background-color: #A7EDA5;
+    width: 33%;
+    align-items: center;
+}
+
+.right {
+    display: flex;
+    background-color: white;
+    align-items: center;
+    flex-direction: column;
+    width: 66.66%;
+}
+.logo {
+    font-size: 5vh;
+    margin-top: 10%;
+}
+.topDrinkers {
+    font-size: 5vh;
+    margin-top: 5%;
+}
