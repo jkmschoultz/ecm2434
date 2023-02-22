@@ -1,0 +1,16 @@
+.area {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    transition: transform 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+.area:hover { 
+    transform: scale(1.1);
+    border: 10px solid #00c896;
+}
+.imageArea {
+    
+}
