@@ -1,0 +1,22 @@
+
+@font-face {
+    font-family: Inter;
+    src: url("../../assets/fonts/Inter-Regular.ttf");
+}
+#background {
+    display: flex;
+    flex-direction: column;
+    font-family: Inter;
+    text-decoration: none;  
+    background-color: #DAFFD9;
+    height: 100vh;
+}
+
+.row {
+    display: flex;
+    align-items: center ;
+    height: 43vh;
+    width: 96%;
+    margin: 2%  ;
+
+}
