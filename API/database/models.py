@@ -2,7 +2,8 @@ from django.db import models
 
 # Define database models here
 class User(models.Model):
-    username = models.CharField(max_length=30)
+    username = models.CharField(max_length=30, unique=True)
+    email = models.EmailField(max_length=254, unique=True)
     name = models.CharField(max_length=50)
     password = models.CharField(max_length=64)
     xp = models.PositiveIntegerField(default=0)
