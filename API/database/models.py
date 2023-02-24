@@ -6,6 +6,7 @@ class User(models.Model):
     password = models.CharField(max_length=64)
     xp = models.PositiveIntegerField(default=0)
     points = models.PositiveIntegerField(default=0)
+    bottles = models.PositiveIntegerField(default=0)
     one_time_code = models.CharField(max_length=6)
     has_been_verified = models.BooleanField(default=False)
     

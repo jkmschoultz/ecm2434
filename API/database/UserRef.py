@@ -1,4 +1,6 @@
 from models import User
+from models import UserAchievement
+from models import Achievement
 
 class UserRef:
 
@@ -45,7 +47,17 @@ class UserRef:
     def getPoints(current_username):
         points = User.objects.get(username = current_username).password
         return points
-
     
+
+    # def updateAcheivements(current_username):
+    #     bottles = User.objects.get(username = current_username).bottles
+    #     listOfAchievements = UserAchievement.objects.all()
+    
+    #     #Fill up your first bottle
+    #     if bottles >= 1:
+    #         newUserAchievement = UserAchievement(User.objects.get(username = current_username),
+    #                                              Achievement.objects.get(challenge = "Fill up your first water bottle"))
+    #         newUserAchievement.save
+
 
 
