@@ -49,15 +49,15 @@ class UserRef:
         return points
     
 
-    # def updateAcheivements(current_username):
-    #     bottles = User.objects.get(username = current_username).bottles
-    #     listOfAchievements = UserAchievement.objects.all()
+    def updateAcheivements(current_username):
+        bottles = User.objects.get(username = current_username).bottles
+        listOfAchievements = UserAchievement.objects.all()
     
-    #     #Fill up your first bottle
-    #     if bottles >= 1:
-    #         newUserAchievement = UserAchievement(User.objects.get(username = current_username),
-    #                                              Achievement.objects.get(challenge = "Fill up your first water bottle"))
-    #         newUserAchievement.save
+        #Fill up your first bottle
+        if bottles >= 1:
+            newUserAchievement = UserAchievement(User.objects.get(username = current_username),
+                                                 Achievement.objects.get(challenge = "Fill up your first water bottle"))
+            newUserAchievement.save
 
 
 
