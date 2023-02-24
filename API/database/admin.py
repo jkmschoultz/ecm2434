@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from .models import User, Building, Question, Answer, HasAnswered, Leaderboard, Achievement, UserAchievement, Fountain
 
-# Register your models here.
+# Register models here for admin view.
 admin.site.register(User)
 admin.site.register(Building)
 admin.site.register(Question)
