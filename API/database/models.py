@@ -58,6 +58,7 @@ class Leaderboard(models.Model):
         return self.building.name + ', ' + self.user.name + ', ' + str(self.user_points_in_building)
 
 class Achievement(models.Model):
+    name = models.CharField(max_length=255, default="")
     challenge = models.CharField(max_length=255)
     xp_reward = models.PositiveIntegerField()
     points_reward = models.PositiveIntegerField()
