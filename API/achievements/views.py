@@ -79,7 +79,7 @@ def totalFilledBottlesAchievementCheck(current_username):
 
 
     #Fill up 250 bottles
-    if bottles >= 100:
+    if bottles >= 250:
 
         newUserAchievement = UserAchievement.objects.create(
             user = User.objects.get(username = current_username),
