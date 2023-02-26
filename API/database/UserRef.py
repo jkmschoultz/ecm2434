@@ -1,4 +1,6 @@
-from models import User
+from .models import User
+from .models import UserAchievement
+from .models import Achievement
 
 class UserRef:
 
@@ -45,7 +47,6 @@ class UserRef:
     def getPoints(current_username):
         points = User.objects.get(username = current_username).password
         return points
-
     
 
 
