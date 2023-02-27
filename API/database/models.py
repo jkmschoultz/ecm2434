@@ -8,6 +8,7 @@ class User(models.Model):
     password = models.CharField(max_length=64)
     xp = models.PositiveIntegerField(default=0)
     points = models.PositiveIntegerField(default=0)
+    bottles = models.PositiveIntegerField(default=0)
     one_time_code = models.CharField(max_length=6)
     has_been_verified = models.BooleanField(default=False)
     
@@ -57,6 +58,7 @@ class Leaderboard(models.Model):
         return self.building.name + ', ' + self.user.name + ', ' + str(self.user_points_in_building)
 
 class Achievement(models.Model):
+    name = models.CharField(max_length=255, default="")
     challenge = models.CharField(max_length=255)
     xp_reward = models.PositiveIntegerField()
     points_reward = models.PositiveIntegerField()
