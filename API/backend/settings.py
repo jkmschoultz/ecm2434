@@ -27,6 +27,8 @@ SECRET_KEY = 'django-insecure-)$^%7#_c25=w2n5650z&26wt352hif==7m^cqaumh2rzh8lh16
 DEBUG = True
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost'] # this is the host that Docker uses to run application
 
+# Base URL to use for backend
+BASE_URL = 'localhost:8000/'
 
 # Application definition
 

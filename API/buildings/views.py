@@ -1,4 +1,5 @@
 import math
+from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, JsonResponse
 import json
@@ -18,22 +19,21 @@ def index(request):
         print(lat)
         print(long)
 
-    # Calculate distance from each building
-    buildings = Building.objects.values()
+    buildings = Building.objects.all()
+    data = []
     for building in buildings:
-        distance = math.sqrt((building['latitude'] - lat)**2 + (building['longitude'] - long)**2)
-        building['distance'] = distance
-        building['is_accessible'] = distance <= building['radius']
+        # Calculate distance from each building
+        distance = math.sqrt((building.latitude - lat)**2 + (building.longitude - long)**2)
+        data.append({
+            'name': building.name,
+            'id': building.id,
+            'distance': distance,
+            'image_path': settings.BASE_URL + 'buildings' + building.image.url,
+            'is_accessible': distance <= building.radius
+        })
     # Sort by distance
-    buildings = sorted(buildings, key=lambda x: x['distance'])
-    for building in buildings:
-        # Remove redundant fields
-        del building['id']
-        del building['latitude']
-        del building['longitude']
-        del building['radius']
-        del building['distance']
-    return JsonResponse({'data': buildings[:6]})
+    data = sorted(data, key=lambda x: x['distance'])
+    return JsonResponse({'data': data[:6]})
 
 def detail(request, building_id):
     building = get_object_or_404(Building, pk=building_id)
