@@ -1,3 +1,4 @@
+import math
 from database.models import User, UserAchievement, Achievement
 from django.http import JsonResponse
 
@@ -27,7 +28,7 @@ def getPassword(current_username):
     password = User.objects.get(username = current_username).password
     return password
 
-def getUserProfileData(current_username):
+def getUserProfileData(request, current_username):
     name = User.objects.get(username = current_username).name
     user = User.objects.get(username = current_username)
     user_achievements = list(UserAchievement.objects.filter(user = user))
@@ -40,16 +41,16 @@ def getUserProfileData(current_username):
 
     
 def getUserLevel(current_username):
-    xp = User.objects.get(username = current_username).xp
-    level = 10*(math.log(1-((xp(1-(2**(1/10))))/5) ,2))
+    xp = int(User.objects.get(username = current_username).xp)
+    level = 10*(math.log(1-((xp*(1-(2**(1/10))))/10) ,2))
     level = int(level)
     return level
 
 def getUserXpLeft(current_username):
     xp = User.objects.get(username = current_username).xp
-    level = 10*(math.log(1-((xp(1-(2**(1/10))))/5) ,2))
+    level = 10*(math.log(1-((xp*(1-(2**(1/10))))/10) ,2))
     level = int(level)
-    xp_left = xp - ((5(1-(2**(level/10)))) / (1-(2**(1/10))))
+    xp_left = xp - ((10*(1-(2**(level/10)))) / (1-(2**(1/10))))
     xp_left = int(xp_left) + 1
     return xp_left
 

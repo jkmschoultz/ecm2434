@@ -6,5 +6,5 @@ app_name = 'buildings'
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:building_id>/', views.detail, name='detail'),
-    path('<building_name>/', views.getTopFive, name='detail'),
+    path('<int:building_id>/leaderboard/', views.getTopFive, name='detail'),
 ]
