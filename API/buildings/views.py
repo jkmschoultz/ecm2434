@@ -2,7 +2,7 @@ import math
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-
+import json
 from database.models import Building
 
 # Create building views here.
@@ -11,9 +11,12 @@ def index(request):
     # Default position to Uni entrance if none given
     lat=50.73505
     long=-3.53207
+    print("here the request")
     if request.method == 'POST':
-        lat = float( request.POST['lat'] )
-        long = float( request.POST['long'] )
+        body_unicode = request.body.decode('utf-8')
+        body_data = json.loads(body_unicode)
+        lat = float( body_data.get('lat'))
+        long = float( body_data.get('long'))
         print(lat)
         print(long)
 
