@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,6 +27,8 @@ SECRET_KEY = 'django-insecure-)$^%7#_c25=w2n5650z&26wt352hif==7m^cqaumh2rzh8lh16
 DEBUG = True
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost'] # this is the host that Docker uses to run application
 
+# Base URL to use for backend
+BASE_URL = 'localhost:8000/'
 
 # Application definition
 
@@ -120,6 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

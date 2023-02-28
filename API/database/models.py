@@ -29,6 +29,7 @@ class Building(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     radius = models.FloatField()
+    image = models.ImageField(blank=True)
     
     def __str__(self):
         return self.name
