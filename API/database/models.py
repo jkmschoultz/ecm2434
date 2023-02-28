@@ -1,4 +1,5 @@
 from django.db import models
+import math
 
 # Define database models here
 class User(models.Model):
@@ -14,7 +15,11 @@ class User(models.Model):
     
     @property
     def level(self):
-        return self.xp / 10
+        return 10*(math.log(1-((self.xp*(1-(2**(1/10))))/10) ,2))
+    
+    @property
+    def xpLeft(self):
+        return self.xp - ((10*(1-(2**(self.level/10)))) / (1-(2**(1/10))))
     
     def __str__(self):
         return self.username
