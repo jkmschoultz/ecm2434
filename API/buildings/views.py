@@ -45,3 +45,15 @@ def detail(request, building_id):
         'longitude': building.longitude
     }
     return JsonResponse(data)
+
+def getTopFive(request, building_name):
+        building = Building.objects.get(name = building_name)
+        print(building_name)
+        building_points = Leaderboard.objects.filter(building = building)
+        top_ten = list(building_points.order_by("user_points_in_building")[:5])
+        points = []
+        names = []
+        for leader in top_ten:
+             names.append(leader.user.name)
+             points.append(leader.user_points_in_building)
+        return JsonResponse({'names': names, 'points':points})
