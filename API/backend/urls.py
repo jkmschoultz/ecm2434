@@ -23,5 +23,6 @@ urlpatterns = [
     path('buildings/', include('buildings.urls')),
     path('users/', include('users.urls')),
     path('questions/', include('questions.urls')),
-    path('achievements/', include('achievements.urls'))
+    path('achievements/', include('achievements.urls')),
+    path('login/', include('login.urls'))
 ]

@@ -1,12 +1,13 @@
-import math
+from database.models import Building
 from django.conf import settings
-from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
-from database.models import Building, Leaderboard
 import json
+import math
 
 # Create building views here.
+@csrf_exempt
 def index(request):
     # Default position to Uni entrance if none given
     lat=50.73505
