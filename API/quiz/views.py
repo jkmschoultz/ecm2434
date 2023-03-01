@@ -1,7 +1,7 @@
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from django.http import JsonResponse
+from django.shortcuts import redirect
 from database.models import Building, Leaderboard
 import json
 
@@ -17,8 +17,9 @@ class LogAnswers(APIView):
         building = Building.objects.get(id=building_id)
         new_xp = correct * 5
         user.xp += new_xp
+        user.bottles += 1
         leaderboard, created = Leaderboard.objects.get_or_create(building=building, user=user)
         leaderboard.user_points_in_building += new_xp
         user.save()
         leaderboard.save()
-        return JsonResponse({'id': request.user.id})
+        return redirect('achievements:detail', current_username=user.username)
