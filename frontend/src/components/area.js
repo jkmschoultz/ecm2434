@@ -8,12 +8,12 @@ const AreaPhoto = ({link,imgPath,active,name}) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-      navigate(link);
+      navigate(link,{state:{active:active}});
     };
 
     return(<div className={classes.area} onClick={handleClick}>
         <div className={classes.name}>{name}</div>
-        <img src={mockPhoto} className={classes.imageArea}></img>
+        <img src={imgPath} className={classes.imageArea}></img>
         {active ? <div className={classes.here}>You are here!</div> : null}
     </div>)
 }
