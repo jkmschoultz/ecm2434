@@ -2,13 +2,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import RegisterUser
-from rest_framework.permissions import AllowAny
-from rest_framework import status, exceptions
-from django.http import HttpResponse, JsonResponse
-from rest_framework.authentication import get_authorization_header, BaseAuthentication
-from database.models import User
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status
+from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
-import jwt
 
 class CreateUser(APIView):
     permission_classes = [AllowAny]
@@ -24,3 +21,9 @@ class CreateUser(APIView):
                     'refresh': str(refresh)
                 })
         return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class GetUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return JsonResponse({'id': request.user.id})

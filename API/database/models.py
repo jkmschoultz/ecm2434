@@ -84,7 +84,7 @@ class HasAnswered(models.Model):
     question = models.ForeignKey(Question, null=True, on_delete=models.SET_NULL)
     
     def __str__(self):
-        return self.user.name + ', ' + self.question.text
+        return self.user.username + ', ' + self.question.text
 
 class Leaderboard(models.Model):
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
@@ -92,7 +92,7 @@ class Leaderboard(models.Model):
     user_points_in_building = models.PositiveIntegerField(default=0)
     
     def __str__(self):
-        return self.building.name + ', ' + self.user.name + ', ' + str(self.user_points_in_building)
+        return self.building.name + ', ' + self.user.username + ', ' + str(self.user_points_in_building)
 
 class Achievement(models.Model):
     name = models.CharField(max_length=255, default="")
@@ -108,7 +108,7 @@ class UserAchievement(models.Model):
     achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.user.name + ', ' + self.achievement.challenge
+        return self.user.username + ', ' + self.achievement.challenge
 
 class Fountain(models.Model):
     location = models.CharField(max_length=255)
