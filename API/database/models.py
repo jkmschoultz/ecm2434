@@ -1,17 +1,43 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 import math
 
 # Define database models here
-class User(models.Model):
-    username = models.CharField(max_length=30, unique=True)
-    email = models.EmailField(max_length=254, unique=True)
-    name = models.CharField(max_length=50)
-    password = models.CharField(max_length=64)
+class CustomAccountManager(BaseUserManager):
+    def create_superuser(self, username, email, password, **other_fields):
+        other_fields.setdefault('is_superuser', True)
+        other_fields.setdefault('is_staff', True)
+
+        if other_fields.get('is_staff') is not True:
+            raise ValueError(
+                'Superuser must be assigned to is_staff=True.'
+            )
+        if other_fields.get('is_superuser') is not True:
+            raise ValueError(
+                'Superuser must be assigned to is_superuser=True.'
+            )
+        return self.create_user(username, email, password, **other_fields)
+    
+    def create_user(self, username, email, password, **other_fields):
+        if not username:
+            raise ValueError('Must provide a username')
+        
+        email = self.normalize_email(email)
+        user = self.model(email=email, username=username, **other_fields)
+        user.set_password(password)
+        user.save()
+        return user
+
+class User(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField('username', max_length=30, unique=True)
+    email = models.EmailField(unique=True)
+    name = models.CharField(max_length=50, blank=True)
     xp = models.PositiveIntegerField(default=0)
     points = models.PositiveIntegerField(default=0)
     bottles = models.PositiveIntegerField(default=0)
-    one_time_code = models.CharField(max_length=6)
-    has_been_verified = models.BooleanField(default=False)
+    one_time_code = models.CharField(max_length=6, default=123456)
+    has_been_verified = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
     
     @property
     def level(self):
@@ -20,6 +46,11 @@ class User(models.Model):
     @property
     def xpLeft(self):
         return self.xp - ((10*(1-(2**(self.level/10)))) / (1-(2**(1/10))))
+    
+    objects = CustomAccountManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
     
     def __str__(self):
         return self.username
