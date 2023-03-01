@@ -1,4 +1,8 @@
 
+@font-face {
+	font-family: Inter;
+	src: url("../assets/fonts/Inter-Regular.ttf");
+}
 
 .siteHeader {
 	display: flex;
@@ -13,7 +17,7 @@
 .siteHeader a, a:link, a:visited, a:focus, a:hover, a:active {
 	text-decoration: none;
 	color: #000;
-	font: Inter;
+	font-family: Inter;
 	font-size: 3vh;
 }
 ul#horizontalList {
