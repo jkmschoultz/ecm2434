@@ -4,7 +4,7 @@ import math
 
 # Define database models here
 class CustomAccountManager(BaseUserManager):
-    def create_superuser(self, email, username, name, password, **other_fields):
+    def create_superuser(self, username, email, password, **other_fields):
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_staff', True)
 
@@ -16,14 +16,14 @@ class CustomAccountManager(BaseUserManager):
             raise ValueError(
                 'Superuser must be assigned to is_superuser=True.'
             )
-        return self.create_user(username, email, name, password, **other_fields)
+        return self.create_user(username, email, password, **other_fields)
     
-    def create_user(self, username, email, name, password, **other_fields):
+    def create_user(self, username, email, password, **other_fields):
         if not username:
             raise ValueError('Must provide a username')
         
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username, name=name, **other_fields)
+        user = self.model(email=email, username=username, **other_fields)
         user.set_password(password)
         user.save()
         return user
@@ -32,7 +32,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField('username', max_length=30, unique=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=50, blank=True)
-    password = models.CharField(max_length=64)
     xp = models.PositiveIntegerField(default=0)
     points = models.PositiveIntegerField(default=0)
     bottles = models.PositiveIntegerField(default=0)
@@ -51,7 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'name']
+    REQUIRED_FIELDS = ['email']
     
     def __str__(self):
         return self.username
