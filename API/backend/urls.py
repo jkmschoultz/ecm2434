@@ -25,5 +25,6 @@ urlpatterns = [
     path('questions/', include('questions.urls')),
     path('achievements/', include('achievements.urls')),
     path('auth/', include('authentication.urls')),
-    path('quiz/', include('quiz.urls'))
+    path('quiz/', include('quiz.urls')),
+    path('leaderboard/', include('leaderboard.urls'))
 ]
