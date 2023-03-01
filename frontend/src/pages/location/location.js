@@ -66,7 +66,7 @@ const Location = () => {
     return (
         <>
         <div id="background">
-            <Navbar />
+            <Navbar/>
             {Array(Math.ceil(data.length / 3))
                 .fill()
                 .map((_, i) => (
@@ -77,7 +77,7 @@ const Location = () => {
                                 <AreaPhoto
                                     key={j}
                                     link={"/leaderboard/" + data[3 * i + j].name}
-                                      imgPath={mockPhoto} active={data[3*i+j].is_accessible} name={data[3 * i + j].name}
+                                      imgPath={data[3*i+j].image_path} active={data[3*i+j].is_accessible} name={data[3 * i + j].name}
                                 ></AreaPhoto>
                             ))}
                     </div>
