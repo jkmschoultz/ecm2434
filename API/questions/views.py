@@ -1,7 +1,9 @@
 from database.models import Question, Answer, Achievement
 from django.http import JsonResponse
 import random
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def getQuestions(request):
     questions = list(Question.objects.all())
     size = len(questions)
@@ -18,5 +20,5 @@ def getQuestions(request):
             anwsers = []
             for anwser in anwsers_list:
                 anwsers.append({'text':anwser.text,'correct':anwser.is_correct})
-            data.append({'text': question_text, 'anwser': anwsers})
+            data.append({'text': question_text, 'answers': anwsers})
     return JsonResponse({'data':data})

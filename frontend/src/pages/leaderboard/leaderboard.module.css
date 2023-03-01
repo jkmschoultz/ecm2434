@@ -16,6 +16,7 @@
     background-color: #A7EDA5;
     width: 33%;
     align-items: center;
+    justify-items: center;
 }
 
 .right {
@@ -32,4 +33,62 @@
 .topDrinkers {
     font-size: 5vh;
     margin-top: 5%;
+}
+.container {
+    width: fit-content;
+    height: 10%;
+    display: flex;
+    margin: 0 0 0 0;
+    -webkit-perspective: 1000;
+    -webkit-backface-visibility: hidden;
+    background-color: #A7EDA5;
+    margin-top: 140%;
+    font-size: 2.5vh;
+}
+
+.containerButton {
+    width: 80%;
+    height: 10%;
+    display: flex;
+    margin: 0 0 0 0;
+    -webkit-perspective: 1000;
+    -webkit-backface-visibility: hidden;
+    background-color: #A7EDA5;
+    margin-top: 130%;
+    font-size: 2.5vh;
+}
+.pulseButton {
+    position: relative;
+    display: block;
+    width: 100%;
+    font-size: 3vh;
+    font-family: Inter;
+    text-align: center;
+    line-height: 100px;
+    letter-spacing: -1px;
+    color: black;
+    border: none;
+    border-radius: 150px;
+    background: #00C896;
+    cursor: pointer;
+    box-shadow: 0px 0px 0px 0px rgb(170, 207, 252,1);
+    animation: pulse 1.5s infinite;
+}
+.pulseButton:hover {
+    animation: none;
+}
+
+
+@keyframes pulse {
+    0% {
+        transform:scale(0.9);
+    }
+    70% {
+        transform : scale(1);
+        box-shadow: 0px 0px 0px 50px rgb(170, 207, 252,0);
+    }
+    100% {
+        transform : scale(.9);
+        box-shadow: 0 0 0 0 rgb(170, 207, 252,0);
+    }
 }

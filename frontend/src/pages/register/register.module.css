@@ -1,0 +1,92 @@
+@font-face {
+    font-family: Roboto;
+    src: url("../../assets/fonts/Roboto-Medium.ttf");
+}
+
+
+.form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color:#00c896;
+    margin: 0;
+    border: 1px solid #888;
+    width: 25%;
+    box-shadow: 5px;
+    text-align: center;
+    border-radius: 25px;
+}
+
+.form ::placeholder {
+    color: #EDEDED;
+}
+.registerbtn:hover {
+    opacity: 1;
+}
+
+/* Add colour links */
+a {
+    color: rgb(76, 153, 230);
+}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+    z-index: 1;
+    left: 0;
+    right:0;
+    width: 100;
+    width: 100%;
+    overflow: auto;
+    padding: 5px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #067c68;
+    box-sizing: border-box;
+    border: 1px solid rgb(109, 163, 22);
+    border-radius: 25px;
+
+
+}
+
+
+
+/* Button used to open the contact form - fixed at the bottom of the page */
+.open-button {
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 280px;
+}
+
+.form-container {
+    max-width: 300px;
+    padding: 10px;
+    background-color:#00c896;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 5px;
+    font-family: Roboto;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+button[type=submit] {
+    background-color: #0f7452;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 20px;
+
+}
+
+button[type=submit]:hover {
+    background-color: #4ff1c6;
+}

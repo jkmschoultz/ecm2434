@@ -55,7 +55,7 @@ const Location = () => {
 
 
         if(error) {
-            <div>{error}</div>
+            return <div>{error}</div>;
         }
         if (!data) {
             return <div>Loading...</div>;
