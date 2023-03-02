@@ -5,19 +5,21 @@
 
 
 .site-content{
-    background-image: url(/frontend/src/assets/water.png);
+    background-image: url("../../assets/water.png");
     background-size: contain;
     background-repeat: no-repeat;
     background-position:  right 25% bottom 75%;
     background-attachment: fixed;
     align-items: end;
     height: 600px;
+    size: 95%;
 }
 
 .container {
     text-align: start;
     padding-top: 150px; /* adds padding to the top of the container */
-    font-family: cursive;
+    font-family: Georgia, serif;
+    color: #077563;
 }
 
 /*logo home page*/
@@ -25,3 +27,4 @@
     display: inline-block; /* makes the image a block-level element */
     margin-right: 20px; /* adds some space to the right of the image */
 }
+
