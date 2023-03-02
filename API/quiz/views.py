@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import redirect
@@ -13,7 +12,7 @@ class LogAnswers(APIView):
         body_unicode = request.body.decode('utf-8')
         body_data = json.loads(body_unicode)
         correct = int( body_data.get('correct'))
-        building_name = int( body_data.get('building'))
+        building_name = str(body_data.get('building'))
         building = Building.objects.get(name=building_name)
         new_xp = correct * 5
         user.xp += new_xp

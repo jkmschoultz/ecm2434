@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /api
 
+RUN pip uninstall pyjwt jwt
 RUN pip install django django-cors-headers djangorestframework-simplejwt Pillow
 
 # copy from the current directory of the Dockerfile to /api in the image
