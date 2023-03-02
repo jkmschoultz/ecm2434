@@ -77,7 +77,7 @@ const Location = () => {
                                 <AreaPhoto
                                     key={j}
                                     link={"/leaderboard/" + data[3 * i + j].name}
-                                      imgPath={data[3*i+j].image_path} active={data[3*i+j].is_accessible} name={data[3 * i + j].name}
+                                      imgPath={"http://"+data[3*i+j].image_path} active={data[3*i+j].is_accessible} name={data[3 * i + j].name}
                                 ></AreaPhoto>
                             ))}
                     </div>

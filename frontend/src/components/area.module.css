@@ -13,7 +13,16 @@
     border: 10px solid #00c896;
 }
 .imageArea {
-    
+    width: 80%;
+    height: 80%;
+
+}
+
+.imageArea:hover {
+    -webkit-filter: drop-shadow(1px 1px 0 #00C896)
+    drop-shadow(-1px -1px 0 #00C896);
+    filter: drop-shadow(1px 1px 0 #00C896)
+    drop-shadow(-10px -10px 0 #00C896);
 }
 
 .name {

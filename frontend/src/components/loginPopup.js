@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import "./loginPopup.css";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import axiosInstance from "../axios";
 
 const LoginPopup= () =>  {
     const [formVisible, setFormVisible] = useState(false);
@@ -12,6 +13,7 @@ const LoginPopup= () =>  {
 
     const [formData, updateFormData] = useState(initialFormData);
 
+    const navigate = useNavigate();
     const handleChange = (e) => {
         updateFormData({
             ...formData,
@@ -19,6 +21,7 @@ const LoginPopup= () =>  {
         });
         console.log(formData);
     };
+
 
     const openForm = () => {
         setFormVisible(true);
@@ -29,9 +32,25 @@ const LoginPopup= () =>  {
         setFormVisible(false);
     };
 
-    const handleSubmit = event => {
-        event.preventDefault();
-        // Handle form submission here
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+
+        axiosInstance
+            .post(`/auth/token`, {
+                username: formData.username ,
+                password: formData.password,
+            })
+            .then((res) => {
+                localStorage.setItem('access_token', res.data.access);
+                localStorage.setItem('refresh_token', res.data.refresh);
+                axiosInstance.defaults.headers['Authorization'] =
+                    'JWT ' + localStorage.getItem('access_token');
+                navigate("/location");
+                //console.log(res);
+                //console.log(res.data);
+            });
     };
 
     return (

@@ -2,16 +2,20 @@ import React, {useState} from "react";
 
 import GreenNavbar from "../../components/greenNavbar";
 import classes from "./register.module.css";
+import {useNavigate} from "react-router-dom";
+import axiosInstance from "../../axios";
 
 const Register = () => {
 
-
+    const navigate = useNavigate();
     const initialFormData = Object.freeze({
         email : '',
         username :'',
         password: ''
     });
+
     const [formData, updateFormData] = useState(initialFormData);
+
     const handleChange = (e) => {
         updateFormData({
             ...formData,
@@ -19,6 +23,25 @@ const Register = () => {
         });
         console.log(formData);
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("I am posting this");
+        console.log(formData);
+        axiosInstance
+            .post(`auth/register`, {
+                email: formData.email,
+                username: formData.username,
+                password: formData.password,
+            })
+            .then((res) => {
+                navigate('/');
+                console.log(res);
+                console.log(res.data);
+            });
+    };
+
+
 
     const disabled = () => {
         if(formData.password) {
@@ -45,7 +68,7 @@ const Register = () => {
                                                 <label htmlFor="psw-repeat"><b>Repeat Password</b></label>
                                                 <input type="password" placeholder="Repeat Password" name="pswrepeat"
                                                        id="pswrepeat" onChange={handleChange} required/>
-                                                    <button type="submit" className="signupbtn" name="submit" disabled={disabled()}>Register</button>
+                                                    <button type="submit" className="signupbtn" name="submit" disabled={disabled()} onClick={handleSubmit}>Register</button>
                             </form>
 
                         </div>
