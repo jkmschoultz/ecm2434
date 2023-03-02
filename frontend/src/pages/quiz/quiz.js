@@ -12,6 +12,7 @@ function Quiz() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [score, setScore] = useState(0);
     const [error, setError] = useState(null);
+    const [hasSumbitted , setHasSubmitted] = useState(false);
     const [questions, setQuestions] = useState(null);
 
     const areaCode = useLocation();
@@ -51,9 +52,17 @@ function Quiz() {
         }
         setSelectedAnswer(null);
         setQuestionIndex(questionIndex + 1);
+
+        if (questionIndex >= questions.length-1) {
+            setHasSubmitted(true);
+            sendValues(score, areaCode.state.location);
+        }
     };
 
     const sendValues = (correct, building) =>{
+        if(hasSumbitted) {
+            return;
+        }
         // Get the access token from local storage
         const access_token = localStorage.getItem('access_token');
 
@@ -86,7 +95,6 @@ function Quiz() {
             })
             .then(data => {
                 // Handle the response data
-                console.log("that's a success!");
                 console.log(data);
             })
             .catch(error => {
@@ -94,8 +102,6 @@ function Quiz() {
                 console.error(error);
             });
     }
-
-
 
     if(error) {
         return <div>{error.message}</div>;
@@ -105,8 +111,6 @@ function Quiz() {
     }
     maxScore = questions.length;
     if (questionIndex >= questions.length) {
-
-        sendValues(score,areaCode.state.location);
         return (
             <div className={classes.background}>
                 <Navbar/>
