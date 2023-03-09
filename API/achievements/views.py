@@ -8,7 +8,9 @@ from database.models import UserAchievement,User,Achievement
 
 
 def detail(request, current_username):
-    dictOfNewAchievements = totalFilledBottlesAchievementCheck(current_username)
+    dictOfNewAchievements = {"data" : []}
+    dictOfNewAchievements = totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements)
+    dictOfNewAchievements = buildingAchievementsCheck(current_username, dictOfNewAchievements)
     return JsonResponse(dictOfNewAchievements)
 
 def all(request, current_username):
@@ -29,7 +31,7 @@ def getAllUserAchievements(current_username):
     return dictOfAchievements
 
 
-def totalFilledBottlesAchievementCheck(current_username):
+def totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements):
     user = User.objects.get(username = current_username)
     bottles = user.bottles
     listOfNewAchievements = []
@@ -56,10 +58,23 @@ def totalFilledBottlesAchievementCheck(current_username):
                 user.points = user.points + achievement.points_reward
                 user.save()
     
-    dictOfNewAchievements = {"data" : []}
     for newAchievement in listOfNewAchievements:
         print(newAchievement.achievement.challenge)
         dictOfNewAchievements["data"].append({"name" : newAchievement.achievement.name, 
                                               "challenge" :newAchievement.achievement.challenge})
 
+    return dictOfNewAchievements
+
+def buildingAchievementsCheck(current_username, dictOfNewAchievements):
+    user = User.objects.get(username = current_username)
+    listOfNewAchievements = []
+
+    listOfBottleCheckPoints = [5,25,50,100]
+    
+
+    for newAchievement in listOfNewAchievements:
+        print(newAchievement.achievement.challenge)
+        dictOfNewAchievements["data"].append({"name" : newAchievement.achievement.name, 
+                                              "challenge" :newAchievement.achievement.challenge})
+        
     return dictOfNewAchievements

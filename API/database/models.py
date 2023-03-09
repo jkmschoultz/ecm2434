@@ -116,3 +116,19 @@ class Fountain(models.Model):
     
     def __str__(self):
         return self.building.name + ', ' + self.location
+    
+class BuildingFloor(models.Model):
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    image = models.ImageField(blank=True)
+    floorNumber = models.IntegerField()
+    
+    def __str__(self):
+        return self.name
+    
+class FilledBottle(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    day = models.DateField()
+
+    def __str__(self):
+        return self.name
