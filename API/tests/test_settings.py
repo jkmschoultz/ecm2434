@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 
 # Create test cases for testing django settings and basic functionality here
-class TestBuildings(TestCase):
+class TestSettings(TestCase):
     def test_get_request(self):
         # Test that get requests to backend work
         c = Client()
