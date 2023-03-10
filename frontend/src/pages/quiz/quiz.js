@@ -12,37 +12,8 @@ function Quiz() {
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [score, setScore] = useState(0);
     const [error, setError] = useState(null);
+    const [hasSumbitted , setHasSubmitted] = useState(false);
     const [questions, setQuestions] = useState(null);
-
-    // let questions = [
-    //     {
-    //         text: 'What is the capital of France?',
-    //         answers: [
-    //             { text: 'Paris', correct: true },
-    //             { text: 'Madrid', correct: false },
-    //             { text: 'Rome', correct: false },
-    //             { text: 'Exeter', correct: false}
-    //         ],
-    //     },
-    //     {
-    //         text: 'What is the largest planet in our solar system?',
-    //         answers: [
-    //             { text: 'Jupiter', correct: true },
-    //             { text: 'Venus', correct: false },
-    //             { text: 'Saturn', correct: false },
-    //             { text: 'Mercury', correct: false}
-    //         ],
-    //     },
-    //     {
-    //         text: 'What is the highest mountain in the world?',
-    //         answers: [
-    //             { text: 'Mount Everest', correct: true },
-    //             { text: 'K2', correct: false },
-    //             { text: 'Makalu', correct: false },
-    //             { text: 'Forum hill', correct: false}
-    //         ],
-    //     },
-    // ];
 
     const areaCode = useLocation();
     let maxScore;
@@ -81,7 +52,56 @@ function Quiz() {
         }
         setSelectedAnswer(null);
         setQuestionIndex(questionIndex + 1);
+
+        if (questionIndex >= questions.length-1) {
+            setHasSubmitted(true);
+            sendValues(score, areaCode.state.location);
+        }
     };
+
+    const sendValues = (correct, building) =>{
+        if(hasSumbitted) {
+            return;
+        }
+        // Get the access token from local storage
+        const access_token = localStorage.getItem('access_token');
+
+        // Set up the request headers
+        const headers = {
+            'Authorization': `Bearer ${access_token}`,
+            'Content-Type': 'application/json'
+        };
+
+        // Set up the request body
+        const body = JSON.stringify({
+            correct: correct,
+            building: building
+        });
+
+        console.log(body);
+        // Send the POST request using fetch()
+        fetch('http://localhost:8000/quiz/', {
+            method: 'POST',
+            headers: headers,
+            body: body
+        })
+            .then(response => {
+                // Handle the response
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to send POST request');
+                }
+            })
+            .then(data => {
+                // Handle the response data
+                console.log(data);
+            })
+            .catch(error => {
+                // Handle any errors
+                console.error(error);
+            });
+    }
 
     if(error) {
         return <div>{error.message}</div>;

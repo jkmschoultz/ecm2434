@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import classes from "./area.module.css";
 
 import mockPhoto from "../assets/image 3.png";
+
+
 const AreaPhoto = ({link,imgPath,active,name}) => {
     
     const navigate = useNavigate();
 
     const handleClick = () => {
-      navigate(link,{state:{active:active}});
+      navigate(link,{state:{active:true }});
     };
 
     return(<div className={classes.area} onClick={handleClick}>

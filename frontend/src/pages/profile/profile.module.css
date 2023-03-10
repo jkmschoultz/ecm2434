@@ -1,0 +1,187 @@
+.userProfile {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+  }
+  
+.container {
+    display: flex;
+    margin: 20px;
+  }
+  
+.sidebar {
+    width: 40%;
+    font-size: 17xp;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+.profileImg {
+    height: 120px;
+    margin-bottom: 20px;
+    width: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+.profileText {
+    color: black; /* updated */
+    font-family: Inter, Arial;
+    font-weight: 100;
+    font-size: 17px; /* updated */
+    text-align: center; /* updated */
+    flex-grow: 1; /* updated */
+    display: flex;
+    flex-direction: column;
+  }
+
+.profile {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+  }
+  
+.profile h2 {
+    margin: 0;
+  }
+
+.main {
+    margin-left: 20px;
+    width: 75%;
+  }
+
+  
+.achievements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+.achievementButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+    height: 100px;
+    margin-bottom: 30px;
+    border-radius: 50px;
+    background-color: #ABEDA5;
+    color: black;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+    position: relative;
+  }
+  
+.achievementButton:nth-child(1) {
+    background-color: #ABEDA5;
+    position: relative;
+  }
+  
+.achievementButton:nth-child(2) {
+    background-color: #ABEDA5;
+    position: relative;
+  }
+  
+.achievementButton:nth-child(3) {
+    background-color: #ABEDA5;
+    position: relative;
+  }
+  
+.button {
+    position: relative; 
+  }
+  
+.star {
+    position: absolute;
+    top: 50%; /* position the star in the middle of the button vertically */
+    right: 10%; /* position the star 350px from the right edge of the button */
+    transform: translateY(-50%); /* center the star vertically */
+    height: 30px;
+    width: 30px;
+    background-color: #00C896; 
+    clip-path: polygon(
+      50% 0%, /* top center */
+      61% 35%, /* top right */
+      98% 35%, /* center right */
+      68% 57%, /* bottom right */
+      79% 91%, /* bottom center */
+      50% 72%, /* bottom left */
+      21% 91%, /* bottom right */
+      32% 57%, /* top left */
+      2% 35%, /* center left */
+      39% 35% /* top right */
+    ); /* define the shape of the star using the clip-path property */
+}
+
+  .star1::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 340px;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 40px;
+    background-color: #00c896;
+    clip-path: polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 72%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
+  }
+  
+  .star2::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 340px;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 40px;
+    background-color: #00c896;
+    clip-path: polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 72%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
+  }
+  
+.star3::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 340px;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 40px;
+    background-color: #00c896;
+    clip-path: polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 72%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
+  }
+  
