@@ -123,12 +123,12 @@ class BuildingFloor(models.Model):
     floorNumber = models.IntegerField()
     
     def __str__(self):
-        return self.name
+        return self.building.name + ',' + self.floorNumber
     
 class FilledBottle(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
-    day = models.DateField()
+    day = models.DateTimeField()
 
     def __str__(self):
-        return self.name
+        return self.user.name + ', ' + self.building.name + ', ' + self.day
