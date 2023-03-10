@@ -17,6 +17,31 @@ def all(request, current_username):
     dictOfAchievements = getAllUserAchievements(current_username)
     return JsonResponse({"data" : dictOfAchievements})
 
+def fill(request, current_username):
+    dictOfNewAchievements = {"data" : []}
+    listOfBuildings = Building.objects.all()
+    listOfCheckpoints = [5,25,50,100]
+    listOfRelativeXp = [25,50, 75, 150]
+    listOfRelativePoints = [3,3,5,10]
+    
+    for building in listOfBuildings:
+        print(building)
+        for index, checkpoint in enumerate(listOfCheckpoints):
+            challenge = "Fill up " + str(checkpoint) + " bottles in " + str(building)
+            try:
+                achievement = Achievement.objects.get(challenge = challenge)
+            except:
+                newAchievement = Achievement.objects.create(
+                    name = "Lorem Ipsum",
+                    challenge = challenge,
+                    xp_reward = listOfRelativeXp[index],
+                    points_reward = listOfRelativePoints[index]
+                )
+                dictOfNewAchievements["data"].append({"challenge" : challenge})
+
+    return JsonResponse(dictOfNewAchievements)
+
+
 def getAllUserAchievements(current_username):
     dictOfAchievements = []
     user = User.objects.get(username = current_username)
@@ -70,7 +95,7 @@ def buildingAchievementsCheck(current_username, dictOfNewAchievements):
     listOfNewAchievements = []
 
     listOfBottleCheckPoints = [5,25,50,100]
-    listOfBuildingNames = ["Harrison"]
+    listOfBuildingNames = Building.objects.all()
 
     for buildingName in listOfBuildingNames:
         building = Building.objects.get(name=buildingName)
@@ -80,8 +105,8 @@ def buildingAchievementsCheck(current_username, dictOfNewAchievements):
             if relevantBottles.count() >= bottleCheckPoints:
 
                 challenge = "Fill up " + str(bottleCheckPoints) + " bottles in " + str(buildingName)
-
-                achievement = Achievement.objects.get(challenge = challenge)
+                achievement = Achievement.objects.get(challenge = challenge)         
+                    
                 try:
                     UserAchievement.objects.get(user = user, achievement = achievement)
                 except:
