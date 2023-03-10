@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from database.models import UserAchievement,User,Achievement
+from database.models import UserAchievement,User,Achievement, FilledBottle, Building
 
 
 
@@ -70,6 +70,29 @@ def buildingAchievementsCheck(current_username, dictOfNewAchievements):
     listOfNewAchievements = []
 
     listOfBottleCheckPoints = [5,25,50,100]
+    listOfBuildingNames = ["Harrison"]
+
+    for buildingName in listOfBuildingNames:
+        building = Building.objects.get(name=buildingName)
+        relevantBottles = FilledBottle.objects.filter(user=user, building=building).values()
+
+        for bottleCheckPoints in listOfBottleCheckPoints:
+            if relevantBottles.count() >= bottleCheckPoints:
+
+                challenge = "Fill up " + str(bottleCheckPoints) + " bottles in " + str(buildingName)
+
+                achievement = Achievement.objects.get(challenge = challenge)
+                try:
+                    UserAchievement.objects.get(user = user, achievement = achievement)
+                except:
+                    newUserAchievement = UserAchievement.objects.create(
+                        user = user,
+                        achievement = achievement)
+                    listOfNewAchievements.append(newUserAchievement)
+                
+                    user.xp = user.xp + achievement.xp_reward
+                    user.points = user.points + achievement.points_reward
+                    user.save()
     
 
     for newAchievement in listOfNewAchievements:

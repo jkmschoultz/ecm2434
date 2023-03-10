@@ -131,4 +131,5 @@ class FilledBottle(models.Model):
     day = models.DateTimeField()
 
     def __str__(self):
-        return self.user.name + ', ' + self.building.name + ', ' + self.day
+        return self.user.username + ', ' + self.building.name + ', ' + str(self.day)
+    
