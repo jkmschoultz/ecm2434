@@ -7,6 +7,8 @@ import math
 from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+import datetime
 
 from database.models import UserAchievement,User,Achievement, FilledBottle, Building
 
@@ -19,6 +21,7 @@ def detail(request, current_username) -> JsonResponse:
     dictOfNewAchievements = {"data" : []}
     dictOfNewAchievements = totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements)
     dictOfNewAchievements = buildingAchievementsCheck(current_username, dictOfNewAchievements)
+    dictOfNewAchievements = streakAchievementsCheck(current_username, dictOfNewAchievements)
     # return a dictionary of any new achievements acquired so they can be displayed on the front-end
     return JsonResponse(dictOfNewAchievements)
 
@@ -164,6 +167,63 @@ def buildingAchievementsCheck(current_username : str, dictOfNewAchievements : di
                     user.points = user.points + achievement.points_reward
                     user.save()
     
+
+    # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
+    for newAchievement in listOfNewAchievements:
+        print(newAchievement.achievement.challenge)
+        dictOfNewAchievements["data"].append({"name" : newAchievement.achievement.name, 
+                                              "challenge" :newAchievement.achievement.challenge})
+        
+    return dictOfNewAchievements
+
+def streakAchievementsCheck(current_username : str, dictOfNewAchievements : dict) -> list:
+    # this function checks if the user has completed any achievements relating to the
+    # user filling up a bottle for several days in a row.
+    # a list of any new achievements completed is then returned.
+
+    user = User.objects.get(username = current_username)
+    listOfNewAchievements = []
+    listOfStreakCheckpoints = [7,30,365]
+    ListOfStreakNames = ["week", "month", "year"]
+    todaysDate = timezone.now()
+
+    for index, checkpoint in enumerate(listOfStreakCheckpoints):
+        userValidForAchievement = True
+
+        # check that every day in the last x days the user has filled up a bottle (x is one of the checkpoints)
+        for day in range(checkpoint):
+
+            # generate a 1 day range and checks if the user has filled a bottle on this date
+            startDate = todaysDate - datetime.timedelta(days=day + 1)
+            endDate = todaysDate - datetime.timedelta(days=day)
+
+            relevantBottles = FilledBottle.objects.filter(user=user,day__range=(startDate, endDate)).values()
+            
+            # if a user hasn't filled a bottle in the entire day their streak is broken
+            # and they can no longer get the achievement
+            if relevantBottles.count() == 0:
+                userValidForAchievement = False
+
+        if userValidForAchievement:
+
+            challenge = "Fill up a bottle every day for a " + ListOfStreakNames[index]
+            achievement = Achievement.objects.get(challenge = challenge)         
+                
+            # if the user does not already own this achievement it is added the UserAchievement table
+            try:
+                UserAchievement.objects.get(user = user, achievement = achievement)
+            except:
+                newUserAchievement = UserAchievement.objects.create(
+                    user = user,
+                    achievement = achievement)
+                listOfNewAchievements.append(newUserAchievement)
+            
+                # give the user the rewards that accomplishing the achievement gives 
+                user.xp = user.xp + achievement.xp_reward
+                user.points = user.points + achievement.points_reward
+                user.save()
+
+
 
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
     for newAchievement in listOfNewAchievements:
