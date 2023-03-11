@@ -1,4 +1,4 @@
-from database.models import Building
+from database.models import Building, Leaderboard
 from django.conf import settings
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
