@@ -7,23 +7,23 @@ from database.models import UserAchievement,User,Achievement, FilledBottle, Buil
 
 
 
-def detail(request, current_username):
+def detail(request, current_username) -> JsonResponse:
     dictOfNewAchievements = {"data" : []}
     dictOfNewAchievements = totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements)
     dictOfNewAchievements = buildingAchievementsCheck(current_username, dictOfNewAchievements)
     return JsonResponse(dictOfNewAchievements)
 
-def all(request, current_username):
+def all(request, current_username) -> JsonResponse:
     dictOfAchievements = getAllUserAchievements(current_username)
     return JsonResponse({"data" : dictOfAchievements})
 
-def fill(request, current_username):
+def fill(request, current_username) -> JsonResponse:
     dictOfNewAchievements = {"data" : []}
     listOfBuildings = Building.objects.all()
     listOfCheckpoints = [5,25,50,100]
     listOfRelativeXp = [25,50, 75, 150]
     listOfRelativePoints = [3,3,5,10]
-    
+
     for building in listOfBuildings:
         print(building)
         for index, checkpoint in enumerate(listOfCheckpoints):
@@ -42,7 +42,7 @@ def fill(request, current_username):
     return JsonResponse(dictOfNewAchievements)
 
 
-def getAllUserAchievements(current_username):
+def getAllUserAchievements(current_username) -> list:
     dictOfAchievements = []
     user = User.objects.get(username = current_username)
     
@@ -56,7 +56,7 @@ def getAllUserAchievements(current_username):
     return dictOfAchievements
 
 
-def totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements):
+def totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements) -> list:
     user = User.objects.get(username = current_username)
     bottles = user.bottles
     listOfNewAchievements = []
@@ -90,7 +90,7 @@ def totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements):
 
     return dictOfNewAchievements
 
-def buildingAchievementsCheck(current_username, dictOfNewAchievements):
+def buildingAchievementsCheck(current_username, dictOfNewAchievements) -> list:
     user = User.objects.get(username = current_username)
     listOfNewAchievements = []
 
