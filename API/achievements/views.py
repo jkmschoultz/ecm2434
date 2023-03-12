@@ -190,7 +190,6 @@ def totalFilledBottlesAchievementCheck(current_username : str, dictOfNewAchievem
     
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
     for newAchievement in listOfNewAchievements:
-        print(newAchievement.achievement.challenge)
         dictOfNewAchievements["data"].append({"name" : newAchievement.achievement.name, 
                                               "challenge" :newAchievement.achievement.challenge})
 
@@ -237,7 +236,6 @@ def buildingAchievementsCheck(current_username : str, dictOfNewAchievements : di
 
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
     for newAchievement in listOfNewAchievements:
-        print(newAchievement.achievement.challenge)
         dictOfNewAchievements["data"].append({"name" : newAchievement.achievement.name, 
                                               "challenge" :newAchievement.achievement.challenge})
         
@@ -294,7 +292,6 @@ def streakAchievementsCheck(current_username : str, dictOfNewAchievements : dict
 
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
     for newAchievement in listOfNewAchievements:
-        print(newAchievement.achievement.challenge)
         dictOfNewAchievements["data"].append({"name" : newAchievement.achievement.name, 
                                               "challenge" :newAchievement.achievement.challenge})
         
