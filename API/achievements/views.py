@@ -44,6 +44,7 @@ def fill(request, current_username : str) -> JsonResponse:
     dictOfNewAchievements = {"data" : []}
     dictOfNewAchievements = fillBuildingAchievements(dictOfNewAchievements)
     dictOfNewAchievements = fillTotalUserBottleAchievements(dictOfNewAchievements)
+    dictOfNewAchievements = fillStreakAchievements(dictOfNewAchievements)
 
     return JsonResponse(dictOfNewAchievements)
 
@@ -91,6 +92,33 @@ def fillTotalUserBottleAchievements(dictOfNewAchievements : dict) -> dict:
             challenge = "Fill up your first water bottle"
         else:
             challenge = "Fill up " + str(checkpoint) + " bottles"
+
+        # if the achievement does not currently exist, it will be created and added to the database.
+        try:
+            achievement = Achievement.objects.get(challenge = challenge)
+        except:
+            newAchievement = Achievement.objects.create(
+                    name = "Lorem Ipsum",
+                    challenge = challenge,
+                    xp_reward = listOfRelativeXp[index],
+                    points_reward = listOfRelativePoints[index]
+                )
+            dictOfNewAchievements["data"].append({"challenge" : challenge})
+
+    return dictOfNewAchievements
+
+def fillStreakAchievements(dictOfNewAchievements : dict) -> dict:
+    # this function creates all the achievements relating to the user's current streak, 
+    # any new achievements that aren't already in the database are created
+    # and appended to the dictOfNewAchievements dictionary, this dictionary is then returned.
+
+    listOfStreakCheckpoints = [7,30,365]
+    listOfRelativeXp = [40,100,500]
+    listOfRelativePoints = [5,10,25]
+    ListOfStreakNames = ["week", "month", "year"]
+
+    for index, checkpoint in enumerate(listOfStreakCheckpoints):
+        challenge = "Fill up a bottle every day for a " + ListOfStreakNames[index]
 
         # if the achievement does not currently exist, it will be created and added to the database.
         try:
