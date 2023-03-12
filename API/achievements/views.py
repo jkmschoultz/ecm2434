@@ -33,11 +33,24 @@ def all(request, current_username : str) -> JsonResponse:
     return JsonResponse({"data" : dictOfAchievements})
 
 def fill(request, current_username : str) -> JsonResponse:
-    # endpoint function to create achievements relating to the amount of bottles filled in each building,
-    # duplicate functions won't be created so this function should be called whenever a new building is introduced to the database.
+    # endpoint function to create achievements if they aren't already exisiting in the database,
+    # duplicate functions won't be created so this function should be called whenever a new building is introduced to the database 
+    # or if the achievements table has been cleared.
     # will return a dictionary of new achievements that are made, an empty dictionary if none are made.
 
+    # IMPORTANT - the achievements are created with the name "Lorem Ipsum" as a placeholder,
+    # an admin will need to change this to a proper name after the achievement is made.
+
     dictOfNewAchievements = {"data" : []}
+    dictOfNewAchievements = fillBuildingAchievements(dictOfNewAchievements)
+    dictOfNewAchievements = fillTotalUserBottleAchievements(dictOfNewAchievements)
+
+    return JsonResponse(dictOfNewAchievements)
+
+def fillBuildingAchievements(dictOfNewAchievements : dict) -> dict:
+    # this function creates all the building related achievements if they are not already present in the database.
+    # a the dictOfNewAchievements parameter is the appended with all the new achievements created if any and returned.
+    
     listOfBuildings = Building.objects.all()
     listOfCheckpoints = [5,25,50,100]
 
@@ -54,8 +67,6 @@ def fill(request, current_username : str) -> JsonResponse:
             try:
                 achievement = Achievement.objects.get(challenge = challenge)
             except:
-                # IMPORTANT - the achievement is created with the name "Lorem Ipsum" as a placeholder,
-                # an admin will need to change this to a proper name after the achievement is made.
                 newAchievement = Achievement.objects.create(
                     name = "Lorem Ipsum",
                     challenge = challenge,
@@ -63,9 +74,37 @@ def fill(request, current_username : str) -> JsonResponse:
                     points_reward = listOfRelativePoints[index]
                 )
                 dictOfNewAchievements["data"].append({"challenge" : challenge})
+    
+    return dictOfNewAchievements
 
-    return JsonResponse(dictOfNewAchievements)
+def fillTotalUserBottleAchievements(dictOfNewAchievements : dict) -> dict:
+    # this function creates all the achievements relating to the total bottles 
+    # filled by the user, any new achievements that aren't already in the database are created
+    # and appended to the dictOfNewAchievements dictionary, this dictionary is then returned.
 
+    listOfBottleCheckpoints = [1,5,10,50,100,250,500,1000]
+    listOfRelativeXp = [25,20,30,50,75,100,200,300]
+    listOfRelativePoints = [5,3,3,3,5,10,15,25]
+
+    for index, checkpoint in enumerate(listOfBottleCheckpoints):
+        if checkpoint == 1:
+            challenge = "Fill up your first water bottle"
+        else:
+            challenge = "Fill up " + str(checkpoint) + " bottles"
+
+        # if the achievement does not currently exist, it will be created and added to the database.
+        try:
+            achievement = Achievement.objects.get(challenge = challenge)
+        except:
+            newAchievement = Achievement.objects.create(
+                    name = "Lorem Ipsum",
+                    challenge = challenge,
+                    xp_reward = listOfRelativeXp[index],
+                    points_reward = listOfRelativePoints[index]
+                )
+            dictOfNewAchievements["data"].append({"challenge" : challenge})
+
+    return dictOfNewAchievements
 
 def getAllUserAchievements(current_username : str) -> list:
     # this function returns a list of dictionaries, each dictionary is an achievement in the database and a boolean
@@ -104,7 +143,7 @@ def totalFilledBottlesAchievementCheck(current_username : str, dictOfNewAchievem
             else:
                 challenge = "Fill up " + str(checkpoint) + " bottles"
 
-            # gets the ahcievement relating to the checkpoint from the Achievements table
+            # gets the achievement relating to the checkpoint from the Achievements table
             achievement = Achievement.objects.get(challenge = challenge)
 
             # if the user does not already own this achievement it is added the UserAchievement table
