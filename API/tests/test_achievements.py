@@ -24,7 +24,7 @@ class TestAchievements(TestCase):
         challenge = str(achievement)
         self.assertEqual(achievement.challenge, challenge)
 
-    def testFillAchievementsEndpoint(self):
+    def testFillAchievementsEndpointEmpty(self):
         # Test that the database is filled with the correct achievements when empty
         c = Client()
         response = c.get('/achievements/fill/AchievementsTestUser/')
@@ -33,6 +33,41 @@ class TestAchievements(TestCase):
         self.assertTrue({"challenge" : "Fill up a bottle every day for a month"} in response.json().get("data"))
         self.assertTrue({"challenge" : "Fill up 10 bottles"} in response.json().get("data"))
         self.assertTrue({"challenge" : "Fill up 100 bottles in Test Building"} in response.json().get("data"))
+
+    def testFillAchievementsEndpointFull(self):
+        # Test that the database is filled with no new achievements when it has already been filled 
+        # (duplicate achievements should not be created)
+        c = Client()
+        c.get('/achievements/fill/AchievementsTestUser/')
+        response = c.get('/achievements/fill/AchievementsTestUser/')
+
+        self.assertTrue(response.json() == {"data" : []})
+
+    def testFillAchievementsEndpointPartiallyFull(self):
+        # Test that the database is filled only with the achievements missing
+        c = Client()
+        c.get('/achievements/fill/AchievementsTestUser/')
+
+        # remove an achievement from each category and check that only these achievements
+        # are inserted into the database
+        Achievement.objects.get(challenge="Fill up 10 bottles").delete()
+        Achievement.objects.get(challenge="Fill up a bottle every day for a year").delete()
+        Achievement.objects.get(challenge="Fill up 5 bottles in Test Building").delete()
+
+        response = c.get('/achievements/fill/AchievementsTestUser/')
+
+        # generate a list of all the new achievement names generated
+        listOfNewAchievements = []
+        for newAchievement in response.json().get("data"):
+            listOfNewAchievements.append(newAchievement.get("challenge"))
+
+        self.assertTrue(len(response.json().get("data")) == 3)
+
+        self.assertTrue("Fill up 10 bottles" in listOfNewAchievements)
+        self.assertTrue("Fill up a bottle every day for a year" in listOfNewAchievements)
+        self.assertTrue("Fill up 5 bottles in Test Building" in listOfNewAchievements)
+        
+        self.assertFalse("Fill up 25 bottles in Test Building" in listOfNewAchievements)
 
     def testSimpleAchievement(self):
         # Test that the a user gets the correct achievements after increasing their total water bottles filled
