@@ -38,7 +38,7 @@ class TestAchievements(TestCase):
     def testFillAchievementsEndpointEmpty(self):
         # Test that the database is filled with the correct achievements when empty
         c = Client()
-        response = c.get('/achievements/fill/AchievementsTestUser/')
+        response = c.get('/achievements/fill')
 
         # each achievement category is tested to make sure all their related achievements are created
         self.assertTrue({"challenge" : "Fill up a bottle every day for a month"} in response.json().get("data"))
@@ -49,15 +49,15 @@ class TestAchievements(TestCase):
         # Test that the database is filled with no new achievements when it has already been filled 
         # (duplicate achievements should not be created)
         c = Client()
-        c.get('/achievements/fill/AchievementsTestUser/')
-        response = c.get('/achievements/fill/AchievementsTestUser/')
+        c.get('/achievements/fill')
+        response = c.get('/achievements/fill')
 
         self.assertTrue(response.json() == {"data" : []})
 
     def testFillAchievementsEndpointPartiallyFull(self):
         # Test that the database is filled only with the achievements missing
         c = Client()
-        c.get('/achievements/fill/AchievementsTestUser/')
+        c.get('/achievements/fill')
 
         # remove an achievement from each category and check that only these achievements
         # are inserted into the database
@@ -65,7 +65,7 @@ class TestAchievements(TestCase):
         Achievement.objects.get(challenge="Fill up a bottle every day for a year").delete()
         Achievement.objects.get(challenge="Fill up 5 bottles in Test Building").delete()
 
-        response = c.get('/achievements/fill/AchievementsTestUser/')
+        response = c.get('/achievements/fill')
 
         # generate a list of all the new achievement names generated
         listOfNewAchievements = []
@@ -83,14 +83,18 @@ class TestAchievements(TestCase):
     def testSimpleAchievement(self):
         # Test that the a user gets the correct achievements after increasing their total water bottles filled
 
-        # sets the total bottles filled by the user to 67 so they are eligible for achievements
+        # sets the total bottles filled by the user to 13 so they are eligible for achievements
         user = User.objects.get(username="AchievementsTestUser")
-        user.bottles = 67
-        user.save()
+        building = Building.objects.get(name="Test Building")
+        time = datetime.datetime.now(pytz.utc)
+        for day in range(13):
+
+            # multiple bottles are filled on the same day as this should not effect these achievements
+            FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=day // 3))
 
         # fills the achievements table so that they can be checked against the user
         c = Client()
-        c.get('/achievements/fill/AchievementsTestUser/')
+        c.get('/achievements/fill')
         response = c.get('/achievements/check/AchievementsTestUser/')
 
         # generate a list of all the new achievement names generated
@@ -101,8 +105,8 @@ class TestAchievements(TestCase):
         # both of the first achievements should have been completed but the last one should not as
         # the user does not have the required number of bottles
         self.assertTrue("Fill up your first water bottle" in listOfNewAchievements)
-        self.assertTrue("Fill up 50 bottles" in listOfNewAchievements)
-        self.assertFalse("Fill up 100 bottles" in listOfNewAchievements)
+        self.assertTrue("Fill up 10 bottles" in listOfNewAchievements)
+        self.assertFalse("Fill up 25 bottles" in listOfNewAchievements)
 
 
     def testBuildingAchievementsCorrect(self):
@@ -119,7 +123,7 @@ class TestAchievements(TestCase):
 
         # fills the achievements table so that they can be checked against the user
         c = Client()
-        c.get('/achievements/fill/AchievementsTestUser/')
+        c.get('/achievements/fill')
         response = c.get('/achievements/check/AchievementsTestUser/')
 
         # generate a list of all the new achievement names generated
@@ -145,7 +149,7 @@ class TestAchievements(TestCase):
 
         # fills the achievements table so that they can be checked against the user
         c = Client()
-        c.get('/achievements/fill/AchievementsTestUser/')
+        c.get('/achievements/fill')
         response = c.get('/achievements/check/AchievementsTestUser/')
 
         # generate a list of all the new achievement names generated
@@ -153,4 +157,48 @@ class TestAchievements(TestCase):
         for newAchievement in response.json().get("data"):
             listOfNewAchievements.append(newAchievement.get("challenge"))
 
-        self.assertTrue(len(listOfNewAchievements) == 0)
+        self.assertFalse("Fill up 5 bottles in Test Building" in listOfNewAchievements)
+
+    def testStreakAchievements(self):
+        # Test that the user gets the correct achievement after filling up a bottle every day for a week
+
+        # add to the FilledBottle table so that the user has filled up atleast one bottle every day for the last week, 
+        # they will be filled in different locations as this should have no effect on the achievement
+        user = User.objects.get(username="AchievementsTestUser")
+        building = Building.objects.get(name="Test Building")
+        building2 = Building.objects.get(name="Test Building 2")
+        time = datetime.datetime.now(pytz.utc)
+        FilledBottle.objects.create(user=user, building=building, day=time)
+        FilledBottle.objects.create(user=user, building=building2, day=time - datetime.timedelta(days=1))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=2))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=3))
+        FilledBottle.objects.create(user=user, building=building2, day=time - datetime.timedelta(days=4))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=5))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=6))
+
+        # fills the achievements table so that they can be checked against the user
+        c = Client()
+        c.get('/achievements/fill')
+        response = c.get('/achievements/check/AchievementsTestUser/')
+
+        # generate a list of all the new achievement names generated
+        listOfNewAchievements = []
+        for newAchievement in response.json().get("data"):
+            listOfNewAchievements.append(newAchievement.get("challenge"))
+
+        self.assertTrue("Fill up a bottle every day for a week" in listOfNewAchievements)
+
+    def testInvalidUsername(self):
+        # Test the achievement endpoints that an invalid username simply returns an empty dictionary
+
+        c = Client()
+        response = c.get('/achievements/check/InvalidUser/')
+        self.assertTrue(response.json() == {"data" : []})
+
+        response = c.get('/achievements/InvalidUser/')
+        self.assertTrue(response.json() == {"data" : []})
+
+    def testUserXp(self):
+        # Test that the user recieves the correct amount of Xp after completing an achievement
+
+        user = User.objects.get(username="AchievementsTestUser")
