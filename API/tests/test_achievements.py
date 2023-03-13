@@ -198,7 +198,38 @@ class TestAchievements(TestCase):
         response = c.get('/achievements/InvalidUser/')
         self.assertTrue(response.json() == {"data" : []})
 
-    def testUserXp(self):
+    def testUserXpAndPoints(self):
         # Test that the user recieves the correct amount of Xp after completing an achievement
 
+        # fill the FilledBottle table with enough bottles to give the user multiple achievements across every category
         user = User.objects.get(username="AchievementsTestUser")
+        building = Building.objects.get(name="Test Building")
+        time = datetime.datetime.now(pytz.utc)
+        FilledBottle.objects.create(user=user, building=building, day=time)
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=1))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=2))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=3))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=4))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=5))
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=6))
+
+
+        # give the user these achievements and the corresponding xp + points
+        c = Client()
+        c.get('/achievements/fill')
+        response = c.get('/achievements/check/AchievementsTestUser/')
+
+        # calculate how much xp and points the user should have recieved
+        totalXpGiven = 0
+        totalPointsGiven = 0
+        for achievement in response.json().get("data"):
+            achievement = Achievement.objects.get(challenge=achievement.get("challenge"))
+            totalXpGiven += achievement.xp_reward
+            totalPointsGiven += achievement.points_reward
+
+        
+        # verify that the user now has this xp and points
+        user = User.objects.get(username="AchievementsTestUser")
+        self.assertTrue(user.xp == totalXpGiven)
+        self.assertTrue(user.points == totalPointsGiven)
+
