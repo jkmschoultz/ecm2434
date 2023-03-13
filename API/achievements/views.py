@@ -14,9 +14,15 @@ from database.models import UserAchievement,User,Achievement, FilledBottle, Buil
 
 
 
-def detail(request, current_username) -> JsonResponse:
+def detail(request, current_username : str) -> JsonResponse:
     # endpoint function to check if a specified user has completed any achievements they don't currently have,
     # this will be called every time a user fills a bottle.
+
+    # if the username doesn't exist an empty response shall be returned
+    try:
+        User.objects.get(username=current_username)
+    except:
+        return JsonResponse({"data" : []})
 
     dictOfNewAchievements = {"data" : []}
     dictOfNewAchievements = totalFilledBottlesAchievementCheck(current_username, dictOfNewAchievements)
@@ -29,10 +35,16 @@ def all(request, current_username : str) -> JsonResponse:
     # endpoint function to return a dictionary of all achievements with a boolean value
     #   to show if the user has completed this achievement.
 
+    # if the username doesn't exist an empty response shall be returned
+    try:
+        User.objects.get(username=current_username)
+    except:
+        return JsonResponse({"data" : []})
+
     dictOfAchievements = getAllUserAchievements(current_username)
     return JsonResponse({"data" : dictOfAchievements})
 
-def fill(request, current_username : str) -> JsonResponse:
+def fill(request) -> JsonResponse:
     # endpoint function to create achievements if they aren't already exisiting in the database,
     # duplicate functions won't be created so this function should be called whenever a new building is introduced to the database 
     # or if the achievements table has been cleared.
@@ -158,13 +170,13 @@ def totalFilledBottlesAchievementCheck(current_username : str, dictOfNewAchievem
     # a list of any new achievements completed is then returned.
 
     user = User.objects.get(username = current_username)
-    bottles = user.bottles
     listOfNewAchievements = []
 
     listOfBottleCheckpoints = [1,5,10,50,100,250,500,1000]
 
     for checkpoint in listOfBottleCheckpoints:
         # if the user has filled more bottles than this checkpoint they should have this achievement
+        bottles = FilledBottle.objects.filter(user=user).values().count()
         if bottles >= checkpoint:
             if checkpoint == 1:
                 challenge = "Fill up your first water bottle"
