@@ -8,9 +8,11 @@ from django.http import JsonResponse
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CreateUser(APIView):
-    permission_classes = [AllowAny]
+    # An endpoint for creating a user in the app, returns the access and refresh token for the user
+    permission_classes = [AllowAny]  # Allow anyone to create a user
 
     def post(self, request):
+        # Use serializer to create user from data in POST
         reg_serializer = RegisterUser(data=request.data)
         if reg_serializer.is_valid():
             newuser = reg_serializer.save()
@@ -23,7 +25,9 @@ class CreateUser(APIView):
         return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUser(APIView):
+    # Endpoint to trial getting an authenticated user
     permission_classes = [IsAuthenticated]
 
+    # Return id of authenticated user making request
     def post(self, request):
         return JsonResponse({'id': request.user.id})

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)$^%7#_c25=w2n5650z&26wt352hif==7m^cqaumh2rzh8lh16
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost'] # this is the host that Docker uses to run application
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost'] # This is the host that Docker uses to run application
 
 # Base URL to use for backend
 BASE_URL = 'localhost:8000'
@@ -126,7 +126,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static"
+    BASE_DIR / "static"  # Specify the base directory for static files
 ]
 
 # Default primary key field type
@@ -134,6 +134,7 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Specify allowed connection origins
 CORS_ORIGIN_WHITELIST = [
      'http://localhost:3000'
 ]
@@ -141,12 +142,13 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
 
+# Default framework behaviour 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Use django simplejwt rest framework
     )
 }
 
@@ -155,5 +157,5 @@ AUTH_USER_MODEL = 'database.User'
 
 # JWT customization
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20)
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20)  # Lifetime of JWT access token
 }
