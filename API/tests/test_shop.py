@@ -139,3 +139,29 @@ class TestShop(TestCase):
             self.assertFalse(True)
         except:
             pass
+
+    def testPurchaseEndpointWhenOwned(self):
+        # Test that the user cannot purchase an item that they already own
+
+        # set the user points to 100 so they have enough points to buy an item twice
+        user = User.objects.get(username="TestUser")
+        user.points = 100
+        user.save()
+
+        # attempt to purchase Test Item 3 twice
+        c = Client()
+        c.get('/shop/purchase/TestUser/Test%20Item%203')
+        response = c.get('/shop/purchase/TestUser/Test%20Item%203')
+
+        # the cost of the item should be deducted from the user only once and the response should be empty,
+        # there should only be one record of purchase in the UserItem table
+        user = User.objects.get(username="TestUser")
+        item = ShopItem.objects.get(name="Test Item 3")
+        self.assertTrue(user.points == 100 - item.cost)
+        self.assertTrue(response.json().get("data") == "")
+
+        userItemRecords = UserItem.objects.filter(user=user, item=item)
+        self.assertTrue(userItemRecords.count() == 1)
+
+
+

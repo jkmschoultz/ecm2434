@@ -72,6 +72,13 @@ def purchase(request, current_username : str, item_name : str) -> JsonResponse:
     user = User.objects.get(username=current_username)
     item = ShopItem.objects.get(name=item_name)
 
+    # check that the user does not already own the item
+    try:
+        UserItem.objects.get(user=user, item=item)
+        return JsonResponse({"data" : ""})
+    except:
+        pass
+
     # check that user has enough points to purchase the item
     if user.points >= item.cost:
         UserItem.objects.create(user=user, item=item)
