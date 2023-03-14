@@ -64,12 +64,22 @@ def someAvailable(request, current_username : str, item_type : str) -> JsonRespo
 
     return JsonResponse(dictOfUnownedItems)
 
-def purchase(request, current_username : str, itemID : int) -> JsonResponse:
+def purchase(request, current_username : str, item_name : str) -> JsonResponse:
     # endpoint function for the purchase of an item by the user. The cost of the item shoud be deducted from
     # the user's points and the item should be added to the UserItems table, the item is returned in the JsonResponse
     # to show that the purchase was successful.
-    
-    return JsonResponse({"data" : []})
+
+    user = User.objects.get(username=current_username)
+    item = ShopItem.objects.get(name=item_name)
+
+    # check that user has enough points to purchase the item
+    if user.points >= item.cost:
+        UserItem.objects.create(user=user, item=item)
+        user.points = user.points - item.cost
+        user.save()
+        return JsonResponse({"data" : str(item)})
+    else:   
+        return JsonResponse({"data" : ""})
 
 def allOwned(request, current_username : str) -> JsonResponse:
     # endpoint function that returns a dictionary all items currently owned by the specified user.
