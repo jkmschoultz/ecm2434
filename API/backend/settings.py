@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-)$^%7#_c25=w2n5650z&26wt352hif==7m^cqaumh2rzh8lh16
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost'] # this is the host that Docker uses to run application
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost','*'] # this is the host that Docker uses to run application
 
 # Base URL to use for backend
 BASE_URL = 'localhost:8000/'
@@ -134,11 +134,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3000'
+     'http://localhost:3000',"http://20.121.251.196"
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:3000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:3000","http://20.121.251.196"]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
