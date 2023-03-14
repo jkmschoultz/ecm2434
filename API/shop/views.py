@@ -42,8 +42,27 @@ def someAvailable(request, current_username : str, item_type : str) -> JsonRespo
     # endpoint function that returns a dictionary of all the items of the given type (i.e background, border, etc...)
     # that the specified user does not own, each woth a boolean value determining if the user 
     # currently has enough points to purchase the item.
-    
-    return JsonResponse({"data" : []})
+
+    # get all items in the ShopItem table and filter out the items that the user owns
+    dictOfUnownedItems = {"data" : []}
+    user = User.objects.get(username=current_username)
+    shopItems = ShopItem.objects.all()
+    userItems = UserItem.objects.filter(user=user)
+
+    listOfUserItems = []
+    for userItem in userItems:
+        listOfUserItems.append(userItem.item)
+
+    for item in shopItems:
+        if item not in listOfUserItems and item.type == item_type:
+            
+            # add this item to the dictionary with the corresponding boolean value
+            if item.cost <= user.points:
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type, "purchasable" : True})
+            else:
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type, "purchasable" : False})
+
+    return JsonResponse(dictOfUnownedItems)
 
 def purchase(request, current_username : str, itemID : int) -> JsonResponse:
     # endpoint function for the purchase of an item by the user. The cost of the item shoud be deducted from
