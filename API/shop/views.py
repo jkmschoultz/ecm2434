@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import Http404, HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from database.models import UserAchievement,User,Achievement, FilledBottle, Building
+from database.models import UserAchievement,User,Achievement, FilledBottle, Building, ShopItem, UserItem
 
 
 
@@ -17,7 +17,26 @@ def allAvailable(request, current_username : str) -> JsonResponse:
     # endpoint function that returns a dictionary of all the items that the specified user
     # does not own, each with a boolean value determining if the user currently has enough points to purchase the item.
 
-    return JsonResponse({"data" : []})
+    # get all items in the ShopItem table and filter out the items that the user owns
+    dictOfUnownedItems = {"data" : []}
+    user = User.objects.get(username=current_username)
+    shopItems = ShopItem.objects.all()
+    userItems = UserItem.objects.filter(user=user)
+
+    listOfUserItems = []
+    for userItem in userItems:
+        listOfUserItems.append(userItem.item)
+
+    for item in shopItems:
+        if item not in listOfUserItems:
+            
+            # add this item to the dictionary with the corresponding boolean value
+            if item.cost <= user.points:
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type, "purchasable" : True})
+            else:
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type, "purchasable" : False})
+
+    return JsonResponse(dictOfUnownedItems)
 
 def someAvailable(request, current_username : str, item_type : str) -> JsonResponse:
     # endpoint function that returns a dictionary of all the items of the given type (i.e background, border, etc...)
