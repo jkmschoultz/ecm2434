@@ -28,7 +28,8 @@ class TestShop(TestCase):
 
     def testItemName(self):
         # Test that stringified items are the name of the item and the type of item
-        pass
+        item = ShopItem.objects.get(name="Test Item 2")
+        self.assertTrue(str(item) == "Test Item 2, Border")
 
     def testAllAvailableEndpoint(self):
         # Test that the allAvailable shop endpoint returns a dictionary of every item not owned by the user
