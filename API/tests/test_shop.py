@@ -53,7 +53,23 @@ class TestShop(TestCase):
         self.assertTrue(affordableItem in response.json().get("data"))
         self.assertTrue(unaffordableItem in response.json().get("data"))
 
-    def testPurachasableBoolean(self):
-        # Test that the boolean ,returned with each item when the allAvailable endpoint is called, is correct
+    def testSomeAvailableEndpoint(self):
+        # Test that the someAvailable shop endpoint returns a dictionary of every item not owned by the user of 
+        # a specified type
 
-        pass
+        # set the user points to 20 so only some items are affordable
+        user = User.objects.get(username="TestUser")
+        user.points = 20
+        user.save()
+
+        # have the user own one item already so it shouldn't be included in the response
+        item = ShopItem.objects.get(name="Test Item 1")
+        UserItem.objects.create(user=user, item=item)
+
+        c = Client()
+        response = c.get('/shop/available/TestUser/Border/')
+
+        # only one item is of type Border and not already owned by the user
+        item = {"name":"Test Item 2", "item type" : "Border", "purchasable" : True}
+        self.assertTrue(response.json().get("data") == [item])
+
