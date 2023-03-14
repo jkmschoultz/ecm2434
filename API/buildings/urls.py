@@ -9,4 +9,4 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:building_id>/', views.detail, name='detail'),
     path('<building_name>/leaderboard/', views.getTopFive, name='getTopFive'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
