@@ -29,7 +29,7 @@ def index(request):
             'name': building.name,
             'id': building.id,
             'distance': distance,
-            'image_path': settings.BASE_URL + 'buildings' + building.image.url,
+            'image_path': settings.BASE_URL + building.image.url,
             'is_accessible': distance <= building.radius
         })
     # Sort by distance
