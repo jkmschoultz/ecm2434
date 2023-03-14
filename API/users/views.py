@@ -21,27 +21,36 @@ def index(request):
         u.save()
 
 ##Function that will verify the account
-def verifyAccount(current_username):
-    current_username.has_been_verified = True
-    current_username.save()
+def verifyAccount(request, username):
+    updating_user = User.objects.get(username = username)
+    updating_user.has_been_verified = True
+    updating_user.save()
+    return JsonResponse({})
 
 ##Adds xp when a bottle is filled
-def bottleFilled(current_username):
-    current_username.xp = current_username.xp + 10
-    current_username.save()
+def bottleFilled(request, current_username):
+    updating_user = User.objects.get(username = current_username)
+    updating_user.xp = updating_user.xp + 10
+    updating_user.save()
+    return JsonResponse({})
 
 ##Updates the name of a user 
-def setName(current_username, new_name):
+def setName(request, current_username, new_name):
     updating_user = User.objects.get(username = current_username)
     updating_user.name = new_name
     updating_user.save()
+    return JsonResponse({})
 
 ##Gets data needed to display data for the profile page by returning a json
 def getUserProfileData(request, current_username):
-    name = User.objects.get(username = current_username).name
-    level = int(User.objects.get(username = current_username).level)
-    xpLeft = int(User.objects.get(username = current_username).xpLeft)
-    points = User.objects.get(username = current_username).points
+    print('bvfubivbsdivbfilbhvloihvsibsovbdbnkdsbvakvdbvsda' + current_username)
+    user = User.objects.get(username = current_username)
+    print('bvfubivbsdivbfilbhvloihvsibsovbdbnkdsbvakvdbvsda')
+    name = user.name
+    level = int(user.level)
+    xpLeft = int(user.xpLeft)
+    points = int(user.points)
+    print('bvfubivbsdivbfilbhvloihvsibsovbdbnkdsbvakvdbvsda')
     achievement = getAllUserAchievements(current_username)
     return JsonResponse({"name":name, "level":level, "XP":xpLeft, "streak":0, "points": points, "achievements": achievement})
 

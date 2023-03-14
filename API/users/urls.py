@@ -6,13 +6,13 @@ from . import views
 app_name = 'users'
 urlpatterns = [
     ##Endpoint for all user data
-    path('<current_username>/', views.getUserProfileData, name='name'),
+    path('<current_username>/', views.getUserProfileData, name='getUserProfileData'),
     ##Endpoint for verifing the users account
-    path('<current_username>/verify', views.verifyAccount, name='name'),
+    path('<username>/verify/', views.verifyAccount, name='verifyAccount'),
     ##Endpoint for adding xp for when a user filles a bottle
-    path('<current_username>/fillBottle', views.bottleFilled, name='name'),
+    path('<current_username>/fillBottle/', views.bottleFilled, name='bottleFilled'),
     ##Endpoint for setting a users name
-    path('<current_username>/setName/<new_name>', views.setName, name='name'),
+    path('<current_username>/setName/<new_name>/', views.setName, name='setName'),
     ##Endpoint for registering a user
-    path('register/', views.index, name='name'),
+    path('register', views.index, name='index')
 ]

@@ -14,10 +14,10 @@ class TestBuildings(TestCase):
         user5 = User.objects.create(username = "unitTestUS5", email = "test5@gmail.com", name = "unitTest5")
 
         Leaderboard.objects.create(building = building , user = user1 , user_points_in_building = 1)
-        Leaderboard.objects.create(building = building , user = user1 , user_points_in_building = 2)
-        Leaderboard.objects.create(building = building , user = user1 , user_points_in_building = 3)
-        Leaderboard.objects.create(building = building , user = user1 , user_points_in_building = 4)
-        Leaderboard.objects.create(building = building , user = user1 , user_points_in_building = 5)
+        Leaderboard.objects.create(building = building , user = user2 , user_points_in_building = 2)
+        Leaderboard.objects.create(building = building , user = user3 , user_points_in_building = 3)
+        Leaderboard.objects.create(building = building , user = user4 , user_points_in_building = 4)
+        Leaderboard.objects.create(building = building , user = user5 , user_points_in_building = 5)
 
     def tearDown(self):
         # Clean up run after every test method
@@ -43,7 +43,7 @@ class TestBuildings(TestCase):
     def testLeaderBoards(self):
         c = Client()
         building = Building.objects.get(name='test')
-        response = c.get(building.id + '/leaderboard/')
+        response = c.get('/buildings/' + str(building.name) + '/leaderboard/')
         data = response.json()
         self.assertEqual(5, len(data['names']))
         self.assertEqual(5, len(data['points']))
