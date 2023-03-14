@@ -92,3 +92,50 @@ class TestShop(TestCase):
         self.assertTrue(item2 in response.json().get("data"))
         self.assertTrue(item3 in response.json().get("data"))
         self.assertTrue(item4 in response.json().get("data"))
+
+    def testPurchaseEndpointWhenValid(self):
+        # Test that a user with enough points can purchase an item
+
+        # set the user points to 20 so the item is affordable
+        user = User.objects.get(username="TestUser")
+        user.points = 20
+        user.save()
+
+        c = Client()
+        response = c.get('/shop/purchase/TestUser/Test%20Item%202')
+
+        # the cost of the item should be deducted from the user and the item should be returned in the response,
+        # there should also be a record of the item in the UserItems
+        user = User.objects.get(username="TestUser")
+        item = ShopItem.objects.get(name="Test Item 2")
+        self.assertTrue(user.points == 20 - item.cost)
+        self.assertTrue(response.json().get("data") == str(item))
+
+        try:
+            UserItem.objects.get(user=user, item=item)
+        except:
+            self.assertFalse(True)
+
+    def testPurchaseEndpointWhenInvalid(self):
+        # Test that a user with insufficient points can't purchase an item
+
+        # set the user points to 10 so it can be tested that the points are unchanged
+        user = User.objects.get(username="TestUser")
+        user.points = 10
+        user.save()
+
+        c = Client()
+        response = c.get('/shop/purchase/TestUser/Test%20Item%202')
+
+        # the purchase should be unsuccessful and the response should be empty
+        user = User.objects.get(username="TestUser")
+        item = ShopItem.objects.get(name="Test Item 2")
+        self.assertTrue(user.points == 10)
+        self.assertTrue(response.json().get("data") == "")
+
+        # there should not be a record of the user owning the item
+        try:
+            UserItem.objects.get(user=user, item=item)
+            self.assertFalse(True)
+        except:
+            pass
