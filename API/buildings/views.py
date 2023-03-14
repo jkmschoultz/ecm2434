@@ -12,7 +12,6 @@ def index(request):
     # Default position to Uni entrance if none given
     lat=50.73505
     long=-3.53207
-    print("here the request")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body_data = json.loads(body_unicode)
@@ -30,7 +29,7 @@ def index(request):
             'name': building.name,
             'id': building.id,
             'distance': distance,
-            'image_path': settings.BASE_URL + 'buildings' + building.image.url,
+            'image_path': settings.BASE_URL + building.image.url,
             'is_accessible': distance <= building.radius
         })
     # Sort by distance

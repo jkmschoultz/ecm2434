@@ -29,7 +29,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'localhost','*'] # this is the host that Docker uses to run application
 
 # Base URL to use for backend
-BASE_URL = 'localhost:8000/'
+BASE_URL = 'localhost:8000'
 
 # Application definition
 
@@ -125,8 +125,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, MEDIA_URL)
+STATICFILES_DIRS = [
+    BASE_DIR / "static"
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

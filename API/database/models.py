@@ -60,7 +60,7 @@ class Building(models.Model):
     latitude = models.FloatField()
     longitude = models.FloatField()
     radius = models.FloatField()
-    image = models.ImageField(blank=True)
+    image = models.ImageField(blank=True, upload_to='static/buildings/')
     
     def __str__(self):
         return self.name
@@ -116,3 +116,35 @@ class Fountain(models.Model):
     
     def __str__(self):
         return self.building.name + ', ' + self.location
+    
+class BuildingFloor(models.Model):
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    image = models.ImageField(blank=True, upload_to='static/floors/')
+    floorNumber = models.IntegerField()
+    
+    def __str__(self):
+        return self.building.name + ',' + self.floorNumber
+    
+class FilledBottle(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    building = models.ForeignKey(Building, on_delete=models.CASCADE)
+    day = models.DateTimeField()
+
+    def __str__(self):
+        return self.user.username + ', ' + self.building.name + ', ' + str(self.day)
+
+class ShopItem(models.Model):
+    name = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    cost = models.PositiveIntegerField()
+    image = models.ImageField(blank=True, upload_to='static/shop_items/')
+
+    def __str__(self):
+        return self.name + ', ' + self.type
+
+class UserItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(ShopItem, on_delete=models.CASCADE)
+
+    def __str__(self) :
+        return self.user.username + ', ' + self.item.name
