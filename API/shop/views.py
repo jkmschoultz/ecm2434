@@ -90,11 +90,30 @@ def purchase(request, current_username : str, item_name : str) -> JsonResponse:
 
 def allOwned(request, current_username : str) -> JsonResponse:
     # endpoint function that returns a dictionary all items currently owned by the specified user.
-    
-    return JsonResponse({"data" : []})
+
+    # get all items in the UserItem table that relate to the specified user
+    dictOfUnownedItems = {"data" : []}
+    user = User.objects.get(username=current_username)
+    userItems = UserItem.objects.filter(user=user)
+
+    for userItem in userItems:
+        dictOfUnownedItems.get("data").append(str(userItem.item))
+
+    return JsonResponse(dictOfUnownedItems)
 
 def someOwned(request, current_username : str, item_type : str) -> JsonResponse:
     # endpoint function that returns a dictionary of all items of a given type (i.e background, border, etc...)
     # that the specified user currently owns.
     
-    return JsonResponse({"data" : []})
+    # get all items in the UserItem table that relate to the specified user
+    dictOfUnownedItems = {"data" : []}
+    user = User.objects.get(username=current_username)
+    userItems = UserItem.objects.filter(user=user)
+
+    for userItem in userItems:
+
+        # only add the item to the response dictionary if the item is of the right type
+        if userItem.item.type == item_type:
+            dictOfUnownedItems.get("data").append(str(userItem.item))
+
+    return JsonResponse(dictOfUnownedItems)
