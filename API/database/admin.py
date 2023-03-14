@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User, Building, Question, Answer, HasAnswered, Leaderboard, Achievement, UserAchievement, Fountain
+from .models import User, Building, Question, Answer,HasAnswered, Leaderboard, Achievement, UserAchievement, Fountain, BuildingFloor, FilledBottle
 
 # Register models here for admin view.
 admin.site.register(User)
@@ -12,3 +12,5 @@ admin.site.register(Leaderboard)
 admin.site.register(Achievement)
 admin.site.register(UserAchievement)
 admin.site.register(Fountain)
+admin.site.register(BuildingFloor)
+admin.site.register(FilledBottle)
