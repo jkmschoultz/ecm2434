@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 import datetime
 
-from database.models import UserAchievement,User,Achievement, FilledBottle, Building
+from database.models import UserAchievement,User,Achievement, FilledBottle, Building, UserItem
 
 
 
@@ -192,6 +192,10 @@ def totalFilledBottlesAchievementCheck(current_username : str, dictOfNewAchievem
                 # give the user the rewards that accomplishing the achievement gives 
                 user.xp = user.xp + achievement.xp_reward
                 user.save()
+
+                # give user item reward if applicable
+                if achievement.item_reward != None:
+                    UserItem.objects.create(user=user, item=achievement.item_reward)
     
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
     for newAchievement in listOfNewAchievements:
@@ -236,6 +240,10 @@ def buildingAchievementsCheck(current_username : str, dictOfNewAchievements : di
                     # give the user the rewards that accomplishing the achievement gives 
                     user.xp = user.xp + achievement.xp_reward
                     user.save()
+
+                    # give user item reward if applicable
+                    if achievement.item_reward != None:
+                        UserItem.objects.create(user=user, item=achievement.item_reward)
     
 
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
@@ -290,6 +298,10 @@ def streakAchievementsCheck(current_username : str, dictOfNewAchievements : dict
                 # give the user the rewards that accomplishing the achievement gives 
                 user.xp = user.xp + achievement.xp_reward
                 user.save()
+
+                # give user item reward if applicable
+                if achievement.item_reward != None:
+                    UserItem.objects.create(user=user, item=achievement.item_reward)
 
 
 
