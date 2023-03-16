@@ -14,10 +14,10 @@ from database.models import UserAchievement,User,Achievement, FilledBottle, Buil
 
 
 def allAvailable(request, current_username : str) -> JsonResponse:
-    # endpoint function that returns a dictionary of all the items that the specified user
+    # endpoint function that returns a dictionary of all the purchasable items that the specified user
     # does not own, each with a boolean value determining if the user currently has enough points to purchase the item.
 
-    # get all items in the ShopItem table and filter out the items that the user owns
+    # get all items in the ShopItem table and filter out the items that the user owns and 
     dictOfUnownedItems = {"data" : []}
     user = User.objects.get(username=current_username)
     shopItems = ShopItem.objects.all()
@@ -28,7 +28,7 @@ def allAvailable(request, current_username : str) -> JsonResponse:
         listOfUserItems.append(userItem.item)
 
     for item in shopItems:
-        if item not in listOfUserItems:
+        if item not in listOfUserItems and item.availableForPurchase == True:
             
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
@@ -54,7 +54,7 @@ def someAvailable(request, current_username : str, item_type : str) -> JsonRespo
         listOfUserItems.append(userItem.item)
 
     for item in shopItems:
-        if item not in listOfUserItems and item.type == item_type:
+        if item not in listOfUserItems and item.type == item_type and item.availableForPurchase == True:
             
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
@@ -78,6 +78,10 @@ def purchase(request, current_username : str, item_name : str) -> JsonResponse:
         return JsonResponse({"data" : ""})
     except:
         pass
+
+    # check that the item is eligible for purchasing
+    if not item.availableForPurchase:
+        return JsonResponse({"data" : ""})
 
     # check that user has enough points to purchase the item
     if user.points >= item.cost:

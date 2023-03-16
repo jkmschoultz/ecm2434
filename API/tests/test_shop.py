@@ -163,6 +163,37 @@ class TestShop(TestCase):
         userItemRecords = UserItem.objects.filter(user=user, item=item)
         self.assertTrue(userItemRecords.count() == 1)
 
+    def testAllOwned(self):
+        # Test that the allOwned endpoint returns all items that the user owns
+
+        user = User.objects.get(username="TestUser")
+
+        UserItem.objects.create(user=user, item=ShopItem.objects.get(name="Test Item 2"))
+        UserItem.objects.create(user=user, item=ShopItem.objects.get(name="Test Item 3"))
+
+        c = Client()
+        response = c.get('/shop/owned/TestUser/')
+
+        # test that the user owns a total of 2 items
+        self.assertTrue(len(response.json().get("data")) == 2)
+
+    def testSomeOwned(self):
+        # Test that the someOwned endpoint returns all items that the user owns of a specific type
+
+        user = User.objects.get(username="TestUser")
+
+        UserItem.objects.create(user=user, item=ShopItem.objects.get(name="Test Item 2"))
+        UserItem.objects.create(user=user, item=ShopItem.objects.get(name="Test Item 3"))
+
+        c = Client()
+        response = c.get('/shop/owned/TestUser/Border/')
+
+        # test that the response only contains 1 item as the user only has 1 item of type "Border"
+        self.assertTrue(len(response.json().get("data")) == 1)
+
+
+
+
     
 
 
