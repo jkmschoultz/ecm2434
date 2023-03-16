@@ -163,5 +163,6 @@ class TestShop(TestCase):
         userItemRecords = UserItem.objects.filter(user=user, item=item)
         self.assertTrue(userItemRecords.count() == 1)
 
+    
 
 
