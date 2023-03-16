@@ -70,7 +70,6 @@ def fillBuildingAchievements(dictOfNewAchievements : dict) -> dict:
     # the xp and points each achievement should have,
     # the index of the xp & points will align with the index in the list of checkpoints.
     listOfRelativeXp = [25,50, 75, 150]
-    listOfRelativePoints = [3,3,5,10]
 
     for building in listOfBuildings:
         for index, checkpoint in enumerate(listOfCheckpoints):
@@ -83,8 +82,7 @@ def fillBuildingAchievements(dictOfNewAchievements : dict) -> dict:
                 newAchievement = Achievement.objects.create(
                     name = "Lorem Ipsum",
                     challenge = challenge,
-                    xp_reward = listOfRelativeXp[index],
-                    points_reward = listOfRelativePoints[index]
+                    xp_reward = listOfRelativeXp[index]
                 )
                 dictOfNewAchievements["data"].append({"challenge" : challenge})
     
@@ -97,7 +95,6 @@ def fillTotalUserBottleAchievements(dictOfNewAchievements : dict) -> dict:
 
     listOfBottleCheckpoints = [1,5,10,50,100,250,500,1000]
     listOfRelativeXp = [25,20,30,50,75,100,200,300]
-    listOfRelativePoints = [5,3,3,3,5,10,15,25]
 
     for index, checkpoint in enumerate(listOfBottleCheckpoints):
         if checkpoint == 1:
@@ -112,8 +109,7 @@ def fillTotalUserBottleAchievements(dictOfNewAchievements : dict) -> dict:
             newAchievement = Achievement.objects.create(
                     name = "Lorem Ipsum",
                     challenge = challenge,
-                    xp_reward = listOfRelativeXp[index],
-                    points_reward = listOfRelativePoints[index]
+                    xp_reward = listOfRelativeXp[index]
                 )
             dictOfNewAchievements["data"].append({"challenge" : challenge})
 
@@ -126,7 +122,6 @@ def fillStreakAchievements(dictOfNewAchievements : dict) -> dict:
 
     listOfStreakCheckpoints = [7,30,365]
     listOfRelativeXp = [40,100,500]
-    listOfRelativePoints = [5,10,25]
     ListOfStreakNames = ["week", "month", "year"]
 
     for index, checkpoint in enumerate(listOfStreakCheckpoints):
@@ -139,8 +134,7 @@ def fillStreakAchievements(dictOfNewAchievements : dict) -> dict:
             newAchievement = Achievement.objects.create(
                     name = "Lorem Ipsum",
                     challenge = challenge,
-                    xp_reward = listOfRelativeXp[index],
-                    points_reward = listOfRelativePoints[index]
+                    xp_reward = listOfRelativeXp[index]
                 )
             dictOfNewAchievements["data"].append({"challenge" : challenge})
 
@@ -197,7 +191,6 @@ def totalFilledBottlesAchievementCheck(current_username : str, dictOfNewAchievem
             
                 # give the user the rewards that accomplishing the achievement gives 
                 user.xp = user.xp + achievement.xp_reward
-                user.points = user.points + achievement.points_reward
                 user.save()
     
     # add these new achievements to the dictionary of all the new achievements that will be returned to the front-end.
@@ -242,7 +235,6 @@ def buildingAchievementsCheck(current_username : str, dictOfNewAchievements : di
                 
                     # give the user the rewards that accomplishing the achievement gives 
                     user.xp = user.xp + achievement.xp_reward
-                    user.points = user.points + achievement.points_reward
                     user.save()
     
 
@@ -297,7 +289,6 @@ def streakAchievementsCheck(current_username : str, dictOfNewAchievements : dict
             
                 # give the user the rewards that accomplishing the achievement gives 
                 user.xp = user.xp + achievement.xp_reward
-                user.points = user.points + achievement.points_reward
                 user.save()
 
 

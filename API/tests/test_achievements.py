@@ -12,7 +12,7 @@ import pytz
 class TestAchievements(TestCase):
     def setUp(self):
         # Set up test case that runs before every test
-        Achievement.objects.create(name="Test Name", challenge="Test challenge", xp_reward=5, points_reward=3)
+        Achievement.objects.create(name="Test Name", challenge="Test challenge", xp_reward=5)
         User.objects.create(username="AchievementsTestUser",
                             email="TestUser@gmail.com",
                             name="AchievementsTestName")
@@ -221,15 +221,12 @@ class TestAchievements(TestCase):
 
         # calculate how much xp and points the user should have recieved
         totalXpGiven = 0
-        totalPointsGiven = 0
         for achievement in response.json().get("data"):
             achievement = Achievement.objects.get(challenge=achievement.get("challenge"))
             totalXpGiven += achievement.xp_reward
-            totalPointsGiven += achievement.points_reward
 
         
         # verify that the user now has this xp and points
         user = User.objects.get(username="AchievementsTestUser")
         self.assertTrue(user.xp == totalXpGiven)
-        self.assertTrue(user.points == totalPointsGiven)
 
