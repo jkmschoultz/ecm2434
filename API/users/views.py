@@ -46,7 +46,15 @@ def getUserProfileData(request, current_username):
     xpLeft = int(user.xpLeft)
     points = int(user.points)
     achievement = getAllUserAchievements(current_username)
-    return JsonResponse({"name":name, "level":level, "XP":xpLeft, "streak":0, "points": points, "achievements": achievement})
+    return JsonResponse({
+        "name":name,
+        "username":current_username,
+        "level":level,
+        "XP":xpLeft,
+        "streak":0,
+        "points": points,
+        "achievements": achievement
+    })
 
     
 
