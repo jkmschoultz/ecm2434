@@ -1,10 +1,9 @@
-from database.models import Building, Leaderboard
-from django.conf import settings
-from django.http import Http404, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from database.models import Building
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from . import buildings
 import json
-import math
 
 # Create building views here.
 @csrf_exempt
@@ -14,27 +13,13 @@ def index(request):
     lat=50.73505
     long=-3.53207
     if request.method == 'POST':
-        # Get position latitude and longitude from request
+        # Get position latitude and longitude from POST request
         body_unicode = request.body.decode('utf-8')
         body_data = json.loads(body_unicode)
         lat = float( body_data.get('lat'))
         long = float( body_data.get('long'))
 
-    # Compare position to location of each building
-    buildings = Building.objects.all()
-    data = []
-    for building in buildings:
-        # Calculate distance from each building
-        distance = math.sqrt((building.latitude - lat)**2 + (building.longitude - long)**2)
-        data.append({
-            'name': building.name,
-            'id': building.id,
-            'distance': distance,
-            'image_path': settings.BASE_URL + building.image.url,
-            'is_accessible': distance <= building.radius
-        })
-    # Sort by distance
-    data = sorted(data, key=lambda x: x['distance'])
+    data = buildings.get_six_closest(lat, long)
     return JsonResponse({'data': data[:6]})
 
 def detail(request, building_id):
@@ -49,15 +34,5 @@ def detail(request, building_id):
 
 def getTopFive(request, building_name):
     # Endpoint to get the top 5 users in the leaderboard for a building
-    building = Building.objects.get(name = building_name)
-    print(building_name)
-    # Get the leaderboard for the building
-    building_points = Leaderboard.objects.filter(building = building)
-    top_five = list(building_points.order_by("user_points_in_building")[:5])
-    # Make list of top 5 users with their corresponding points
-    points = []
-    names = []
-    for leader in top_five:
-            names.append(leader.user.name)
-            points.append(leader.user_points_in_building)
+    names, points = buildings.get_leaderboard(building_name)
     return JsonResponse({'names': names, 'points':points})
