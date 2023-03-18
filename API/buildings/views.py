@@ -31,8 +31,3 @@ def detail(request, building_id):
         'longitude': building.longitude
     }
     return JsonResponse(data)
-
-def getTopFive(request, building_name):
-    # Endpoint to get the top 5 users in the leaderboard for a building
-    names, points = buildings.get_leaderboard(building_name)
-    return JsonResponse({'names': names, 'points':points})

@@ -24,19 +24,3 @@ def get_six_closest(latitude, longitude):
     # Sort by distance and return first 6
     data = sorted(data, key=lambda x: x['distance'])
     return data[:6]
-
-def get_leaderboard(building_name):
-    # Get the top 5 people in the leaderboard for a building
-    building = Building.objects.get(name = building_name)
-    print(building_name)
-    # Get the leaderboard for the building
-    building_points = Leaderboard.objects.filter(building = building)
-    top_five = list(building_points.order_by("user_points_in_building")[:5])
-    # Make list of top 5 users with their corresponding points
-    points = []
-    names = []
-    for leader in top_five:
-            names.append(leader.user.name)
-            points.append(leader.user_points_in_building)
-    # Return tuple of list of names with corresponding points in leaderboard
-    return names, points

@@ -32,26 +32,6 @@ class TestBuildings(TestCase):
         name = str(building)
         self.assertEqual(building.name, name)
 
-    def test_get_building_details(self):
-        # Test that /buildings/<building_id> path returns correct building information
-        c = Client()
-        # Simulate get request
-        building = Building.objects.get(name='test1')
-        response = c.get('/buildings/' + str(building.id) + '/')
-        data = response.json()
-        # Verify response is same as expected building
-        self.assertEqual(building.name, data['name'])
-        self.assertEqual(building.latitude, data['latitude'])
-        self.assertEqual(building.longitude, data['longitude'])
-
-    def test_fail_get_building(self):
-        # Test getting a building that does not exist
-        c = Client()
-        # Simulate get request
-        response = c.get('/buildings/-1/')
-        # Assert response code is 404 not found
-        self.assertEqual(response.status_code, 404)
-
     def test_get_six_closest(self):
         # Test getting 6 buildings closest to a position
         buildings = get_six_closest(0, 0)
@@ -77,3 +57,23 @@ class TestBuildings(TestCase):
         buildings = get_six_closest(-5, -5)
         for building in buildings:
             self.assertFalse(building['is_accessible'])
+
+    def test_get_building_details(self):
+        # Test that /buildings/<building_id> path returns correct building information
+        c = Client()
+        # Simulate get request
+        building = Building.objects.get(name='test1')
+        response = c.get('/buildings/' + str(building.id) + '/')
+        data = response.json()
+        # Verify response is same as expected building
+        self.assertEqual(building.name, data['name'])
+        self.assertEqual(building.latitude, data['latitude'])
+        self.assertEqual(building.longitude, data['longitude'])
+
+    def test_fail_get_building(self):
+        # Test getting a building that does not exist
+        c = Client()
+        # Simulate get request
+        response = c.get('/buildings/-1/')
+        # Assert response code is 404 not found
+        self.assertEqual(response.status_code, 404)
