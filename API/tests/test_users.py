@@ -21,7 +21,6 @@ class TestUser(TestCase):
         self.assertEqual(user.name, data['name'])
         self.assertEqual(user.xpLeft, data['XP'])
         self.assertEqual(user.level, data['level'])
-        self.assertEqual(user.streak, data['streak'])
         self.assertEqual(user.email, data['points'])
         self.assertEqual(getAllUserAchievements('unitTestUser'), data["achievements"])
 

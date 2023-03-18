@@ -7,15 +7,12 @@ from achievements.views import getAllUserAchievements
 ##Creates a function for frontend to make a POST request to backend
 @csrf_exempt
 def index(request):
-    print("here the request")
     if request.method == 'POST':
         body_unicode = request.body.decode('utf-8')
         body_data = json.loads(body_unicode)
         name = str(body_data.get('name'))
         username = str(body_data.get('username'))
         password = str(body_data.get('password'))
-        print(name)
-        print(username)
         u = User(username = username, name = name, password = password,
             xp = 0, points = 0, has_been_verified = False)
         u.save()
@@ -43,14 +40,11 @@ def setName(request, current_username, new_name):
 
 ##Gets data needed to display data for the profile page by returning a json
 def getUserProfileData(request, current_username):
-    print('bvfubivbsdivbfilbhvloihvsibsovbdbnkdsbvakvdbvsda' + current_username)
     user = User.objects.get(username = current_username)
-    print('bvfubivbsdivbfilbhvloihvsibsovbdbnkdsbvakvdbvsda')
     name = user.name
     level = int(user.level)
     xpLeft = int(user.xpLeft)
     points = int(user.points)
-    print('bvfubivbsdivbfilbhvloihvsibsovbdbnkdsbvakvdbvsda')
     achievement = getAllUserAchievements(current_username)
     return JsonResponse({"name":name, "level":level, "XP":xpLeft, "streak":0, "points": points, "achievements": achievement})
 
