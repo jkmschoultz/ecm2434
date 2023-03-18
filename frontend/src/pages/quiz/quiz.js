@@ -40,6 +40,11 @@ function Quiz() {
             fetchData();
     }, []);
 
+    useEffect(() => {
+        if (hasSumbitted) {
+            sendValues(score,areaCode.state.location)
+        }
+    },[hasSumbitted])
 
     const handleAnswer = (index) => {
         setSelectedAnswer(index);
@@ -55,14 +60,10 @@ function Quiz() {
 
         if (questionIndex >= questions.length-1) {
             setHasSubmitted(true);
-            sendValues(score, areaCode.state.location);
         }
     };
 
     const sendValues = (correct, building) =>{
-        if(hasSumbitted) {
-            return;
-        }
         // Get the access token from local storage
         const access_token = localStorage.getItem('access_token');
 
@@ -78,7 +79,6 @@ function Quiz() {
             building: building
         });
 
-        console.log(body);
         // Send the POST request using fetch()
         fetch('http://localhost:8000/quiz/', {
             method: 'POST',

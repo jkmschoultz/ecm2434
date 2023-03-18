@@ -1,6 +1,6 @@
 services:
   api:
-    build: ./api        
+    build: ./api
     ports:
       - "8000:8000"
     volumes:
@@ -12,5 +12,5 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend/:/frontend/
+      - ./frontend:/frontend
       - /frontend/node_modules
