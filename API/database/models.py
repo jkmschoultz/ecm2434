@@ -41,11 +41,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     @property
     def level(self):
-        return 10*(math.log(1-((self.xp*(1-(2**(1/10))))/10) ,2))
+        return int(10*(math.log(1-((self.xp*(1-(2**(1/10))))/10) ,2)))
     
     @property
     def xpLeft(self):
-        return self.xp - ((10*(1-(2**(self.level/10)))) / (1-(2**(1/10))))
+        return int(self.xp - ((10*(1-(2**(self.level/10)))) / (1-(2**(1/10)))))
     
     objects = CustomAccountManager()
 
