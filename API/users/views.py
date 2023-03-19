@@ -1,4 +1,5 @@
 import math
+import json
 from database.models import User, UserAchievement, Achievement
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -45,13 +46,14 @@ def getUserProfileData(request, current_username):
     level = int(user.level)
     xpLeft = int(user.xpLeft)
     points = int(user.points)
+    email = user.email
     achievement = getAllUserAchievements(current_username)
     return JsonResponse({
         "name":name,
         "username":current_username,
         "level":level,
         "XP":xpLeft,
-        "streak":0,
+        "email":email,
         "points": points,
         "achievements": achievement
     })

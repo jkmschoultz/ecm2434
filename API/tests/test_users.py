@@ -21,7 +21,8 @@ class TestUser(TestCase):
         self.assertEqual(user.name, data['name'])
         self.assertEqual(user.xpLeft, data['XP'])
         self.assertEqual(user.level, data['level'])
-        self.assertEqual(user.email, data['points'])
+        self.assertEqual(user.email, data['email'])
+        self.assertEqual(user.points, data['points'])
         self.assertEqual(getAllUserAchievements('unitTestUser'), data["achievements"])
 
     # Test to see if the endpoint for verifing a user works
