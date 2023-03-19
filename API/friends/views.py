@@ -7,31 +7,26 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import RefreshToken
 
-'''
-class CreateUser(APIView):
-    permission_classes = [AllowAny]
+from database.models import UserFriend, User
 
-    def post(self, request):
-        reg_serializer = RegisterUser(data=request.data)
-        if reg_serializer.is_valid():
-            newuser = reg_serializer.save()
-            if newuser:
-                refresh = RefreshToken.for_user(newuser)
-                return JsonResponse({
-                    'token': str(refresh.access_token),
-                    'refresh': str(refresh)
-                })
-        return Response(reg_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class GetUser(APIView):
+class allFriends(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        username = request.user.username
-        return redirect('users:getUserProfileData', current_username=username)
-    
-class all(APIView):
-    permission_classes = [IsAuthenticated]
+        # endpoint function to return all the friends of the user making the post request
 
-    '''
+        # search the UserFriend table for all pairs of users including the specified user
+        user = request.user
+        friendsQuery = UserFriend.objects.filter(user=user) | UserFriend.objects.filter(friend=user)
+
+        listOfFriends = []
+        for friendsPair in friendsQuery:
+            if friendsPair.user == user:
+                listOfFriends.append({"username" : friendsPair.friend.username})
+            else:
+                listOfFriends.append({"username" : friendsPair.user.username})
+        
+        dictOfFriends = {"data" : listOfFriends}
+
+        return JsonResponse(dictOfFriends)
 
