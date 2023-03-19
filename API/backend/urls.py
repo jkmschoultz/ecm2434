@@ -30,5 +30,6 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('quiz/', include('quiz.urls')),
     path('leaderboard/', include('leaderboard.urls')),
-    path('shop/', include('shop.urls'))
+    path('shop/', include('shop.urls')),
+    path('friends/', include('friends.urls'))
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # Include static folder in urls

@@ -157,6 +157,13 @@ class UserFriend(models.Model):
     def __str__(self):
         return self.user.username + ', ' + self.friend.username
     
+class PendingFriendInvite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user')
+    potentialFriend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='potentialFriend')
+
+    def __str__(self):
+        return self.user.username + ', ' + self.potentialFriend.username
+    
 class Achievement(models.Model):
     name = models.CharField(max_length=255, default="")
     challenge = models.CharField(max_length=255)
