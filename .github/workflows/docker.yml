@@ -27,7 +27,7 @@ jobs:
         docker build ./frontend -t qwazzarr/ecm2434_web:latest
     - name : Run Django tests
       run : |
-          docker runpython3 API/manage.py test API/tests
+          docker run python3 API/manage.py test API/tests
     - name: Push docker
       run : |
           docker push qwazzarr/ecm2434_api:latest
