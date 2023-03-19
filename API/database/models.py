@@ -133,6 +133,13 @@ class UserItem(models.Model):
 
     def __str__(self) :
         return self.user.username + ', ' + self.item.name
+
+class UserFriend(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
+    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+
+    def __str__(self):
+        return self.user.username + ', ' + self.friend.username
     
 class Achievement(models.Model):
     name = models.CharField(max_length=255, default="")
