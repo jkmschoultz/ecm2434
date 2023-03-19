@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from leaderboard.leaderboard import get_leaderboard
+from database.models import Leaderboard
 
 from database.models import Building
 
@@ -8,6 +8,14 @@ from database.models import Building
 def leaderboard(request, building_name):
     # Get the leaderboard of top 5 from a building name
     building = get_object_or_404(Building, name=building_name)
-    leaderboard = get_leaderboard(building_name)
-    # Return json of leaderboard data
-    return JsonResponse({'data': leaderboard})
+    # Get the leaderboard for the building
+    leaderboard = Leaderboard.objects.filter(building=building).order_by('-user_points_in_building')
+    # Make list of top 5 users with their corresponding points
+    data = []
+    for entry in leaderboard:
+        data.append({
+            'username': entry.user.username,
+            'points': entry.user_points_in_building
+        })
+    # Return json of top 5 in leaderboard
+    return JsonResponse({'data': data[:5]})
