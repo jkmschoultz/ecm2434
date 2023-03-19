@@ -3,7 +3,7 @@ This module tests all functionality and validation for the achievements feature
 '''
 
 from django.test import TestCase, Client
-from database.models import Achievement,UserAchievement,User,Building, FilledBottle
+from database.models import Achievement,UserAchievement,User,Building, FilledBottle, ShopItem, UserItem
 import datetime
 from django.utils import timezone
 import pytz
@@ -12,7 +12,7 @@ import pytz
 class TestAchievements(TestCase):
     def setUp(self):
         # Set up test case that runs before every test
-        Achievement.objects.create(name="Test Name", challenge="Test challenge", xp_reward=5, points_reward=3)
+        Achievement.objects.create(name="Test Name", challenge="Test challenge", xp_reward=5)
         User.objects.create(username="AchievementsTestUser",
                             email="TestUser@gmail.com",
                             name="AchievementsTestName")
@@ -198,7 +198,7 @@ class TestAchievements(TestCase):
         response = c.get('/achievements/InvalidUser/')
         self.assertTrue(response.json() == {"data" : []})
 
-    def testUserXpAndPoints(self):
+    def testUserXp(self):
         # Test that the user recieves the correct amount of Xp after completing an achievement
 
         # fill the FilledBottle table with enough bottles to give the user multiple achievements across every category
@@ -214,22 +214,50 @@ class TestAchievements(TestCase):
         FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=6))
 
 
-        # give the user these achievements and the corresponding xp + points
+        # give the user these achievements and the corresponding xp
         c = Client()
         c.get('/achievements/fill')
         response = c.get('/achievements/check/AchievementsTestUser/')
 
-        # calculate how much xp and points the user should have recieved
+        # calculate how much xp the user should have recieved
         totalXpGiven = 0
-        totalPointsGiven = 0
         for achievement in response.json().get("data"):
             achievement = Achievement.objects.get(challenge=achievement.get("challenge"))
             totalXpGiven += achievement.xp_reward
-            totalPointsGiven += achievement.points_reward
 
         
-        # verify that the user now has this xp and points
+        # verify that the user now has this xp
         user = User.objects.get(username="AchievementsTestUser")
         self.assertTrue(user.xp == totalXpGiven)
-        self.assertTrue(user.points == totalPointsGiven)
+
+    def testItemRewards(self):
+        # Test that a user recieves the correct item when the achievement grants one
+
+        user = User.objects.get(username="AchievementsTestUser")
+        building = Building.objects.get(name="Test Building")
+        time = datetime.datetime.now(pytz.utc)
+
+        # add item reward to the achievement for filling 1 bottle
+        ShopItem.objects.create(name="Test Item",
+                                type="Background",
+                                cost=0,
+                                availableForPurchase=False)
+        
+        c = Client()
+        c.get('/achievements/fill')
+
+        achievement = Achievement.objects.get(challenge="Fill up your first water bottle")
+        achievement.item_reward = ShopItem.objects.get(name="Test Item")
+        achievement.save()
+
+        FilledBottle.objects.create(user=user, building=building, day=time)
+
+        response = c.get('/achievements/check/AchievementsTestUser/')
+
+        try:
+            UserItem.objects.get(user=user, item=ShopItem.objects.get(name="Test Item"))
+        except:
+            self.assertTrue(False)
+
+
 

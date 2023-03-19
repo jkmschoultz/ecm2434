@@ -28,5 +28,6 @@ urlpatterns = [
     path('achievements/', include('achievements.urls')),
     path('auth/', include('authentication.urls')),
     path('quiz/', include('quiz.urls')),
-    path('leaderboard/', include('leaderboard.urls'))
+    path('leaderboard/', include('leaderboard.urls')),
+    path('shop/', include('shop.urls'))
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

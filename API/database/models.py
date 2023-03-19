@@ -94,22 +94,6 @@ class Leaderboard(models.Model):
     def __str__(self):
         return self.building.name + ', ' + self.user.username + ', ' + str(self.user_points_in_building)
 
-class Achievement(models.Model):
-    name = models.CharField(max_length=255, default="")
-    challenge = models.CharField(max_length=255)
-    xp_reward = models.PositiveIntegerField()
-    points_reward = models.PositiveIntegerField()
-    
-    def __str__(self):
-        return self.challenge
-
-class UserAchievement(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.user.username + ', ' + self.achievement.challenge
-
 class Fountain(models.Model):
     location = models.CharField(max_length=255)
     building = models.ForeignKey(Building, on_delete=models.CASCADE)
@@ -137,6 +121,7 @@ class ShopItem(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     cost = models.PositiveIntegerField()
+    availableForPurchase = models.BooleanField(default=True)
     image = models.ImageField(blank=True, upload_to='static/shop_items/')
 
     def __str__(self):
@@ -155,3 +140,19 @@ class UserFriend(models.Model):
 
     def __str__(self):
         return self.user.username + ', ' + self.friend.username
+    
+class Achievement(models.Model):
+    name = models.CharField(max_length=255, default="")
+    challenge = models.CharField(max_length=255)
+    xp_reward = models.PositiveIntegerField()
+    item_reward = models.ForeignKey(ShopItem, null=True, on_delete=models.SET_NULL, default=None)
+    
+    def __str__(self):
+        return self.challenge
+    
+class UserAchievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.username + ', ' + self.achievement.challenge
