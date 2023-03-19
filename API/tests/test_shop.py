@@ -41,7 +41,6 @@ class TestShop(TestCase):
 
         c = Client()
         response = c.get('/shop/available/TestUser/')
-
         # only two items should be available
         self.assertTrue(len(response.json().get("data")) == 2)
         unaffordableItem = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False}
@@ -162,6 +161,7 @@ class TestShop(TestCase):
 
         userItemRecords = UserItem.objects.filter(user=user, item=item)
         self.assertTrue(userItemRecords.count() == 1)
+
 
     def testAllOwned(self):
         # Test that the allOwned endpoint returns all items that the user owns
