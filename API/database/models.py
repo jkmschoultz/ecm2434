@@ -46,12 +46,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Calculate the level of a user from their XP gained
     @property
     def level(self):
-        return 10*(math.log(1-((self.xp*(1-(2**(1/10))))/10) ,2))
+        return int(10*(math.log(1-((self.xp*(1-(2**(1/10))))/10) ,2)))
     
     # Calculate the XP remainder from a user's level
     @property
     def xpLeft(self):
-        return self.xp - ((10*(1-(2**(self.level/10)))) / (1-(2**(1/10))))
+        return int(self.xp - ((10*(1-(2**(self.level/10)))) / (1-(2**(1/10)))))
     
     objects = CustomAccountManager()
 
@@ -105,24 +105,6 @@ class Leaderboard(models.Model):
     def __str__(self):
         return self.building.name + ', ' + self.user.username + ', ' + str(self.user_points_in_building)
 
-class Achievement(models.Model):
-    # The database model for an achievement in the app
-    name = models.CharField(max_length=255, default="")
-    challenge = models.CharField(max_length=255)
-    xp_reward = models.PositiveIntegerField()
-    points_reward = models.PositiveIntegerField()
-    
-    def __str__(self):
-        return self.challenge
-
-class UserAchievement(models.Model):
-    # The database model for an achievement achieved by a user
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.user.username + ', ' + self.achievement.challenge
-
 class Fountain(models.Model):
     # The database model for a fountain in the app
     location = models.CharField(max_length=255)
@@ -154,6 +136,7 @@ class ShopItem(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     cost = models.PositiveIntegerField()
+    availableForPurchase = models.BooleanField(default=True)
     image = models.ImageField(blank=True, upload_to='static/shop_items/')
 
     def __str__(self):
@@ -166,3 +149,26 @@ class UserItem(models.Model):
 
     def __str__(self) :
         return self.user.username + ', ' + self.item.name
+
+class UserFriend(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user1')
+    friend = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user2')
+
+    def __str__(self):
+        return self.user.username + ', ' + self.friend.username
+    
+class Achievement(models.Model):
+    name = models.CharField(max_length=255, default="")
+    challenge = models.CharField(max_length=255)
+    xp_reward = models.PositiveIntegerField()
+    item_reward = models.ForeignKey(ShopItem, null=True, on_delete=models.SET_NULL, default=None)
+    
+    def __str__(self):
+        return self.challenge
+    
+class UserAchievement(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    achievement = models.ForeignKey(Achievement, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.user.username + ', ' + self.achievement.challenge

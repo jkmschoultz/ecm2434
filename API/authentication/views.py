@@ -5,6 +5,7 @@ from .serializers import RegisterUser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CreateUser(APIView):
@@ -30,4 +31,5 @@ class GetUser(APIView):
 
     # Return id of authenticated user making request
     def post(self, request):
-        return JsonResponse({'id': request.user.id})
+        username = request.user.username
+        return redirect('users:getUserProfileData', current_username=username)
