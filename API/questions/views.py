@@ -10,7 +10,6 @@ def getQuestions(request):
     data = []
     list_of_questions = []
     while (len(list_of_questions) < 5) and (len(list_of_questions) < len(questions)):
-        print(len(list_of_questions))
         question_num = random.randint(0,size-1)
         if question_num not in list_of_questions:
             list_of_questions.append(question_num)
