@@ -1,0 +1,14 @@
+.left {
+    width: 15%;
+    background-color: #F8F8F8;
+    height: 100%;
+    margin-top: -1%;
+    border-right: 1px solid #000000;
+}
+.background {
+    display: flex;
+    flex-direction: column;
+    font-family: Inter;
+    text-decoration: none;
+    height: 100vh;
+}

@@ -25,6 +25,11 @@ import uniLogo from "../assets/uniLogo.svg";
                                 Profile
                             </Link>
                         </li>
+                        <li>
+                            <Link to="/shop">
+                                Shop
+                            </Link>
+                        </li>
                     </ul>
                 </div>
             </header>

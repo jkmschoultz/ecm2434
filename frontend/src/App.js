@@ -10,6 +10,7 @@ import Main from "./pages/main/main";
 import Register from "./pages/register/register";
 import protectedRoute from "./components/protectedRoute";
 import ProtectedRoute from "./components/protectedRoute";
+import Shop from "./pages/shop/shop";
 function App() {
   // const [currentTime, setCurrentTime] = useState(0);
   // const [currentDate, setCurrentDate] = useState(0);
@@ -32,6 +33,9 @@ function App() {
             </Route>
             <Route path = '/quiz' element = {<ProtectedRoute></ProtectedRoute>}>
               <Route index element = {<Quiz/>}></Route>
+            </Route>
+            <Route path = '/shop' element = {<ProtectedRoute></ProtectedRoute>}>
+              <Route index element = {<Shop/>}></Route>
             </Route>
             <Route path = '/cake' element = {<div>cake</div>}></Route>
             <Route path = '/register' element = {<Register></Register>}></Route>
