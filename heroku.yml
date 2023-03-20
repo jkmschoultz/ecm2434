@@ -1,7 +1,7 @@
 build:
   docker:
     web: frontend/Dockerfile
-    worker: worker/Dockerfile
+    worker: api/Dockerfile
 run:
   web: npm start
   worker: python manage.py runserver 0.0.0.0:8000
