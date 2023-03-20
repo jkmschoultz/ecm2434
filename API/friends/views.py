@@ -49,7 +49,7 @@ class allPending(APIView):
         # add the username of the requesters to the dictionary to be returned
         listOfPendingFriends = []
         for friend in friendsQuery:
-                listOfPendingFriends.append({"username" : friend.potentialFriend.username})
+                listOfPendingFriends.append({"username" : friend.user.username})
         
         dictOfFriends = {"data" : listOfPendingFriends}
 

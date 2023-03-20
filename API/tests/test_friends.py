@@ -18,8 +18,8 @@ class TestFriends(TestCase):
 
         # create 3 users but only add 2 of them as friends
         User.objects.create(username="TestFriend1",
-                    email="TestFriend1@gmail.com",
-                    name="TestName")
+            email="TestFriend1@gmail.com",
+            name="TestName")
         User.objects.create(username="TestFriend2",
             email="TestFriend2@gmail.com",
             name="TestName")
@@ -39,6 +39,36 @@ class TestFriends(TestCase):
         
         self.assertTrue(len(response.json().get("data")) == 2)
         self.assertTrue({"username" : "TestFriend1"} in response.json().get("data"))
+
+    def testAllPendingInvitesEndpoint(self):
+        # Test that the allPending endpoint retuns a dictionary of all the 
+        # pending invites the user has yet to accept
+
+        user = User.objects.get(username='TestUser')
+
+        # create 3 users but only have 2 of them request friendship
+        User.objects.create(username="TestFriend1",
+            email="TestFriend1@gmail.com",
+            name="TestName")
+        User.objects.create(username="TestFriend2",
+            email="TestFriend2@gmail.com",
+            name="TestName")
+        User.objects.create(username="TestFriend3",
+            email="TestFriend3@gmail.com",
+            name="TestName")
+        
+        PendingFriendInvite.objects.create(user=User.objects.get(username="TestFriend1"), potentialFriend=user)
+        PendingFriendInvite.objects.create(user=User.objects.get(username="TestFriend3"), potentialFriend=user)
+
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # Test post request to get all of the user's pending requests
+        data = {}
+        response = c.post('/friends/allPending', data=data)
+
+        self.assertTrue(len(response.json().get("data")) == 2)
+        self.assertTrue({"username" : "TestFriend3"} in response.json().get("data"))
 
 
 
