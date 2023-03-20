@@ -6,9 +6,13 @@ from rest_framework import status
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import RefreshToken
-import json
 
-from database.models import UserFriend, User, PendingFriendInvite
+import json
+from django.utils import timezone
+import datetime
+import pytz
+
+from database.models import UserFriend, User, PendingFriendInvite, FilledBottle
 
 class allFriends(APIView):
     permission_classes = [IsAuthenticated]
@@ -107,5 +111,51 @@ class accept(APIView):
         UserFriend(user=user, friend=friend)
         
         return JsonResponse({"data" : {"user" : user.username}, "friend" : friend.username})
+    
+class leaderboard(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # endpoint function to return a sorted list of all the user's friends number of bottles
+        # filled in the last week
+
+        user = request.user
+        friendsQuery = UserFriend.objects.filter(user=user) | UserFriend.objects.filter(friend=user)
+        
+        # get a list of all the user's friends
+        listOfFriends = []
+        for friendsPair in friendsQuery:
+            if friendsPair.user == user:
+                listOfFriends.append({"username" : friendsPair.friend.username})
+            else:
+                listOfFriends.append({"username" : friendsPair.user.username})
+
+        # get the bottles of all the friends in the last week and sort them
+        todaysDate = timezone.now()
+        endDate = todaysDate - datetime.timedelta(days=7)
+
+        listOfScores = []
+        userCount = FilledBottle.objects.filter(user=user,day__range=(todaysDate, endDate)).values().count()
+        listOfScores.append({"username" : user.username, "bottles" : userCount})
+
+        for friendUsername in listOfFriends:
+
+            # get the score for a friend
+            friend = User.objects.get(username=friendUsername)
+            friendCount = FilledBottle.objects.filter(user=friend,day__range=(todaysDate, endDate)).values().count()
+            inserted = False
+
+            # insert it in the right place in the list of scores
+            for index, score in enumerate(listOfScores):
+                if score.get("bottles") < friendCount:
+                    listOfScores.insert(index, {"username" : friend.username, "bottles" : friendCount})
+                    inserted = True
+                    break
+
+            if inserted == False:
+                listOfScores.append({"username" : friend.username, "bottles" : friendCount})
+
+        
+        return JsonResponse({"data" : listOfScores})
     
 

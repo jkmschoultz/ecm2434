@@ -10,5 +10,6 @@ urlpatterns = [
     path('allFriends', views.allFriends.as_view(), name='allFriends'),
     path('allPending', views.allPending.as_view(), name='allPending'),
     path('request', views.request.as_view(), name='request'),
-    path('accept', views.accept.as_view(), name='accept')
+    path('accept', views.accept.as_view(), name='accept'),
+    path('leadboard', views.leaderboard.as_view(), name='leaderboard')
 ]
