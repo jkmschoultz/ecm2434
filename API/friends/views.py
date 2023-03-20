@@ -1,3 +1,7 @@
+"""
+This module contains the endpoints and relevant functions related to the user friends feature.
+"""
+
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -141,23 +145,23 @@ class leaderboard(APIView):
         listOfFriends = []
         for friendsPair in friendsQuery:
             if friendsPair.user == user:
-                listOfFriends.append({"username" : friendsPair.friend.username})
+                listOfFriends.append(friendsPair.friend.username)
             else:
-                listOfFriends.append({"username" : friendsPair.user.username})
+                listOfFriends.append(friendsPair.user.username)
 
         # get the bottles of all the friends in the last week and sort them
         todaysDate = timezone.now()
         endDate = todaysDate - datetime.timedelta(days=7)
 
         listOfScores = []
-        userCount = FilledBottle.objects.filter(user=user,day__range=(todaysDate, endDate)).values().count()
+        userCount = FilledBottle.objects.filter(user=user,day__range=(endDate, todaysDate)).values().count()
         listOfScores.append({"username" : user.username, "bottles" : userCount})
 
         for friendUsername in listOfFriends:
 
             # get the score for a friend
             friend = User.objects.get(username=friendUsername)
-            friendCount = FilledBottle.objects.filter(user=friend,day__range=(todaysDate, endDate)).values().count()
+            friendCount = FilledBottle.objects.filter(user=friend,day__range=(endDate, todaysDate)).values().count()
             inserted = False
 
             # insert it in the right place in the list of scores

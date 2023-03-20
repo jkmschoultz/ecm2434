@@ -1,5 +1,11 @@
+'''
+This module tests all functionality and validation for the user friends feature
+'''
+
 from django.test import TestCase, Client
-from database.models import User, UserFriend, PendingFriendInvite, CustomAccountManager
+from database.models import User, UserFriend, PendingFriendInvite, CustomAccountManager, FilledBottle, Building
+import datetime
+import pytz
 
 from rest_framework.test import APIClient, APITestCase, force_authenticate
 from rest_framework_simplejwt.views import *
@@ -234,5 +240,49 @@ class TestFriends(TestCase):
         # check that the request was identified as invalid and that it was removed from the table
         self.assertTrue(response.json().get("data") == [])
         self.assertTrue(PendingFriendInvite.objects.all().count() == 0)
+
+    def testLeaderboardEndpoint(self):
+        # Test that the leaderboard endpoint returns the correct sorted list of friends
+
+        user = User.objects.get(username='TestUser')
+
+        # create users for the TestUser to be friends with
+        friend1 = User.objects.create(username="TestFriend1",
+                    email="TestFriend1@gmail.com",
+                    name="TestName")
+        friend2 = User.objects.create(username="TestFriend2",
+                    email="TestFriend2@gmail.com",
+                    name="TestName")
+        building = Building.objects.create(name="Test Building",
+                        latitude=5,
+                        longitude=5,
+                        radius=1)
+        
+        UserFriend.objects.create(user=user, friend=friend1)
+        UserFriend.objects.create(user=user, friend=friend2)
+        
+        # give the user's filled bottles
+        time = datetime.datetime.now(pytz.utc)
+        FilledBottle.objects.create(user=user, building=building, day=time)
+        FilledBottle.objects.create(user=friend1, building=building, day=time)
+        FilledBottle.objects.create(user=friend1, building=building, day=time)
+
+        # this bottle should not add to the leaderboards
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(days=8))
+
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # create a valid friends request
+        data = {}
+        response = c.post('/friends/leaderboard', data=data)
+
+        self.assertTrue(len(response.json().get("data")) == 3)
+        self.assertTrue(response.json().get("data")[0] == {'username': 'TestFriend1', 'bottles': 2})
+        self.assertTrue(response.json().get("data")[1] == {'username': 'TestUser', 'bottles': 1})
+        self.assertTrue(response.json().get("data")[2] == {'username': 'TestFriend2', 'bottles': 0})
+
+
+
 
 
