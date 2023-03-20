@@ -158,4 +158,3 @@ class leaderboard(APIView):
         
         return JsonResponse({"data" : listOfScores})
     
-
