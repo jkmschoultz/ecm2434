@@ -4,4 +4,4 @@ build:
     worker: API/Dockerfile
 run:
   web: npm start
-  worker: python manage.py runserver 0.0.0.0:8000
+  worker: python manage.py runserver 8000
