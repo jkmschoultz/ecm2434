@@ -189,4 +189,50 @@ class TestFriends(TestCase):
         self.assertTrue(UserFriend.objects.all().count() == 1)
         self.assertTrue(PendingFriendInvite.objects.all().count() == 0)
 
+    def testAcceptEndpointInvalid(self):
+        # Test that users cannot accept invalid friend requests
+
+        user = User.objects.get(username='TestUser')
+        
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # attempt to accept a made up request
+        data = {"friend username" : "InvaidUser"}
+        response = c.post('/friends/accept', data=data)
+
+        self.assertTrue(response.json().get("data") == [])
+        self.assertTrue(UserFriend.objects.all().count() == 0)
+
+    def testAcceptEndpointWhenFriends(self):
+        # Test that users cannot accept friend requests of users who are already their friend
+
+        user = User.objects.get(username='TestUser')
+
+        # create another user for the TestUser to be friends with
+        friend = User.objects.create(username="TestFriend1",
+                    email="TestFriend1@gmail.com",
+                    name="TestName")
+
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # create a valid friends request
+        data = {"friend username" : "TestFriend1"}
+        response = c.post('/friends/request', data=data)
+
+        # set the user's as friends so that the request should no longer work
+        UserFriend.objects.create(user=user, friend=friend)
+
+        c = APIClient()
+        c.force_authenticate(user=friend)
+
+        # try and accept the invalid friend request
+        data = {"friend username" : "TestUser"}
+        response = c.post('/friends/accept', data=data)
+
+        # check that the request was identified as invalid and that it was removed from the table
+        self.assertTrue(response.json().get("data") == [])
+        self.assertTrue(PendingFriendInvite.objects.all().count() == 0)
+
 

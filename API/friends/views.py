@@ -115,9 +115,10 @@ class accept(APIView):
         except:
             return JsonResponse({"data" : []})
         
-        # check that the users aren't already friends
+        # check that the users aren't already friends, if they are the request needs to be deleted
         if UserFriend.objects.filter(user=user, friend=friend).exists() or \
                 UserFriend.objects.filter(user=friend, friend=user).exists():
+            PendingFriendInvite.objects.get(user=friend, potentialFriend= user).delete()
             return JsonResponse({"data" : []})
         
         # make them friends <3
