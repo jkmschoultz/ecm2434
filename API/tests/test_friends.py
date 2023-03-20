@@ -161,5 +161,32 @@ class TestFriends(TestCase):
         # check that the friend request was identified as invalid
         self.assertTrue(response.json().get("data") == [])
 
+    def testAcceptEndpoint(self):
+        # Test that users can accept valid friend requests
+
+        user = User.objects.get(username='TestUser')
+
+        # create another user for the TestUser to be friends with
+        friend = User.objects.create(username="TestFriend1",
+                    email="TestFriend1@gmail.com",
+                    name="TestName")
+        
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # send the friend request to TestFriend1 from TestUser
+        data = {"friend username" : "TestFriend1"}
+        c.post('/friends/request', data=data)
+        self.assertTrue(PendingFriendInvite.objects.all().count() == 1)
+
+        c = APIClient()
+        c.force_authenticate(user=friend)
+        
+        # accept the friend request
+        data = {"friend username" : "TestUser"}
+        c.post('/friends/accept', data=data)
+
+        self.assertTrue(UserFriend.objects.all().count() == 1)
+        self.assertTrue(PendingFriendInvite.objects.all().count() == 0)
 
 

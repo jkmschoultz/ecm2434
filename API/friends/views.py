@@ -104,9 +104,9 @@ class accept(APIView):
             try:
                 body_unicode = request.body.decode('utf-8')
                 body_data = json.loads(body_unicode)
-                friend = float( body_data.get('friend username'))
+                friend = body_data.get('friend username')
             except:
-                friend = float( request.POST['friend username'] )
+                friend = request.POST['friend username'] 
 
         # validate that the request is real
         try:
@@ -115,11 +115,16 @@ class accept(APIView):
         except:
             return JsonResponse({"data" : []})
         
-        # make them friends <3
-        PendingFriendInvite.objects.delete(invite)
-        UserFriend(user=user, friend=friend)
+        # check that the users aren't already friends
+        if UserFriend.objects.filter(user=user, friend=friend).exists() or \
+                UserFriend.objects.filter(user=friend, friend=user).exists():
+            return JsonResponse({"data" : []})
         
-        return JsonResponse({"data" : {"user" : user.username}, "friend" : friend.username})
+        # make them friends <3
+        PendingFriendInvite.objects.get(user=friend, potentialFriend= user).delete()
+        UserFriend.objects.create(user=user, friend=friend)
+        
+        return JsonResponse({"data" : {"user" : user.username, "friend" : friend.username}})
     
 class leaderboard(APIView):
     permission_classes = [IsAuthenticated]
