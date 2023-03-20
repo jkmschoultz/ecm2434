@@ -33,3 +33,40 @@ In case of node module installation faults, navigate to the `frontend/` director
 Please note that [Node.js](https://nodejs.org/en/download/) must be installed on your system in order to do so.
 
 Once running, the frontend view can be found at <http://localhost:3000> and the backend is accessible at <http://localhost:8000>
+
+### Structure
+### Backend
+
+The backend is contained within the `API/` directory, and consists of multiple modules that each correspond to a different kind of interaction with the Django server. The backend has been designed in this way to minimise the potential for conflicts between collaborators.
+
+- The core Django module is located in the `backend/` subdirectory which contains all the settings and base URLs. Any additionally created modules with additional views should have the URL patterns included in `backend/urls.py`.
+- The `database/` module is responsible for designing models contained in the database, and registering these models to the Django admin view.
+- The `tests/` module contains all the tests for functionality of the server.
+- The `static/` directory contains any static references that are used by the server (eg. images) and is specified in the `backend/settings.py`.
+- The remaining modules are appropriately named referring to the types of interactions they handle with the server.
+
+The `Dockerfile` is responsible for settings up the backend docker image, installing any required packages in the environment.
+
+### Frontend
+
+The frontend is contained within the `frontend/` directory, where it is structured as a Reactjs application. The packages used are specified in the `package.json` and `package-lock.json` files. The source code can be found in the `src/` directory:
+
+- The core application is defined within `src/App.js`, which includes all the pages contained within the app.
+- The pages are all located in the `src/pages/` directory, where each page of the website contains its own respective subdirectory.
+- Components that are contained within some of the pages are located in the `src/components/` directory.
+- Assets (including logos, fonts and other images) that are used by the application are located within `src/assets/`.
+
+The `Dockerfile` sets up the frontend docker image, installing all the necessary packages and initializing the app to run.
+
+### Miscellaneous
+
+- The `Useful_Colours.txt` contains hexadecimal code references to the relevant university colour theme that is used throughout the app.
+- The `docker-compose.yaml` is responsible for initialising the frontend and backend docker images when the 'docker-compose' command is executed.
+
+## Testing
+
+The django tests are located in the `API/tests/` directory and can be run from the root directory with the command:
+
+    python3 API/manage.py test API/tests
+
+The tests are also run as part of the GitHub action on pull requests and merges.

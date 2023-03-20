@@ -19,6 +19,7 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from .views import index
 
+# Include urlpatterns for additional apps here
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index),
@@ -29,5 +30,6 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('quiz/', include('quiz.urls')),
     path('leaderboard/', include('leaderboard.urls')),
-    path('shop/', include('shop.urls'))
-]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('shop/', include('shop.urls')),
+    path('friends/', include('friends.urls'))
+]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)  # Include static folder in urls
