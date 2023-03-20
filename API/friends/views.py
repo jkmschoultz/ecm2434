@@ -6,8 +6,9 @@ from rest_framework import status
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import RefreshToken
+import json
 
-from database.models import UserFriend, User
+from database.models import UserFriend, User, PendingFriendInvite
 
 class allFriends(APIView):
     permission_classes = [IsAuthenticated]
@@ -19,6 +20,7 @@ class allFriends(APIView):
         user = request.user
         friendsQuery = UserFriend.objects.filter(user=user) | UserFriend.objects.filter(friend=user)
 
+        # add the username paired with the user's to the dictionary to be returned
         listOfFriends = []
         for friendsPair in friendsQuery:
             if friendsPair.user == user:
@@ -29,4 +31,51 @@ class allFriends(APIView):
         dictOfFriends = {"data" : listOfFriends}
 
         return JsonResponse(dictOfFriends)
+    
+class allPending(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # endpoint function to pending invites the user has recieved
+
+        # search the PendingFriendInvite table for all records of the user having a pending invite sent to them
+        user = request.user
+        friendsQuery = PendingFriendInvite.objects.filter(potentialFriend=user)
+
+        # add the username of the requesters to the dictionary to be returned
+        listOfPendingFriends = []
+        for friend in friendsQuery:
+                listOfPendingFriends.append({"username" : friend.potentialFriend.username})
+        
+        dictOfFriends = {"data" : listOfPendingFriends}
+
+        return JsonResponse(dictOfFriends)
+    
+class request(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # endpoint function to allow a user to request the friendship of another user
+
+        user = request.user
+        friend = ""
+        if request.method == 'POST':
+            # get the friend username from POST request
+            try:
+                body_unicode = request.body.decode('utf-8')
+                body_data = json.loads(body_unicode)
+                friend = float( body_data.get('friend username'))
+            except:
+                friend = float( request.POST['friend username'] )
+
+        # validate that the friend is a real user
+        try:
+            friend = User.objects.get(username=friend)
+        except:
+            return JsonResponse({"data" : []})
+        
+        PendingFriendInvite.objects.create(user=user, potentialFriend=friend)
+        
+        return JsonResponse({"data" : {"username" : friend.username}})
+    
 
