@@ -9,15 +9,13 @@ class TestFriends(TestCase):
 
     def setUp(self):
         # Set up test case that runs before every test
-        User.objects.create(username="TestUser",
-                            email="TestUser@gmail.com",
-                            name="TestName")
+        User.objects.create_user(username="TestUser", email="test@gmail.com", password="test")
 
     def testAllFriendsEndpoint(self):
         # Test that the AllFriends endpoint returns a list of all the friends of the user
 
         c = Client()
-        c.login(username="TestUser", password="")
+        c.login(username="TestUser", password="test")
         
         # Test post request
         data = {}

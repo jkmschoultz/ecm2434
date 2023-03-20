@@ -78,4 +78,34 @@ class request(APIView):
         
         return JsonResponse({"data" : {"username" : friend.username}})
     
+class accept(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # endpoint function to allow a user to accept the friendship request of another user
+
+        user = request.user
+        friend = ""
+        if request.method == 'POST':
+            # get the friend username from POST request
+            try:
+                body_unicode = request.body.decode('utf-8')
+                body_data = json.loads(body_unicode)
+                friend = float( body_data.get('friend username'))
+            except:
+                friend = float( request.POST['friend username'] )
+
+        # validate that the request is real
+        try:
+            friend = User.objects.get(username=friend)
+            invite = PendingFriendInvite.objects.get(user=friend, potentialFriend=user)
+        except:
+            return JsonResponse({"data" : []})
+        
+        # make them friends <3
+        PendingFriendInvite.objects.delete(invite)
+        UserFriend(user=user, friend=friend)
+        
+        return JsonResponse({"data" : {"user" : user.username}, "friend" : friend.username})
+    
 
