@@ -96,5 +96,32 @@ class TestFriends(TestCase):
         self.assertTrue(len(response.json().get("data")) == 1)
         self.assertTrue(response.json().get("data") == [{'username': 'TestUser'}])
 
+    def testRequestEndpointRepeated(self):
+        # Test that the request endpoint allows the user to request the friendship of another user
+
+        user = User.objects.get(username='TestUser')
+
+        # create another user for the TestUser to request
+        User.objects.create(username="TestFriend1",
+            email="TestFriend1@gmail.com",
+            name="TestName")
+        
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # send the friend request from the TestUser to the TestFriend1 twice
+        data = {"friend username" : "TestFriend1"}
+        response = c.post('/friends/request', data=data)
+        response = c.post('/friends/request', data=data)
+
+        # check that the request only works once
+        c = APIClient()
+        c.force_authenticate(user=User.objects.get(username="TestFriend1"))
+        data = {}
+        response = c.post('/friends/allPending', data=data)
+
+        self.assertTrue(len(response.json().get("data")) == 1)
+        self.assertTrue(response.json().get("data") == [{'username': 'TestUser'}])
+
 
 

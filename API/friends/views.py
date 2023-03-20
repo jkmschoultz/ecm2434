@@ -78,7 +78,10 @@ class request(APIView):
         except:
             return JsonResponse({"data" : []})
         
-        PendingFriendInvite.objects.create(user=user, potentialFriend=friend)
+        try:
+            PendingFriendInvite.objects.get(user=user, potentialFriend=friend)
+        except:
+            PendingFriendInvite.objects.create(user=user, potentialFriend=friend)
         
         return JsonResponse({"data" : {"username" : friend.username}})
     
