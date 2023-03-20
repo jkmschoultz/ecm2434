@@ -97,7 +97,7 @@ class TestFriends(TestCase):
         self.assertTrue(response.json().get("data") == [{'username': 'TestUser'}])
 
     def testRequestEndpointRepeated(self):
-        # Test that the request endpoint allows the user to request the friendship of another user
+        # Test that the request endpoint can't be used repeatedly on the same user
 
         user = User.objects.get(username='TestUser')
 
@@ -122,6 +122,44 @@ class TestFriends(TestCase):
 
         self.assertTrue(len(response.json().get("data")) == 1)
         self.assertTrue(response.json().get("data") == [{'username': 'TestUser'}])
+
+    def testRequestEndpointInvalid(self):
+        # Test that the request endpoint doesn't break when passed an invalid username
+
+        user = User.objects.get(username='TestUser')
+        
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # send the friend request from the TestUser to an invalid username
+        data = {"friend username" : "InvalidUser"}
+        response = c.post('/friends/request', data=data)
+
+        # check that the friend request was identified as invalid
+        self.assertTrue(response.json().get("data") == [])
+
+    def testRequestEndpointForFriends(self):
+        # Test that the request endpoint doesn't allow you to request
+        # the friendship of a user who is already your friend
+
+        user = User.objects.get(username='TestUser')
+
+        # create another user for the TestUser to be friends with
+        friend = User.objects.create(username="TestFriend1",
+                    email="TestFriend1@gmail.com",
+                    name="TestName")
+        
+        UserFriend.objects.create(user=user, friend=friend)
+        
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # send the friend request from the TestUser to an existing friend
+        data = {"friend username" : "InvalidUser"}
+        response = c.post('/friends/request', data=data)
+
+        # check that the friend request was identified as invalid
+        self.assertTrue(response.json().get("data") == [])
 
 
 

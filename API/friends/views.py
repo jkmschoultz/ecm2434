@@ -78,6 +78,12 @@ class request(APIView):
         except:
             return JsonResponse({"data" : []})
         
+        # check that the users aren't already friends
+        if UserFriend.objects.filter(user=user, friend=friend).exists() or \
+                UserFriend.objects.filter(user=friend, friend=user).exists():
+            return JsonResponse({"data" : []})
+            
+        # valitday that this request isn't already pending
         try:
             PendingFriendInvite.objects.get(user=user, potentialFriend=friend)
         except:
