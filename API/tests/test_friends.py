@@ -33,7 +33,7 @@ class TestFriends(TestCase):
         c = APIClient()
         c.force_authenticate(user=user)
         
-        # Test post request to get all of the user's friends
+        # test post request to get all of the user's friends
         data = {}
         response = c.post('/friends/allFriends', data=data)
         
@@ -63,12 +63,38 @@ class TestFriends(TestCase):
         c = APIClient()
         c.force_authenticate(user=user)
         
-        # Test post request to get all of the user's pending requests
+        # test post request to get all of the user's pending requests
         data = {}
         response = c.post('/friends/allPending', data=data)
 
         self.assertTrue(len(response.json().get("data")) == 2)
         self.assertTrue({"username" : "TestFriend3"} in response.json().get("data"))
+
+    def testRequestEndpoint(self):
+        # Test that the request endpoint allows the user to request the friendship of another user
+
+        user = User.objects.get(username='TestUser')
+
+        # create another user for the TestUser to request
+        User.objects.create(username="TestFriend1",
+            email="TestFriend1@gmail.com",
+            name="TestName")
+        
+        c = APIClient()
+        c.force_authenticate(user=user)
+        
+        # send the friend request from the TestUser to the TestFriend1
+        data = {"friend username" : "TestFriend1"}
+        response = c.post('/friends/request', data=data)
+
+        # check that the invite now shows in the pending invites of TestFriend1
+        c = APIClient()
+        c.force_authenticate(user=User.objects.get(username="TestFriend1"))
+        data = {}
+        response = c.post('/friends/allPending', data=data)
+
+        self.assertTrue(len(response.json().get("data")) == 1)
+        self.assertTrue(response.json().get("data") == [{'username': 'TestUser'}])
 
 
 

@@ -68,9 +68,9 @@ class request(APIView):
             try:
                 body_unicode = request.body.decode('utf-8')
                 body_data = json.loads(body_unicode)
-                friend = float( body_data.get('friend username'))
+                friend = body_data.get('friend username')
             except:
-                friend = float( request.POST['friend username'] )
+                friend = request.POST['friend username'] 
 
         # validate that the friend is a real user
         try:
