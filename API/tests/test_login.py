@@ -77,7 +77,7 @@ class TestAuthentication(APITestCase):
         except:
             pass
 
-    def testUsernameValidation(self):
+    def testUsernameRepetition(self):
         # Test that a user cannot create an account with a taken username
         c = Client()
 
@@ -92,6 +92,25 @@ class TestAuthentication(APITestCase):
         # Verify that the account was not created
         try:     
             User.objects.get(username='test')
+            self.assertFalse(True)
+        except:
+            pass
+
+    def testUsernameValidation(self):
+        # Test that a user cannot create an account with an empty username
+        c = Client()
+
+        # Data to create a user
+        data = {
+            'username': '',
+            'email': 'test@user.com',
+            'password': 'abc'
+        }
+        response = c.post('/auth/register', data=data)
+
+        # Verify that the account was not created
+        try:     
+            User.objects.get(username='')
             self.assertFalse(True)
         except:
             pass
