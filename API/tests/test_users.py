@@ -2,15 +2,23 @@ from database.models import *
 from django.test import TestCase, Client
 from users import views
 from achievements.views import getAllUserAchievements
+from django.conf import settings
 
 class TestUser(TestCase):
     def setUp(self):
-        User.objects.create(username = "unitTestUser", email = "test@gmail.com", name = "unitTest",
+        user = User.objects.create(username = "unitTestUser", email = "test@gmail.com", name = "unitTest",
             xp = 20, points = 7, has_been_verified=False)
         Building.objects.create(name="Test Building",
                         latitude=5,
                         longitude=5,
                         radius=1)
+        pp = ShopItem.objects.create(name='User', type = 'Profile Picture', cost = 0, availableForPurchase = False, image = 'static/shop_items/User.png')
+        border = ShopItem.objects.create(name='Black Border', type = 'Border', cost = 0, availableForPurchase = False, image = 'static/shop_items/Black_Border.png')
+        background = ShopItem.objects.create(name='White Background', type = 'Background', cost = 0, availableForPurchase = False, image = 'static/shop_items/White_Background.png')
+        user.profile_pic = pp
+        user.profile_border = border
+        user.profile_background = background
+        user.save()
 
     # Clean up run after every test method    
     def tearDown(self):
@@ -27,6 +35,9 @@ class TestUser(TestCase):
         self.assertEqual(user.level, data['level'])
         self.assertEqual(user.email, data['email'])
         self.assertEqual(user.points, data['points'])
+        self.assertEqual(settings.BASE_URL + user.profile_pic.image.url, data['profile_pic'])
+        self.assertEqual(settings.BASE_URL + user.profile_border.image.url, data['profile_border'])
+        self.assertEqual(settings.BASE_URL + user.profile_background.image.url, data['profile_background'])
         self.assertEqual(getAllUserAchievements('unitTestUser'), data["achievements"])
 
     # Test to see if the endpoint for verifing a user works

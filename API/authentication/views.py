@@ -24,6 +24,9 @@ class CreateUser(APIView):
                 UserItem.objects.create(user = newuser, item = ShopItem.objects.get(name = 'User'))
                 UserItem.objects.create(user = newuser, item = ShopItem.objects.get(name = 'Black Border'))
                 UserItem.objects.create(user = newuser, item = ShopItem.objects.get(name = 'White Background'))
+                newuser.profile_pic = UserItem.objects.get(name='User').pk
+                newuser.profile_border = UserItem.objects.get(name='Black Border').pk
+                newuser.profile_background = UserItem.objects.get(name='White Background').pk
                 refresh = RefreshToken.for_user(newuser)
                 return JsonResponse({
                     'token': str(refresh.access_token),
