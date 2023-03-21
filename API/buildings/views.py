@@ -1,5 +1,5 @@
 from django.conf import settings
-from database.models import Building
+from database.models import Building, BuildingFloor
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -38,7 +38,8 @@ def index(request):
             'id': building.id,
             'distance': distance,
             'image_path': settings.BASE_URL + building.image.url,
-            'is_accessible': distance <= building.radius
+            'is_accessible': distance <= building.radius,
+            'floors': floors(building.id)
         })
     # Sort by distance and return first 6
     data = sorted(data, key=lambda x: x['distance'])
@@ -53,3 +54,16 @@ def detail(request, building_id):
         'longitude': building.longitude
     }
     return JsonResponse(data)
+
+def floors(building_id):
+    # Endpoint to get the floor number and image for a specific building
+    building = get_object_or_404(Building, pk=building_id)
+    buildingFloors = list(BuildingFloor.objects.filter(building = building))
+    data = []
+    #gets each floor in a building and adds it to a dictionary
+    for floor in buildingFloors:
+        image = floor.image
+        floorNumber = int(floor.floorNumber)
+        data.append({'image': settings.BASE_URL + image.url,
+            'floor_number': floorNumber})
+    return data

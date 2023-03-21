@@ -145,7 +145,7 @@ class BuildingFloor(models.Model):
     floorNumber = models.IntegerField()
     
     def __str__(self):
-        return self.building.name + ',' + self.floorNumber
+        return str(self.building.name) + ',' + str(self.floorNumber)
     
 class FilledBottle(models.Model):
     # The database model for a bottle being filled by a user

@@ -1,17 +1,27 @@
 from django.test import TestCase, Client
-from database.models import Building, Leaderboard, User
+from database.models import Building, Leaderboard, User, BuildingFloor
 
 # Create test cases for testing building functionality here
 class TestBuildings(TestCase):
     def setUp(self):
         # Set up test objects for use in each of the test cases
         for i in range(10):
-            Building.objects.create(
+            building = Building.objects.create(
                 name='test' + str(i),
                 latitude=i * 10,
                 longitude=i * 10,
                 radius=5,
                 image='test' + str(i)
+            )
+            BuildingFloor.objects.create(
+                building = building,
+                image = 'static/floors/Laver_6th.png',
+                floorNumber = 6
+            )
+            BuildingFloor.objects.create(
+                building = building,
+                image = 'static/floors/Laver_7th.png',
+                floorNumber = 7
             )
 
     def tearDown(self):
@@ -50,6 +60,10 @@ class TestBuildings(TestCase):
             name = buildings[i]['name']
             expected = 'test' + str(i)
             self.assertEqual(name, expected)
+        # Assert floor plans are passed with
+        buildings = list(buildings)
+        building_data = buildings[0]
+        self.assertEqual(len(building_data['floors']),2)
     
     def test_is_accessible(self):
         # Test building accessibility
