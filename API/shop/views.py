@@ -5,9 +5,12 @@ they may spend their points on items to customize their profile.
 
 
 import math
-from django.shortcuts import get_object_or_404, render
-from django.http import Http404, HttpResponse, JsonResponse
+import json
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import Http404, HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from database.models import UserAchievement,User,Achievement, FilledBottle, Building, ShopItem, UserItem
 
@@ -121,3 +124,63 @@ def someOwned(request, current_username : str, item_type : str) -> JsonResponse:
             dictOfUnownedItems.get("data").append(str(userItem.item))
 
     return JsonResponse(dictOfUnownedItems)
+
+class AuthAllAvailable(APIView):
+    # Redirect to get all purchasable items for an authenticated user
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Get username of authenticated user and redirect
+        user = request.user
+        print(request.user)
+        return redirect('shop:allAvailable', current_username=user.username)
+    
+class AuthSomeAvailable(APIView):
+    # Redirect to get purchasable items for a given type
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, item_type):
+        # Get username of authenticated user and redirect
+        user = request.user
+        return redirect('shop:someAvailable', current_username=user.username, item_type=item_type)
+
+class AuthPurchase(APIView):
+    # Allow an authenticated user to purchase an item
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        # Get username of authenticated user and redirect
+        user = request.user
+        # Get name of item being purchased from post body
+        item = ''
+        try:
+            body_unicode = request.body.decode('utf-8')
+            body_data = json.loads(body_unicode)
+            item = str( body_data.get('item_name'))
+        except:
+            item = str( request.POST['item_name'] )
+
+        # Redirect to purchase of item if found
+        if item != '':
+            return redirect('shop:purchase', current_username=user.username, item_name=item)
+        else:
+            return HttpResponseBadRequest('Must provide name of item to purchase')
+
+class AuthAllOwned(APIView):
+    # Get all items owned for an authenticated user
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Get username of authenticated user and redirect
+        user = request.user
+        return redirect('shop:allOwned', current_username=user.username)
+
+class AuthSomeOwned(APIView):
+    # Get items of a specified type that are owned by an authenticated user
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, item_type):
+        # Get username of authenticated user and redirect
+        user = request.user
+        return redirect('shop:someOwned', current_username=user.username, item_type=item_type)
+
