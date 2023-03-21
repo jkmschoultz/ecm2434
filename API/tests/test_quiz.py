@@ -30,8 +30,8 @@ class TestQuiz(TestCase):
         c.force_authenticate(user=user)
         
         # test post request to get all of the user's pending requests
-        data = {}
-        response = c.post("/quiz/", data=data)
+        data = json.dumps({'correct':3,'building': 'test'})
+        c.post("/quiz/", data=data)
         leaderboard = Leaderboard.objects.filter(building = building_test)
         self.assertEqual(len(leaderboard), 2)'''
         
