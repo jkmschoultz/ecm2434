@@ -91,10 +91,30 @@ class TestAuthentication(APITestCase):
 
         # Verify that the account was not created
         try:     
+            User.objects.get(username='test')
+            self.assertFalse(True)
+        except:
+            pass
+
+    def testPasswordValidation(self):
+        # Test that a user cannot create an account with an empty password
+        c = Client()
+
+        # Data to create a user
+        data = {
+            'username': 'created',
+            'email': 'test@user.com',
+            'password': ''
+        }
+        response = c.post('/auth/register', data=data)
+
+        # Verify that the account was not created
+        try:     
             User.objects.get(username='created')
             self.assertFalse(True)
         except:
             pass
+
 
 
 
