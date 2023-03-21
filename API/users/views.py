@@ -2,9 +2,12 @@ import math
 import json
 from database.models import User, UserAchievement, Achievement
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from achievements.views import getAllUserAchievements
 from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 ##Creates a function for frontend to make a POST request to backend
 @csrf_exempt
@@ -65,6 +68,11 @@ def getUserProfileData(request, current_username):
         "profile_background": settings.BASE_URL + profile_background.url
     })
 
-    
+class AuthGetUserData(APIView):
+    # Redirect to get profile data for an authorised user
+    permission_classes = [IsAuthenticated]
 
-
+    def get(self, request):
+        # Get username of authenticated user and redirect
+        user = request.user
+        return redirect('users:getUserProfileData', current_username=user.username)
