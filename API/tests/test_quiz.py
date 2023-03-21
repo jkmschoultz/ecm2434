@@ -1,37 +1,36 @@
-'''from database.models import *
+from database.models import *
 from django.test import TestCase, Client
 from rest_framework.test import APIClient
 import json
 
 class TestQuiz(TestCase):
     def setUp(self):
-        building1 = Building.objects.create(name='test', latitude=10, longitude=10, radius=5)
-        user1 = User.objects.create(username = "unitTestUser", email = "test@gmail.com", password="jibba jabba", name = "unitTest",
+        building = Building.objects.create(name='test', latitude=10, longitude=10, radius=5)
+        user = User.objects.create(username = "unitTestUser", email = "test@gmail.com", password="jibba jabba", name = "unitTest",
             xp = 20, points = 7, has_been_verified=False)
-        Leaderboard.objects.create(building = building1, user = user1)
+        Leaderboard.objects.create(building = building, user = user)
 
     # Clean up run after every test method    
     def tearDown(self):
         pass
 
-    def normalize_email(self,email):
-        return email
-    
-    def model(self,email, username, **other_fields):
-        return User.objects.create(email=email, username=username, **other_fields)
-
     def testQuiz(self):
+        # Test that user answers to quiz are correctly processed
         building_test = Building.objects.get(name = 'test')
+        # Verify leaderboard exists in building
         leaderboard = Leaderboard.objects.filter(building = building_test)
         self.assertEqual(len(leaderboard), 1)
 
+        # Simulate user answers to quiz
         user = User.objects.get(username='unitTestUser')
         c = APIClient()
         c.force_authenticate(user=user)
-        
-        # test post request to get all of the user's pending requests
-        data = json.dumps({'correct':3,'building': 'test'})
+        data = {'correct':3,'building': 'test'}  # Sample quiz result data
         c.post("/quiz/", data=data)
+
+        # Verify leaderboard has been updated
         leaderboard = Leaderboard.objects.filter(building = building_test)
-        self.assertEqual(len(leaderboard), 2)'''
+        self.assertEqual(len(leaderboard), 1)
+        entry = leaderboard[0]
+        self.assertEqual(entry.user_points_in_building, 15)  # 15 points for 3 right answers
         

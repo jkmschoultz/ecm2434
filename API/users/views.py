@@ -1,6 +1,6 @@
 import math
 import json
-from database.models import User, UserAchievement, Achievement, FilledBottle, Building, UserItem, ShopItem
+from database.models import User, FilledBottle, Building, UserItem, ShopItem, Leaderboard
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -52,13 +52,18 @@ def bottleFilled(request, current_username, building_name):
 
     # create a record of the user filling a bottle
     time = datetime.datetime.now(pytz.utc)
+    building = Building.objects.get(name=building_name)
     FilledBottle.objects.create(user=updating_user, 
-                               building=Building.objects.get(name=building_name),
+                               building=building,
                                 day=time)
 
     updating_user.xp = updating_user.xp + 10
     updating_user.bottles += 1
     updating_user.save()
+    # Add user to leaderboard for building
+    leaderboard, created = Leaderboard.objects.get_or_create(building=building, user=updating_user)
+    leaderboard.user_points_in_building += 10
+    leaderboard.save()
     # Redirect to get quiz questions once bottle filled
     return redirect('questions:questions')
 

@@ -27,6 +27,7 @@ class CreateUser(APIView):
                 newuser.profile_pic = ShopItem.objects.get(name="User")
                 newuser.profile_border = ShopItem.objects.get(name="Black Border")
                 newuser.profile_background = ShopItem.objects.get(name="White Background")
+                newuser.save()
                 refresh = RefreshToken.for_user(newuser)
                 return JsonResponse({
                     'token': str(refresh.access_token),
