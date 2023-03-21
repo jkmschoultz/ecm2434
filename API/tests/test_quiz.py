@@ -1,4 +1,4 @@
-'''from database.models import *
+from database.models import *
 from django.test import TestCase, Client
 from rest_framework.test import APIClient
 import json
@@ -33,5 +33,5 @@ class TestQuiz(TestCase):
         data = json.dumps({'correct':3,'building': 'test'})
         c.post("/quiz/", data=data)
         leaderboard = Leaderboard.objects.filter(building = building_test)
-        self.assertEqual(len(leaderboard), 2)'''
+        self.assertEqual(len(leaderboard), 2)
         
