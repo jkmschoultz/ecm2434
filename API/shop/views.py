@@ -37,11 +37,11 @@ def allAvailable(request, current_username : str) -> JsonResponse:
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : True, "cost" : item.cost,
+                                                        "purchasable" : True, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
             else:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : False, "cost" : item.cost,
+                                                        "purchasable" : False, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
 
     return JsonResponse(dictOfUnownedItems)
@@ -67,11 +67,11 @@ def someAvailable(request, current_username : str, item_type : str) -> JsonRespo
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : True, "cost" : item.cost,
+                                                        "purchasable" : True, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
             else:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : False, "cost" : item.cost,
+                                                        "purchasable" : False, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
 
     return JsonResponse(dictOfUnownedItems)
