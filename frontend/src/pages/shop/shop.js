@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from "../../components/navbar";
 import styles from './shop.module.css';
 import droplet from "../../assets/droplet.png";
+import axiosInstance from "axios";
 const Shop = () => {
     const [itemType, setItemType] = useState('backgrounds');
     const [selectedItem, setSelectedItem] = useState(null);
@@ -39,6 +40,18 @@ const Shop = () => {
     ];
     const [items, setItems] = useState(testItems);
 
+    const sendPurchaseRequest = (itemName) => {
+        const body = { item_name: itemName };
+
+        axiosInstance.post('/shop/auth-purchase', body)
+            .then(response => {
+                // Handle successful response here
+            })
+            .catch(error => {
+                // Handle error here
+                console.error('There was a problem with the purchase:', error);
+            });
+    };
 
     useEffect(() => {
         // Fetch items from backend based on current itemType
@@ -88,7 +101,7 @@ const Shop = () => {
                                     </div>
                                     <img src={droplet} className={styles.droplet}/>
                                 </div>
-                                <button>Purchase</button>
+                                <button onClick={sendPurchaseRequest(selectedItem.name)}>Purchase</button>
                             </div>
                         </div>
                     </div>
