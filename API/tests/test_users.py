@@ -12,7 +12,7 @@ class TestUser(TestCase):
     def tearDown(self):
         pass
 
-    # Test that /buildusersings/<username> path returns correct building information
+    # Test that /users/<username> path returns correct building information
     def testUserProfileData(self):
         c = Client()
         user = User.objects.get(username='unitTestUser')

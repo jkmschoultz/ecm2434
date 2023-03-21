@@ -30,6 +30,26 @@ class CustomAccountManager(BaseUserManager):
         user.set_password(password)
         user.save()
         return user
+    
+class ShopItem(models.Model):
+    # The database model for an item in the shop for the app
+    name = models.CharField(max_length=255, unique=True)
+    type = models.CharField(max_length=255)
+    cost = models.PositiveIntegerField()
+    availableForPurchase = models.BooleanField(default=True)
+    image = models.ImageField(blank=True, upload_to='static/shop_items/')
+
+    def get_default_profile_pic():
+        return ShopItem.objects.get(name='User').pk
+    
+    def get_default_border():
+        return ShopItem.objects.get(name='Black Border').pk
+    
+    def get_default_background():
+        return ShopItem.objects.get(name='White Background').pk
+    
+    def __str__(self):
+        return self.name + ', ' + self.type
 
 class User(AbstractBaseUser, PermissionsMixin):
     # The database model for a user in the app
@@ -42,7 +62,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     one_time_code = models.CharField(max_length=6, default=123456)
     has_been_verified = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    #profile_pic = models.ImageField( default=ShopItem.objects.get(name = 'User'), on_delete=models.SET_DEFAULT, related_name='profile_pic')
+    profile_pic = models.ForeignKey(ShopItem, default = ShopItem.get_default_profile_pic(), on_delete=models.SET_DEFAULT, related_name='profile_pic')
+    profile_border = models.ForeignKey(ShopItem, default = ShopItem.get_default_border(), on_delete=models.SET_DEFAULT, related_name='profile_border')
+    profile_background = models.ForeignKey(ShopItem, default = ShopItem.get_default_background(), on_delete=models.SET_DEFAULT, related_name='profile_background')
     
+
     # Calculate the level of a user from their XP gained
     @property
     def level(self):
@@ -130,17 +155,6 @@ class FilledBottle(models.Model):
 
     def __str__(self):
         return self.user.username + ', ' + self.building.name + ', ' + str(self.day)
-
-class ShopItem(models.Model):
-    # The database model for an item in the shop for the app
-    name = models.CharField(max_length=255)
-    type = models.CharField(max_length=255)
-    cost = models.PositiveIntegerField()
-    availableForPurchase = models.BooleanField(default=True)
-    image = models.ImageField(blank=True, upload_to='static/shop_items/')
-
-    def __str__(self):
-        return self.name + ', ' + self.type
 
 class UserItem(models.Model):
     # The database model for an item that is owned by a user

@@ -4,6 +4,7 @@ from database.models import User, UserAchievement, Achievement
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from achievements.views import getAllUserAchievements
+from django.conf import settings
 
 ##Creates a function for frontend to make a POST request to backend
 @csrf_exempt
@@ -47,6 +48,9 @@ def getUserProfileData(request, current_username):
     xpLeft = int(user.xpLeft)
     points = int(user.points)
     email = user.email
+    profile_pic = user.profile_pic.image
+    profile_border = user.profile_border.image
+    profile_background = user.profile_background.image
     achievement = getAllUserAchievements(current_username)
     return JsonResponse({
         "name":name,
@@ -55,7 +59,10 @@ def getUserProfileData(request, current_username):
         "XP":xpLeft,
         "email":email,
         "points": points,
-        "achievements": achievement
+        "achievements": achievement,
+        "profile_pic": settings.BASE_URL + profile_pic.url,
+        "profile_border": settings.BASE_URL + profile_border.url,
+        "profile_background": settings.BASE_URL + profile_background.url
     })
 
     
