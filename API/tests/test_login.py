@@ -45,7 +45,7 @@ class TestAuthentication(APITestCase):
 
 
     def testVerifyUser(self):
-        # Test that a user can be autherticated and returns the correct user details
+        # Test that a user can be authenticated and returns the correct user details
 
         c = APIClient()
         user = User.objects.get(username='test')
@@ -57,6 +57,16 @@ class TestAuthentication(APITestCase):
         self.assertTrue(response.json().get("username") == "test")
         self.assertTrue(response.json().get("email") == "test@user.com")
         self.assertTrue(response.json().get("points") == 0)
+
+    def testVerifyUserInvalid(self):
+        # Test that a user not logged in cannot be authenticated
+
+        c = APIClient()
+        user = User.objects.get(username='test')
+        response = c.post('/auth/')
+        
+        # assert that the user cannot access this endpoint
+        self.assertTrue(response.status_code == 401)
 
     def testEmailValidation(self):
         # Test that a user cannot create an account with an invalid email
