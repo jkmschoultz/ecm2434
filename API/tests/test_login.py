@@ -11,17 +11,21 @@ from authentication.views import GetUser
 class TestAuthentication(APITestCase):
     def setUp(self):
         # Set up test user object
-        User.objects.create_user(username='test', email='test@user.com', password='abc123')
+        user = User.objects.create_user(username='test', email='test@user.com', password='abc123')
         pp = ShopItem.objects.create(name='User', type = 'Profile Picture', cost = 0, availableForPurchase = False, image = 'static/shop_items/User.png')
         border = ShopItem.objects.create(name='Black Border', type = 'Border', cost = 0, availableForPurchase = False, image = 'static/shop_items/Black_Border.png')
         background = ShopItem.objects.create(name='White Background', type = 'Background', cost = 0, availableForPurchase = False, image = 'static/shop_items/White_Background.png')
-
+        user.profile_pic = pp
+        user.profile_border = border
+        user.profile_background = background
+        user.save()
 
     def tearDown(self):
         # Clean up run after every test method
         pass
 
-    def test_register_user(self):
+    def testRegisterUser(self):
+        # Test that a user can create an account with valid credentials
         c = Client()
 
         # Data to create a user
@@ -40,11 +44,20 @@ class TestAuthentication(APITestCase):
         self.assertIsNotNone(tokens.get('refresh'))
 
 
-    def test_verify_user(self):
+    def testVerifyUser(self):
+        # Test that a user can be autherticated and returns the correct user details
+
         c = APIClient()
         user = User.objects.get(username='test')
         c.force_authenticate(user=user)
-        # success = c.login(username='test', password='abc123')
-        # print(success)
         response = c.post('/auth/')
-        print(response)
+        self.assertTrue(response.url == "/users/test/")
+
+        response = c.post(response.url)
+        self.assertTrue(response.json().get("username") == "test")
+        self.assertTrue(response.json().get("email") == "test@user.com")
+        self.assertTrue(response.json().get("points") == 0)
+
+
+
+    
