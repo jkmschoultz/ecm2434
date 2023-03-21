@@ -43,8 +43,8 @@ class TestShop(TestCase):
         response = c.get('/shop/available/TestUser/')
         # only two items should be available
         self.assertTrue(len(response.json().get("data")) == 2)
-        unaffordableItem = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "cost" : 25}
-        affordableItem = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "cost" : 15}
+        unaffordableItem = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "price" : 25}
+        affordableItem = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "price" : 15}
         self.assertTrue(affordableItem in response.json().get("data"))
         self.assertTrue(unaffordableItem in response.json().get("data"))
 
@@ -61,7 +61,7 @@ class TestShop(TestCase):
         response = c.get('/shop/available/TestUser/Border/')
 
         # only one item is of type Border and not already owned by the user
-        item = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "cost" : 15}
+        item = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "price" : 15}
         self.assertTrue(response.json().get("data") == [item])
 
     def testPurchasableBoolean(self):
@@ -82,10 +82,10 @@ class TestShop(TestCase):
         response = c.get('/shop/available/TestUser/')
 
         # only two of the created items should be affordable for the user
-        item1 = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "cost" : 25}
-        item2 = {"name":"Test Item 2", "item type" : "Border", "purchasable" : True, "cost" : 15}
-        item3 = {"name":"Test Item 3", "item type" : "Background", "purchasable" : False, "cost" : 25}
-        item4 = {"name":"Test Item 4", "item type" : "Background", "purchasable" : True, "cost" : 20}
+        item1 = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "price" : 25}
+        item2 = {"name":"Test Item 2", "item type" : "Border", "purchasable" : True, "price" : 15}
+        item3 = {"name":"Test Item 3", "item type" : "Background", "purchasable" : False, "price" : 25}
+        item4 = {"name":"Test Item 4", "item type" : "Background", "purchasable" : True, "price" : 20}
 
         self.assertTrue(item1 in response.json().get("data"))
         self.assertTrue(item2 in response.json().get("data"))
