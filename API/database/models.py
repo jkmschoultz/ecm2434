@@ -63,9 +63,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     has_been_verified = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     #profile_pic = models.ImageField( default=ShopItem.objects.get(name = 'User'), on_delete=models.SET_DEFAULT, related_name='profile_pic')
-    profile_pic = models.ForeignKey(ShopItem, default = ShopItem.get_default_profile_pic(), on_delete=models.SET_DEFAULT, related_name='profile_pic')
-    profile_border = models.ForeignKey(ShopItem, default = ShopItem.get_default_border(), on_delete=models.SET_DEFAULT, related_name='profile_border')
-    profile_background = models.ForeignKey(ShopItem, default = ShopItem.get_default_background(), on_delete=models.SET_DEFAULT, related_name='profile_background')
+    profile_pic = models.ForeignKey(ShopItem, null=True, default = None, on_delete=models.SET(ShopItem.get_default_profile_pic()), related_name='profile_pic')
+    profile_border = models.ForeignKey(ShopItem, null=True, default = None, on_delete=models.SET(ShopItem.get_default_border()), related_name='profile_border')
+    profile_background = models.ForeignKey(ShopItem, null=True, default = None, on_delete=models.SET(ShopItem.get_default_background()), related_name='profile_background')
     
 
     # Calculate the level of a user from their XP gained
