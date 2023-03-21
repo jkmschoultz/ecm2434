@@ -10,11 +10,13 @@ urlpatterns = [
     ##Endpoint for verifing the users account
     path('<username>/verify/', views.verifyAccount, name='verifyAccount'),
     ##Endpoint for adding xp for when a user filles a bottle
-    path('<current_username>/fillBottle/', views.bottleFilled, name='bottleFilled'),
+    path('fillBottle/<current_username>/<building_name>/', views.bottleFilled, name='bottleFilled'),
     ##Endpoint for setting a users name
     path('<current_username>/setName/<new_name>/', views.setName, name='setName'),
     ##Endpoint for registering a user
     path('register', views.index, name='index'),
     ##Endpoint for registering a user
-    path('setPic/<name>/<type>/', views.setUserPics, name='index')
+    path('setPic/<name>/<type>/', views.setUserPics, name='index'),
+    # Endpoint to get data for an authorised user
+    path('data', views.AuthGetUserData.as_view(), name='authGetUserProfileData')
 ]
