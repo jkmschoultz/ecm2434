@@ -57,8 +57,10 @@ def bottleFilled(request, current_username, building_name):
                                 day=time)
 
     updating_user.xp = updating_user.xp + 10
+    updating_user.bottles += 1
     updating_user.save()
-    return JsonResponse({})
+    # Redirect to get quiz questions once bottle filled
+    return redirect('questions:questions')
 
 ##Updates the name of a user 
 def setName(request, current_username, new_name):
@@ -78,6 +80,7 @@ def getUserProfileData(request, current_username):
     profile_pic = user.profile_pic.image
     profile_border = user.profile_border.image
     profile_background = user.profile_background.image
+    bottles_filled = user.bottles
     achievement = getAllUserAchievements(current_username)
     return JsonResponse({
         "name":name,
@@ -89,7 +92,8 @@ def getUserProfileData(request, current_username):
         "achievements": achievement,
         "profile_pic": settings.BASE_URL + profile_pic.url,
         "profile_border": settings.BASE_URL + profile_border.url,
-        "profile_background": settings.BASE_URL + profile_background.url
+        "profile_background": settings.BASE_URL + profile_background.url,
+        "bottles_filled": bottles_filled
     })
 
 ## Function that sets the pictures of a user
