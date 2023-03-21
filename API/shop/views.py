@@ -11,6 +11,7 @@ from django.http import Http404, HttpResponse, JsonResponse, HttpResponseBadRequ
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.conf import settings
 
 from database.models import UserAchievement,User,Achievement, FilledBottle, Building, ShopItem, UserItem
 
@@ -36,10 +37,12 @@ def allAvailable(request, current_username : str) -> JsonResponse:
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : True, "cost" : item.cost})
+                                                        "purchasable" : True, "cost" : item.cost,
+                                                        "image" : settings.BASE_URL + item.image.url})
             else:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : False, "cost" : item.cost})
+                                                        "purchasable" : False, "cost" : item.cost,
+                                                        "image" : settings.BASE_URL + item.image.url})
 
     return JsonResponse(dictOfUnownedItems)
 
@@ -64,10 +67,12 @@ def someAvailable(request, current_username : str, item_type : str) -> JsonRespo
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : True, "cost" : item.cost})
+                                                        "purchasable" : True, "cost" : item.cost,
+                                                        "image" : settings.BASE_URL + item.image.url})
             else:
                 dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
-                                                        "purchasable" : False, "cost" : item.cost})
+                                                        "purchasable" : False, "cost" : item.cost,
+                                                        "image" : settings.BASE_URL + item.image.url})
 
     return JsonResponse(dictOfUnownedItems)
 
