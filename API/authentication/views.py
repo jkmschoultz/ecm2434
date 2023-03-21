@@ -8,6 +8,8 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from database.models import UserItem, ShopItem
+
 class CreateUser(APIView):
     # An endpoint for creating a user in the app, returns the access and refresh token for the user
     permission_classes = [AllowAny]  # Allow anyone to create a user
@@ -18,6 +20,10 @@ class CreateUser(APIView):
         if reg_serializer.is_valid():
             newuser = reg_serializer.save()
             if newuser:
+                # Unlocks the standard items for a user
+                UserItem.objects.create(user = newuser, item = ShopItem.objects.get(name = 'User'))
+                UserItem.objects.create(user = newuser, item = ShopItem.objects.get(name = 'Black Border'))
+                UserItem.objects.create(user = newuser, item = ShopItem.objects.get(name = 'White Background'))
                 refresh = RefreshToken.for_user(newuser)
                 return JsonResponse({
                     'token': str(refresh.access_token),
