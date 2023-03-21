@@ -11,10 +11,15 @@ class LogAnswers(APIView):
     def post(self, request):
         # Get data passed from POST
         user = request.user
-        body_unicode = request.body.decode('utf-8')
-        body_data = json.loads(body_unicode)
-        correct = int( body_data.get('correct'))
-        building_name = str(body_data.get('building'))
+        correct, building_name = '', ''
+        try:
+            body_unicode = request.body.decode('utf-8')
+            body_data = json.loads(body_unicode)
+            correct = int( body_data.get('correct'))
+            building_name = str(body_data.get('building'))
+        except:
+            correct = int(request.POST['correct'])
+            building_name = str(request.POST['building'])
         building = Building.objects.get(name=building_name)
 
         # Add 5 XP for every correct answer and increment number of bottles drank by user
