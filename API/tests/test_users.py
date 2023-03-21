@@ -4,11 +4,15 @@ from users import views
 from achievements.views import getAllUserAchievements
 from django.conf import settings
 
+import datetime
+from django.utils import timezone
+import pytz
+
 class TestUser(TestCase):
     def setUp(self):
         user = User.objects.create(username = "unitTestUser", email = "test@gmail.com", name = "unitTest",
             xp = 20, points = 7, has_been_verified=False)
-        Building.objects.create(name="Test Building",
+        Building.objects.create(name="TestBuilding",
                         latitude=5,
                         longitude=5,
                         radius=1)
@@ -54,9 +58,47 @@ class TestUser(TestCase):
         c = Client()
         user = User.objects.get(username='unitTestUser')
         self.assertEqual(user.xp, 20)
-        c.get('/users/' + 'unitTestUser/' + 'Test Building' + '/fillBottle/')
+        response = c.get('/users/fillBottle/unitTestUser/TestBuilding/')
         updated_user = User.objects.get(username='unitTestUser')
         self.assertEqual(updated_user.xp, 30)
+        self.assertEqual(FilledBottle.objects.all().count(), 1)
+
+    # Test that a user cannot fill up two bottles within the space of 10 minutes
+    def testUserFillBottleInvalid(self):
+        c = Client()
+        user = User.objects.get(username="unitTestUser")
+        building = Building.objects.get(name="TestBuilding")
+        self.assertEqual(user.xp, 20)
+        time = datetime.datetime.now(pytz.utc)
+
+        # the user has now filled a bottle 5 minutes ago so should not be allowed to fill another bottle
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(minutes=5))
+
+        response = c.get('/users/fillBottle/unitTestUser/TestBuilding/')
+        
+        # check that the user has not gained the invalid filled bottle and that the endpoint
+        # returns the time left till the user can refill a bottle
+        user = User.objects.get(username="unitTestUser")
+        self.assertEqual(user.xp, 20)
+        self.assertEqual(FilledBottle.objects.all().count(), 1)
+        self.assertTrue(response.json().get("data").get("minutes") == 4)
+        self.assertTrue(response.json().get("data").get("seconds") < 60)
+
+    # Test that a user can fill a bottle when their previous fill was over 10 minutes beforehand
+    def testUserFillBottleValid(self):
+        c = Client()
+        user = User.objects.get(username="unitTestUser")
+        building = Building.objects.get(name="TestBuilding")
+        self.assertEqual(user.xp, 20)
+        time = datetime.datetime.now(pytz.utc)
+
+        # the user has now filled a bottle 15 minutes ago so they can fill another bottle
+        FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(minutes=15))
+
+        response = c.get('/users/fillBottle/unitTestUser/TestBuilding/')
+        updated_user = User.objects.get(username='unitTestUser')
+        self.assertEqual(updated_user.xp, 30)
+        self.assertEqual(FilledBottle.objects.all().count(), 2)
 
     # Test to see if the endpoint for changing name works
     def testUserName(self):
