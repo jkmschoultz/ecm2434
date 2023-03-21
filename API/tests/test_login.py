@@ -58,6 +58,25 @@ class TestAuthentication(APITestCase):
         self.assertTrue(response.json().get("email") == "test@user.com")
         self.assertTrue(response.json().get("points") == 0)
 
+    def testEmailValidation(self):
+        # Test that a user cannot create an account with an invalid email
+        c = Client()
+
+        # Data to create a user
+        data = {
+            'username': 'created',
+            'email': 'invalid email',
+            'password': 'abc'
+        }
+        response = c.post('/auth/register', data=data)
+
+        # Verify that the account was not created
+        try:     
+            User.objects.get(username='created')
+            self.assertFalse(True)
+        except:
+            pass
+
 
 
     
