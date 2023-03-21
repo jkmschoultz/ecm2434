@@ -1,6 +1,6 @@
 import math
 import json
-from database.models import User, UserAchievement, Achievement
+from database.models import User, UserAchievement, Achievement, UserItem, ShopItem
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from achievements.views import getAllUserAchievements
@@ -64,6 +64,35 @@ def getUserProfileData(request, current_username):
         "profile_border": settings.BASE_URL + profile_border.url,
         "profile_background": settings.BASE_URL + profile_background.url
     })
+
+## Function that sets the pictures of a user
+def setUserPics(self, request, name, type):
+    user = request.user
+    # Checks the type of the image change
+    if type == 'Profile Picture':
+        try:
+            # Checks to see if the image exists and if the user owns it
+            item = ShopItem.objects.get(name = name)
+            UserItem.objects.get(item = item)
+            user.profile_pic.image = item
+        except:
+            return JsonResponse({})
+    elif type == 'Border':
+        try:
+            # Checks to see if the image exists and if the user owns it
+            item = ShopItem.objects.get(name = name)
+            UserItem.objects.get(item = item)
+            user.profile_border.image = item
+        except:
+            return JsonResponse({})
+    elif type == 'Background':
+        try:
+            # Checks to see if the image exists and if the user owns it
+            item = ShopItem.objects.get(name = name)
+            UserItem.objects.get(item = item)
+            user.profile_background.image = item
+        except:
+            return JsonResponse({})
 
     
 
