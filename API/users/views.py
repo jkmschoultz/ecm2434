@@ -1,10 +1,14 @@
 import math
 import json
-from database.models import User, UserAchievement, Achievement, UserItem, ShopItem
+from database.models import User, UserAchievement, Achievement, FilledBottle, Building, UserItem, ShopItem
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from achievements.views import getAllUserAchievements
 from django.conf import settings
+
+import datetime
+from django.utils import timezone
+import pytz
 
 ##Creates a function for frontend to make a POST request to backend
 @csrf_exempt
@@ -26,9 +30,29 @@ def verifyAccount(request, username):
     updating_user.save()
     return JsonResponse({})
 
-##Adds xp when a bottle is filled
-def bottleFilled(request, current_username):
+##Adds xp when a valid bottle is filled
+def bottleFilled(request, current_username, building_name):
     updating_user = User.objects.get(username = current_username)
+
+    # if user has filled a bottle in the last 10 minutes don't let them fill again
+    time = datetime.datetime.now(pytz.utc)
+    endTime = time
+    startTime = time - datetime.timedelta(minutes=10)
+    relevantBottles = FilledBottle.objects.filter(user=updating_user,day__range=(startTime, endTime)).values()
+
+    # return the time left until the user is allowed to track another filled bottle
+    if relevantBottles.count() > 0:
+        lastBottle = relevantBottles.last().get("day")
+        timeRemaining = datetime.timedelta(minutes = 10) - (time - lastBottle)
+        return JsonResponse({"data" : {"minutes" : timeRemaining.seconds // 60,
+                                        "seconds" : timeRemaining.seconds % 60}})
+
+    # create a record of the user filling a bottle
+    time = datetime.datetime.now(pytz.utc)
+    FilledBottle.objects.create(user=updating_user, 
+                               building=Building.objects.get(name=building_name),
+                                day=time)
+
     updating_user.xp = updating_user.xp + 10
     updating_user.save()
     return JsonResponse({})
