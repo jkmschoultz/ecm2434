@@ -7,6 +7,10 @@ class TestUser(TestCase):
     def setUp(self):
         User.objects.create(username = "unitTestUser", email = "test@gmail.com", name = "unitTest",
             xp = 20, points = 7, has_been_verified=False)
+        Building.objects.create(name="Test Building",
+                        latitude=5,
+                        longitude=5,
+                        radius=1)
 
     # Clean up run after every test method    
     def tearDown(self):
@@ -39,7 +43,7 @@ class TestUser(TestCase):
         c = Client()
         user = User.objects.get(username='unitTestUser')
         self.assertEqual(user.xp, 20)
-        c.get('/users/' + 'unitTestUser' + '/fillBottle/')
+        c.get('/users/' + 'unitTestUser/' + 'Test Building' + '/fillBottle/')
         updated_user = User.objects.get(username='unitTestUser')
         self.assertEqual(updated_user.xp, 30)
 
