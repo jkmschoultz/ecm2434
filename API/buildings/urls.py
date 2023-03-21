@@ -7,5 +7,4 @@ app_name = 'buildings'
 urlpatterns = [
     path('', views.index, name='index'),
     path('<int:building_id>/', views.detail, name='detail'),
-    #path('floors/<int:building_id>/', views.floors, name='floors'),
 ]

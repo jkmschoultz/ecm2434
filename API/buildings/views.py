@@ -58,7 +58,7 @@ def detail(request, building_id):
 def floors(building_id):
     # Endpoint to get the floor number and image for a specific building
     building = get_object_or_404(Building, pk=building_id)
-    buildingFloors = list(BuildingFloor.objects.filter(building = building))
+    buildingFloors = list(BuildingFloor.objects.filter(building = building).order_by('floorNumber'))
     data = []
     #gets each floor in a building and adds it to a dictionary
     for floor in buildingFloors:
