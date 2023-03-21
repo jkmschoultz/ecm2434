@@ -3,7 +3,7 @@ import Navbar from "../../components/navbar";
 import styles from './shop.module.css';
 import droplet from "../../assets/droplet.png";
 import axiosInstance from "axios";
-const Shop = () => {
+const Shop = ({ onPurchaseSuccess }) => {
     const [itemType, setItemType] = useState('backgrounds');
     const [selectedItem, setSelectedItem] = useState(null);
     const testItems = [
@@ -38,20 +38,14 @@ const Shop = () => {
             price: '90'
         }
     ];
-    const [items, setItems] = useState(testItems);
-
-    const sendPurchaseRequest = (itemName) => {
-        const body = { item_name: itemName };
-
-        axiosInstance.post('/shop/auth-purchase', body)
-            .then(response => {
-                // Handle successful response here
-            })
-            .catch(error => {
-                // Handle error here
-                console.error('There was a problem with the purchase:', error);
-            });
+    const handlePurchase = () => {
+        // Call the onPurchaseSuccess function with the selected item name and price
+        onPurchaseSuccess(selectedItem.name, selectedItem.price);
+        // Close the popup
+        setSelectedItem(null);
     };
+
+    const [items, setItems] = useState(testItems);
 
     useEffect(() => {
         // Fetch items from backend based on current itemType
@@ -101,7 +95,7 @@ const Shop = () => {
                                     </div>
                                     <img src={droplet} className={styles.droplet}/>
                                 </div>
-                                <button onClick={sendPurchaseRequest(selectedItem.name)}>Purchase</button>
+                                <button onClick={handlePurchase}>Purchase</button>
                             </div>
                         </div>
                     </div>
