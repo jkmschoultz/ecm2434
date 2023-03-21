@@ -138,6 +138,7 @@ class TestBuildings(TestCase):
         for floor in data:
             num = floor['floor_number']
             self.assertTrue(num > old_num)
+            old_num = num
         
 
 

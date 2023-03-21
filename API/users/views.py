@@ -1,6 +1,6 @@
 import math
 import json
-from database.models import User, UserAchievement, Achievement, FilledBottle, Building, UserItem, ShopItem
+from database.models import User, FilledBottle, Building, UserItem, ShopItem, Leaderboard
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
@@ -52,13 +52,20 @@ def bottleFilled(request, current_username, building_name):
 
     # create a record of the user filling a bottle
     time = datetime.datetime.now(pytz.utc)
+    building = Building.objects.get(name=building_name)
     FilledBottle.objects.create(user=updating_user, 
-                               building=Building.objects.get(name=building_name),
+                               building=building,
                                 day=time)
 
     updating_user.xp = updating_user.xp + 10
+    updating_user.bottles += 1
     updating_user.save()
-    return JsonResponse({})
+    # Add user to leaderboard for building
+    leaderboard, created = Leaderboard.objects.get_or_create(building=building, user=updating_user)
+    leaderboard.user_points_in_building += 10
+    leaderboard.save()
+    # Redirect to get quiz questions once bottle filled
+    return redirect('questions:questions')
 
 ##Updates the name of a user 
 def setName(request, current_username, new_name):
@@ -78,6 +85,7 @@ def getUserProfileData(request, current_username):
     profile_pic = user.profile_pic.image
     profile_border = user.profile_border.image
     profile_background = user.profile_background.image
+    bottles_filled = user.bottles
     achievement = getAllUserAchievements(current_username)
     return JsonResponse({
         "name":name,
@@ -89,7 +97,8 @@ def getUserProfileData(request, current_username):
         "achievements": achievement,
         "profile_pic": settings.BASE_URL + profile_pic.url,
         "profile_border": settings.BASE_URL + profile_border.url,
-        "profile_background": settings.BASE_URL + profile_background.url
+        "profile_background": settings.BASE_URL + profile_background.url,
+        "bottles_filled": bottles_filled
     })
 
 ## Function that sets the pictures of a user

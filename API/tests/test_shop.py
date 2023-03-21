@@ -4,6 +4,7 @@ This module tests all functionality and validation for the user's points shop.
 
 from django.test import TestCase, Client
 from database.models import Achievement,UserAchievement,User,Building, FilledBottle, ShopItem, UserItem
+from django.conf import settings
 
 # Create test cases for testing shop functionality here
 class TestShop(TestCase):
@@ -14,13 +15,16 @@ class TestShop(TestCase):
                             name="TestName")
         ShopItem.objects.create(name="Test Item 1",
                                 type="Border",
-                                cost=25)
+                                cost=25,
+                                image = 'static/floors/Pink.png')
         ShopItem.objects.create(name="Test Item 2",
                                 type="Border",
-                                cost=15)
+                                cost=15,
+                                image = 'static/floors/Black_Border.png')
         ShopItem.objects.create(name="Test Item 3",
                                 type="Background",
-                                cost=25)
+                                cost=25,
+                                image = 'static/floors/White_Background.png')
 
     def tearDown(self):
         # Clean up run after every test method
@@ -43,8 +47,10 @@ class TestShop(TestCase):
         response = c.get('/shop/available/TestUser/')
         # only two items should be available
         self.assertTrue(len(response.json().get("data")) == 2)
-        unaffordableItem = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "price" : 25}
-        affordableItem = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "price" : 15}
+        unaffordableItem = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "price" : 25,
+                             'image' : settings.BASE_URL + '/static/floors/Pink.png'}
+        affordableItem = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "price" : 15,
+                           'image' : settings.BASE_URL + '/static/floors/Black_Border.png'}
         self.assertTrue(affordableItem in response.json().get("data"))
         self.assertTrue(unaffordableItem in response.json().get("data"))
 
@@ -61,7 +67,8 @@ class TestShop(TestCase):
         response = c.get('/shop/available/TestUser/Border/')
 
         # only one item is of type Border and not already owned by the user
-        item = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "price" : 15}
+        item = {"name":"Test Item 2", "item type" : "Border", "purchasable" : False, "price" : 15,
+                 'image' : settings.BASE_URL + '/static/floors/Black_Border.png'}
         self.assertTrue(response.json().get("data") == [item])
 
     def testPurchasableBoolean(self):
@@ -76,16 +83,21 @@ class TestShop(TestCase):
         # add a border case
         ShopItem.objects.create(name="Test Item 4",
                                 type="Background",
-                                cost=20)
+                                cost=20,
+                                image = 'static/floors/White_Background.png')
         
         c = Client()
         response = c.get('/shop/available/TestUser/')
 
         # only two of the created items should be affordable for the user
-        item1 = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "price" : 25}
-        item2 = {"name":"Test Item 2", "item type" : "Border", "purchasable" : True, "price" : 15}
-        item3 = {"name":"Test Item 3", "item type" : "Background", "purchasable" : False, "price" : 25}
-        item4 = {"name":"Test Item 4", "item type" : "Background", "purchasable" : True, "price" : 20}
+        item1 = {"name":"Test Item 1", "item type" : "Border", "purchasable" : False, "price" : 25,
+                  'image' : settings.BASE_URL + '/static/floors/Pink.png'}
+        item2 = {"name":"Test Item 2", "item type" : "Border", "purchasable" : True, "price" : 15,
+                  'image' : settings.BASE_URL + '/static/floors/Black_Border.png'}
+        item3 = {"name":"Test Item 3", "item type" : "Background", "purchasable" : False, "price" : 25,
+                  'image' : settings.BASE_URL + '/static/floors/White_Background.png'}
+        item4 = {"name":"Test Item 4", "item type" : "Background", "purchasable" : True, "price" : 20,
+                  'image' : settings.BASE_URL + '/static/floors/White_Background.png'}
 
         self.assertTrue(item1 in response.json().get("data"))
         self.assertTrue(item2 in response.json().get("data"))
