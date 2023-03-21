@@ -1,0 +1,7 @@
+build:
+  docker:
+    web: frontend/Dockerfile
+    worker: API/Dockerfile
+run:
+  web: npm start
+  worker: gunicorn api.wsgi:application --bind 0.0.0.0:8000
