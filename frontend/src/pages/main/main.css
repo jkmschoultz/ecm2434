@@ -1,29 +1,113 @@
+
 @font-face {
     font-family: Roboto;
     src: url("../../assets/fonts/Roboto-Medium.ttf");
 }
 
-
-.site-content{
-    background-image: url("../../assets/water.png");
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position:  right 25% bottom 75%;
-    background-attachment: fixed;
-    align-items: end;
-    height: 600px;
-    size: 95%;
+/* styles for all devices */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.container {
-    text-align: start;
-    padding-top: 150px; /* adds padding to the top of the container */
+/* to  set background image to cover whole page */
+.background-image {
+    background-image: url('../../assets/pexels-marianne-rixhon-6233582.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: -1;
+}
+
+/* centre contents so it works on small screens */
+.overlay {
+    max-width: 800px;
+    margin: 10% auto 0;
+    padding: 5%;
+    text-align: center;
+    position: relative;
+    color: #00FFFF or #00BFFF;
+    text-shadow: 2px 2px 4px black;
     font-family: Georgia, serif;
-    color: #077563;
 }
 
-/*logo home page*/
-.img-thumbnail {
-    display: inline-block; /* makes the image a block-level element */
-    margin-right: 20px; /* adds some space to the right of the image */
+/* to adjust logo  
+.logo {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin-top: 20px;
+    border: 5px solid #9c9a9a;
+
+}
+*/
+/*adjust padding device */
+.container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 5%;
+    margin-top: 17%;
+}
+
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col-sm-6 {
+    width: 50%;
+    padding: 0 15px;
+    
+}
+
+/* adjust heading and paragraph font sizes for smaller screens */
+h1 {
+    font-size: 3rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+p {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* adjust image size */
+.img-responsive {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    
+}
+
+/* to fit small screens */
+@media only screen and (max-width: 767px) {
+    .overlay {
+        margin: 20% auto 0;
+        font-size: 0.8rem;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
 }

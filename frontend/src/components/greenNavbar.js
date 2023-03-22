@@ -10,7 +10,7 @@ const greenNavbar = () => {
         <>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"/>
         <header>
-            <div className="navbar-fixed-top" style={{backgroundColor: "#00c896"}}>
+            <div className="navbar-fixed-top" style={{backgroundColor: "#ededed"}}>
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <Link to="/" className="navbar-brand">
