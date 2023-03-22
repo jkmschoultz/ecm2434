@@ -1,5 +1,5 @@
 from django.test import TestCase, Client
-from database.models import Building, User, Leaderboard
+from database.models import Building, User, Leaderboard, ShopItem
 
 # Create test cases for testing leaderboard functionality here
 class TestLeaderboard(TestCase):
@@ -22,6 +22,18 @@ class TestLeaderboard(TestCase):
         Leaderboard.objects.create(building = building , user = user3 , user_points_in_building = 3)
         Leaderboard.objects.create(building = building , user = user4 , user_points_in_building = 4)
         Leaderboard.objects.create(building = building , user = user5 , user_points_in_building = 5)
+
+        pp = ShopItem.objects.create(name='User', type = 'Profile Picture', cost = 0, availableForPurchase = False, image = 'static/shop_items/User.png')
+        border = ShopItem.objects.create(name='Black Border', type = 'Border', cost = 0, availableForPurchase = False, image = 'static/shop_items/Black_Border.png')
+        background = ShopItem.objects.create(name='White Background', type = 'Background', cost = 0, availableForPurchase = False, image = 'static/shop_items/White_Background.png')
+
+        users = list(User.objects.all())
+        for user_add in users:
+            user_add.profile_pic = pp
+            user_add.profile_border = border
+            user_add.profile_background = background
+            user_add.save()
+
 
     def tearDown(self):
         # Clean up run after every test method
