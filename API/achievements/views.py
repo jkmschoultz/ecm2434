@@ -155,7 +155,8 @@ def getAllUserAchievements(current_username : str) -> list:
         except:
             listOfAchievements.append({"name" : achievement.name, "challenge" : achievement.challenge, "has" : False})
 
-    return listOfAchievements
+    #Return list of achievements, with the ones the user has appearing first
+    return sorted(listOfAchievements, key=lambda d: d['has'], reverse=True)
 
 
 def totalFilledBottlesAchievementCheck(current_username : str, dictOfNewAchievements : dict) -> list:
