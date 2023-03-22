@@ -1,5 +1,6 @@
 from django.test import TestCase, Client
 from database.models import Building, User, Leaderboard, ShopItem
+from django.conf import settings
 
 # Create test cases for testing leaderboard functionality here
 class TestLeaderboard(TestCase):
@@ -82,3 +83,23 @@ class TestLeaderboard(TestCase):
         response = c.get('/leaderboard/zzzzzzzz/')
         # Verify response code is 404 not found
         self.assertEqual(response.status_code, 404)
+
+    def test_leaderboard_urls(self):
+        # Test that the leaderboard endpoint returns the correct url for user picture and border
+
+        c = Client()
+
+        # Get leaderboard for 'test' building
+        response = c.get('/leaderboard/test/')
+        data = response.json().get('data')
+        
+        # check that the images for all the user are correct
+        for user_details in data:
+            self.assertTrue(user_details.get("profile_pic") ==
+                             settings.BASE_URL + "/" + str(User.objects.get(
+                            username=user_details.get("username")).profile_pic.image))
+            self.assertTrue(user_details.get("border") == 
+                            settings.BASE_URL + "/"+ str(User.objects.get(
+                            username=user_details.get("username")).profile_border.image))
+
+
