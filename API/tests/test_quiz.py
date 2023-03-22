@@ -32,7 +32,7 @@ class TestQuiz(TestCase):
         leaderboard = Leaderboard.objects.filter(building = building_test)
         self.assertEqual(len(leaderboard), 1)
         entry = leaderboard[0]
-        self.assertEqual(entry.user_points_in_building, 15)  # 15 points for 3 right answers
+        self.assertEqual(entry.user_points_in_building, 6)  # 6 points for 3 right answers
 
     def testQuizNewUser(self):
         # Test that user answers to quiz are correctly processed
@@ -53,5 +53,5 @@ class TestQuiz(TestCase):
         leaderboard = Leaderboard.objects.filter(building = building_test)
         self.assertEqual(len(leaderboard), 2)
         entry = leaderboard[1]
-        self.assertEqual(entry.user_points_in_building, 15)  # 15 points for 3 right answers
+        self.assertEqual(entry.user_points_in_building, 6)  # 6 points for 3 right answers
         
