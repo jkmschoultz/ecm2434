@@ -11,7 +11,7 @@ const Navbar = ({flag}) => {
 
     useEffect(() => {
         // Fetch user data from backend
-        axiosInstance.get('user')
+        axiosInstance.get(`users/data`)
             .then(response => {
                 setPoints(response.data.points);
             })

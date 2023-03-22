@@ -100,8 +100,18 @@
 .achievementButtonEarned {
     background-color: #ABEDA5;
     position: relative;
-  }
+}
 
+.edit {
+    width: 2%;
+    height: 4%;
+    margin-top: 2%;
+    margin-right: 3%;
+}
+.editPhoto {
+    width: 200%;
+    height: 200%;
+}
 .achievementButton {
     background-color: #EDEDED;
 }

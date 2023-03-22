@@ -45,7 +45,7 @@ const Shop = () => {
     const handlePurchase = () => {
         // Make a post request to purchase the selected item
         const body = { item_name: selectedItem.name, price: selectedItem.price };
-        axiosInstance.post('shop/auth-purchase', body)
+        axiosInstance.post('shop/auth-purchase/', body)
             .then(response => {
                 // Close the popup
                 setSelectedItem(null);

@@ -6,6 +6,8 @@ import classes from './profile.module.css';
 import axiosInstance from "../../axios";
 import styles from "../shop/shop.module.css";
 import droplet from "../../assets/droplet.png";
+import editLogo from "../../assets/editLogo.png";
+import {Link} from "react-router-dom";
 
 const Profile = () => {
     //get list of achievements ,and whether they are completed or not
@@ -65,6 +67,7 @@ const Profile = () => {
                         ))}
                     </div>
                 </div>
+                    <Link to="/edit" className={classes.edit}><img src={editLogo} className={classes.editPhoto}></img></Link>
             </div>
         </div>
     );
