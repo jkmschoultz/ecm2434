@@ -41,7 +41,7 @@
     grid-template-columns: repeat(4, 1fr);
     grid-row-gap: 30px;
     grid-column-gap: 10%;
-    max-height: calc(4 * 300px + 90px); /* Increase the max-height to show 4 rows */
+    max-height: 100%;   /* Increase the max-height to show 4 rows */
     overflow-y: scroll;
     padding: 3%;
     margin-top: -1%;

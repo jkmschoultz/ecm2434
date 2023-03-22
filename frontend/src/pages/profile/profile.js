@@ -4,6 +4,8 @@ import photo from '../../assets/useravatar.png';
 
 import classes from './profile.module.css';
 import axiosInstance from "../../axios";
+import styles from "../shop/shop.module.css";
+import droplet from "../../assets/droplet.png";
 
 const Profile = () => {
     //get list of achievements ,and whether they are completed or not
@@ -35,10 +37,6 @@ const Profile = () => {
             <header>
                 <Navbar />
             </header>
-            <head>
-                <title>User Profile</title>
-                <link rel="stylesheet" href="style.css" />
-            </head>
             <div className={classes.container}>
                 <div className={classes.sidebar} style={{borderImage:`url(http://${items.profile_border}) 20% repeat`}}>
                     <div className={classes.profile} style={{ background: `url(http://${items.profile_background})` , backgroundSize: 'cover', backgroundPosition: 'center' }}>
@@ -53,23 +51,18 @@ const Profile = () => {
                         </div>
                     </div>
                 </div>
-                <div className={classes.main}>
-                    <div className={classes.achievements}>
-                        <h2>Achievements</h2>
-                        <div className={classes.achievementContainer}>
-                            <button className={classes.achievementButton}>
-                                You filled your first water bottle!
-                                <span className={classes.star1}></span>
+                <div className={classes.achievements}>
+                    <h2>Achievements</h2>
+                    <div className={classes.achievementContainer}>
+                        {items.achievements.map((item, _) => (
+                            <button className={`${classes.achievementButton} ${item.has ? classes.achievementButtonEarned : ''}`}>
+                                <div className={classes.description}>
+                                    <div className={classes.challengeName}>{item.name}</div>
+                                    <div className={classes.challenge}>{item.challenge}</div>
+                                </div>
+                                <span className={`${classes.star} ${item.has ? classes.starAchieved : ''}`}></span>
                             </button>
-                            <button className={classes.achievementButton}>
-                                You filled water bottle 50 times!
-                                <span className={classes.star2}></span>
-                            </button>
-                            <button className={classes.achievementButton}>
-                                You are in top 10 on the leaderboard!
-                                <span className={classes.star3}></span>
-                            </button>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </div>
