@@ -113,7 +113,12 @@ def allOwned(request, current_username : str) -> JsonResponse:
     userItems = UserItem.objects.filter(user=user)
 
     for userItem in userItems:
-        dictOfUnownedItems.get("data").append(str(userItem.item))
+        item = {
+            "name" : userItem.item.name,
+            "item_type" : userItem.item.type,
+            "image" : settings.BASE_URL + userItem.item.image.url
+        }
+        dictOfUnownedItems.get("data").append(item)
 
     return JsonResponse(dictOfUnownedItems)
 
@@ -130,7 +135,12 @@ def someOwned(request, current_username : str, item_type : str) -> JsonResponse:
 
         # only add the item to the response dictionary if the item is of the right type
         if userItem.item.type == item_type:
-            dictOfUnownedItems.get("data").append(str(userItem.item))
+            item = {
+                "name" : userItem.item.name,
+                "item_type" : userItem.item.type,
+                "image" : settings.BASE_URL + userItem.item.image.url
+            }
+            dictOfUnownedItems.get("data").append(item)
 
     return JsonResponse(dictOfUnownedItems)
 
