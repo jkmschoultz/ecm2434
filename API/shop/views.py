@@ -147,6 +147,7 @@ class AuthAllAvailable(APIView):
 class AuthSomeAvailable(APIView):
     # Redirect to get purchasable items for a given type
     permission_classes = [IsAuthenticated]
+
     def get(self, request, item_type):
         # Get username of authenticated user and redirect
         user = request.user
