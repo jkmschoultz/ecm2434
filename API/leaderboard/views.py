@@ -1,8 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
-from database.models import Leaderboard
-
-from database.models import Building
+from database.models import Leaderboard,Building
+from django.conf import settings
 
 # Create leaderboard views here
 def leaderboard(request, building_name):
@@ -15,7 +14,9 @@ def leaderboard(request, building_name):
     for entry in leaderboard:
         data.append({
             'username': entry.user.username,
-            'points': entry.user_points_in_building
+            'points': entry.user_points_in_building,
+            'border': settings.BASE_URL + entry.user.profile_border.image.url,
+            'profile_pic': settings.BASE_URL + entry.user.profile_pic.image.url
         })
     # Return json of top 5 in leaderboard
     return JsonResponse({'data': data[:5]})
