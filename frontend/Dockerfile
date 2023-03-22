@@ -1,17 +1,13 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16
+FROM node:14.17.3
 
-# Set the working directory to /app
+# Set the working directory to /frontend
 WORKDIR /frontend
 
-# Copy the package.json files to the container
-COPY package.json ./
-
+# Copy the application code to the container
+COPY . .
 
 # Install dependencies
 RUN npm install
-# Copy the rest of the application code to the container
-COPY . .
 
 # Build the application
 RUN npm run build

@@ -1,36 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import Shop from "../pages/shop/shop";
 import { Link } from "react-router-dom";
 import classes from "./navbar.module.css";
 
 import uniLogo from "../assets/uniLogo.svg";
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '../axios';
 
-const Navbar = () => {
+const Navbar = ({flag}) => {
     const [points, setPoints] = useState(0);
 
     useEffect(() => {
         // Fetch user data from backend
-        axiosInstance.get('user')
+        axiosInstance.get(`users/data`)
             .then(response => {
                 setPoints(response.data.points);
             })
             .catch(error => {
                 console.error('There was a problem fetching user data:', error);
             });
-    }, []);
-
-    const handlePurchaseSuccess = (itemName, price) => {
-        // Make a post request to update the user balance
-        const body = { item_name: itemName, price: price };
-        axiosInstance.post('/shop/auth-purchase', body)
-            .then(response => {
-                // Update the balance in the navbar
-                setPoints(response.data.points);
-            })
-            .catch(error => {
-                console.error('There was a problem with the purchase:', error);
-            });
-    };
+    }, [flag]);
 
     return (
         <header className={classes.siteHeader}>
@@ -55,8 +43,6 @@ const Navbar = () => {
                         <Link to="/shop">
                             Shop
                         </Link>
-                        {/* Pass the handlePurchaseSuccess function as a prop to the Shop component */}
-                        <Shop onPurchaseSuccess={handlePurchaseSuccess} />
                     </li>
                     <li>
                         <div className={classes.points}>{points} droplets</div>

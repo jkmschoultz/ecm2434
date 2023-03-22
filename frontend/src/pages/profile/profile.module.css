@@ -3,17 +3,23 @@
     flex-direction: row;
     margin-top: 50px;
   }
-  
+
 .container {
     display: flex;
     margin: 20px;
   }
-  
+
 .sidebar {
     width: 40%;
-    font-size: 17xp;
+    height: 50vh;
+    font-size: 2vh;
     font-weight: 400;
     line-height: 16px;
+    border-style: solid;
+    border-image-repeat: round;
+    border-width: 50px;
+    justify-content: center;
+    align-content: center;
   }
 
 .profileImg {
@@ -36,33 +42,32 @@
   }
 
 .profile {
-    background-color: #f0f0f0;
-    padding: 20px;
+    height: 100%;
+    width: 100%;
     text-align: center;
   }
-  
+
 .profile h2 {
     margin: 0;
   }
 
-.main {
-    margin-left: 20px;
-    width: 75%;
-  }
 
-  
+
 .achievements {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    height: 85vh;
+    width: 75%;
   }
-  
+
 .achievementButton {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 400px;
+    width: 90%;
     height: 100px;
     margin-bottom: 30px;
     border-radius: 50px;
@@ -74,34 +79,51 @@
     text-transform: uppercase;
     position: relative;
   }
-  
-.achievementButton:nth-child(1) {
+
+.achievementContainer {
+    max-height: 100%;
+    overflow-y: scroll;
+    width: 90%;
+    margin-left: 8%;
+}
+.challengeName {
+    font-size: 2.7vh;
+}
+.challenge {
+    margin-top: 3%;
+    font-size: 1.5vh;
+}
+.description {
+    display: flex;
+    flex-direction: column;
+}
+.achievementButtonEarned {
     background-color: #ABEDA5;
     position: relative;
-  }
-  
-.achievementButton:nth-child(2) {
-    background-color: #ABEDA5;
-    position: relative;
-  }
-  
-.achievementButton:nth-child(3) {
-    background-color: #ABEDA5;
-    position: relative;
-  }
-  
-.button {
-    position: relative; 
-  }
-  
+}
+
+.edit {
+    width: 2%;
+    height: 4%;
+    margin-top: 2%;
+    margin-right: 3%;
+}
+.editPhoto {
+    width: 200%;
+    height: 200%;
+}
+.achievementButton {
+    background-color: #EDEDED;
+}
+
 .star {
     position: absolute;
     top: 50%; /* position the star in the middle of the button vertically */
-    right: 10%; /* position the star 350px from the right edge of the button */
+    left: 7%; /* position the star 350px from the right edge of the button */
     transform: translateY(-50%); /* center the star vertically */
-    height: 30px;
-    width: 30px;
-    background-color: #00C896; 
+    height: 75%;
+    width: 10%;
+    background-color: #888888;
     clip-path: polygon(
       50% 0%, /* top center */
       61% 35%, /* top right */
@@ -115,73 +137,8 @@
       39% 35% /* top right */
     ); /* define the shape of the star using the clip-path property */
 }
+.starAchieved {
+    background-color: #00C896;
+}
 
-  .star1::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 340px;
-    transform: translateY(-50%);
-    height: 40px;
-    width: 40px;
-    background-color: #00c896;
-    clip-path: polygon(
-      50% 0%,
-      61% 35%,
-      98% 35%,
-      68% 57%,
-      79% 91%,
-      50% 72%,
-      21% 91%,
-      32% 57%,
-      2% 35%,
-      39% 35%
-    );
-  }
-  
-  .star2::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 340px;
-    transform: translateY(-50%);
-    height: 40px;
-    width: 40px;
-    background-color: #00c896;
-    clip-path: polygon(
-      50% 0%,
-      61% 35%,
-      98% 35%,
-      68% 57%,
-      79% 91%,
-      50% 72%,
-      21% 91%,
-      32% 57%,
-      2% 35%,
-      39% 35%
-    );
-  }
-  
-.star3::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    right: 340px;
-    transform: translateY(-50%);
-    height: 40px;
-    width: 40px;
-    background-color: #00c896;
-    clip-path: polygon(
-      50% 0%,
-      61% 35%,
-      98% 35%,
-      68% 57%,
-      79% 91%,
-      50% 72%,
-      21% 91%,
-      32% 57%,
-      2% 35%,
-      39% 35%
-    );
-  }
   
