@@ -53,14 +53,15 @@ class TestUser(TestCase):
         updated_user = User.objects.get(username='unitTestUser')
         self.assertTrue(updated_user.has_been_verified)
 
-    # Test to see if the endpoint adds 10 xp when a bottle is filled
+    # Test to see if the endpoint adds 10 xp when a bottle is filled, plus 25 xp for first bottle
     def testUserFillBottle(self):
         c = Client()
         user = User.objects.get(username='unitTestUser')
         self.assertEqual(user.xp, 20)
+        c.get('/achievements/fill')
         response = c.get('/users/fillBottle/unitTestUser/TestBuilding/')
         updated_user = User.objects.get(username='unitTestUser')
-        self.assertEqual(updated_user.xp, 30)
+        self.assertEqual(updated_user.xp, 55)
         self.assertEqual(FilledBottle.objects.all().count(), 1)
 
     # Test that a user cannot fill up two bottles within the space of 10 minutes
@@ -94,10 +95,10 @@ class TestUser(TestCase):
 
         # the user has now filled a bottle 15 minutes ago so they can fill another bottle
         FilledBottle.objects.create(user=user, building=building, day=time - datetime.timedelta(minutes=15))
-
+        c.get('/achievements/fill')
         response = c.get('/users/fillBottle/unitTestUser/TestBuilding/')
         updated_user = User.objects.get(username='unitTestUser')
-        self.assertEqual(updated_user.xp, 30)
+        self.assertEqual(updated_user.xp, 55)
         self.assertEqual(FilledBottle.objects.all().count(), 2)
 
     # Test to see if the endpoint for changing name works
