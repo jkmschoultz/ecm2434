@@ -23,8 +23,9 @@ class LogAnswers(APIView):
         building = Building.objects.get(name=building_name)
 
         # Add 5 XP for every correct answer and increment number of bottles drank by user
-        new_xp = correct * 5
+        new_xp = correct * 2
         user.xp += new_xp
+        user.points += correct
         # Create or add to user in leaderboard for building
         leaderboard, created = Leaderboard.objects.get_or_create(building=building, user=user)
         leaderboard.user_points_in_building += new_xp

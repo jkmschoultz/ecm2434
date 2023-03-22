@@ -16,7 +16,7 @@ urlpatterns = [
     ##Endpoint for registering a user
     path('register', views.index, name='register'),
     ##Endpoint for registering a user
-    path('setPic/<name>/<type>/', views.setUserPics, name='index'),
+    path('setPic/<name>/<type>/', views.SetUserPic.as_view(), name='index'),
     # Endpoint to get data for an authorised user
     path('data', views.AuthGetUserData.as_view(), name='authGetUserProfileData')
 ]

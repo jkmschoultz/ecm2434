@@ -1,8 +1,8 @@
 import math
 import json
 from database.models import User, FilledBottle, Building, UserItem, ShopItem, Leaderboard
-from django.http import JsonResponse
-from django.shortcuts import redirect
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from achievements.views import getAllUserAchievements
 from django.conf import settings
@@ -102,33 +102,35 @@ def getUserProfileData(request, current_username):
     })
 
 ## Function that sets the pictures of a user
-def setUserPics(self, request, name, type):
-    user = request.user
-    # Checks the type of the image change
-    if type == 'Profile Picture':
-        try:
+class SetUserPic(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, name, type):
+        user = request.user
+        # Checks the type of the image change
+        if type == 'Profile Picture':
             # Checks to see if the image exists and if the user owns it
-            item = ShopItem.objects.get(name = name)
-            UserItem.objects.get(item = item)
-            user.profile_pic.image = item
-        except:
-            return JsonResponse({})
-    elif type == 'Border':
-        try:
+            item = get_object_or_404(ShopItem, name = name)
+            get_object_or_404(UserItem, item = item, user=user)
+            user.profile_pic = item
+            user.save()
+            return JsonResponse({'changed': type})
+        elif type == 'Border':
             # Checks to see if the image exists and if the user owns it
-            item = ShopItem.objects.get(name = name)
-            UserItem.objects.get(item = item)
-            user.profile_border.image = item
-        except:
-            return JsonResponse({})
-    elif type == 'Background':
-        try:
+            item = get_object_or_404(ShopItem, name = name)
+            get_object_or_404(UserItem, item = item, user=user)
+            user.profile_border = item
+            user.save()
+            return JsonResponse({'changed': type})
+        elif type == 'Background':
             # Checks to see if the image exists and if the user owns it
-            item = ShopItem.objects.get(name = name)
-            UserItem.objects.get(item = item)
-            user.profile_background.image = item
-        except:
-            return JsonResponse({})
+            item = get_object_or_404(ShopItem, name = name)
+            get_object_or_404(UserItem, item = item, user=user)
+            user.profile_background = item
+            user.save()
+            return JsonResponse({'changed': type})
+        else:
+            return HttpResponseBadRequest('Must specify item type')
 
 class AuthGetUserData(APIView):
     # Redirect to get profile data for an authorised user
