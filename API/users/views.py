@@ -86,6 +86,7 @@ def getUserProfileData(request, current_username):
     name = user.name
     level = int(user.level)
     xpLeft = int(user.xpLeft)
+    xpRemaining = int( 10*( 2**( (level - 1) / 10 ) ) - xpLeft )
     points = int(user.points)
     email = user.email
     profile_pic = user.profile_pic.image
@@ -98,6 +99,7 @@ def getUserProfileData(request, current_username):
         "username":current_username,
         "level":level,
         "XP":xpLeft,
+        "xpRemaining":xpRemaining,
         "email":email,
         "points": points,
         "achievements": achievement,
