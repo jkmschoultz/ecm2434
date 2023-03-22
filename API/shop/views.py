@@ -36,11 +36,11 @@ def allAvailable(request, current_username : str) -> JsonResponse:
             
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
-                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item_type" : item.type,
                                                         "purchasable" : True, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
             else:
-                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item_type" : item.type,
                                                         "purchasable" : False, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
 
@@ -66,11 +66,11 @@ def someAvailable(request, current_username : str, item_type : str) -> JsonRespo
             
             # add this item to the dictionary with the corresponding boolean value
             if item.cost <= user.points:
-                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item_type" : item.type,
                                                         "purchasable" : True, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
             else:
-                dictOfUnownedItems.get("data").append({"name" : item.name, "item type" : item.type,
+                dictOfUnownedItems.get("data").append({"name" : item.name, "item_type" : item.type,
                                                         "purchasable" : False, "price" : item.cost,
                                                         "image" : settings.BASE_URL + item.image.url})
 
