@@ -4,7 +4,8 @@ from database.models import User, FilledBottle, Building, UserItem, ShopItem, Le
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
-from achievements.views import getAllUserAchievements
+from achievements.views import getAllUserAchievements, totalFilledBottlesAchievementCheck, \
+                buildingAchievementsCheck, streakAchievementsCheck
 from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -64,6 +65,11 @@ def bottleFilled(request, current_username, building_name):
     leaderboard, created = Leaderboard.objects.get_or_create(building=building, user=updating_user)
     leaderboard.user_points_in_building += 10
     leaderboard.save()
+    # Check whether user reached any new achievements
+    achievements = {"data" : []}
+    totalFilledBottlesAchievementCheck(current_username, achievements)
+    buildingAchievementsCheck(current_username, achievements)
+    streakAchievementsCheck(current_username, achievements)
     # Redirect to get quiz questions once bottle filled
     return redirect('questions:questions')
 
