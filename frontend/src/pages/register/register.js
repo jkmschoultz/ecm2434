@@ -29,6 +29,7 @@ const Register = () => {
         e.preventDefault();
         console.log("I am posting this");
         console.log(formData);
+        localStorage.setItem('access_token',"Bearer ");
         axiosInstance
             .post(`auth/register`, {
                 email: formData.email,
@@ -69,7 +70,6 @@ const Register = () => {
                                                        id="pswrepeat" onChange={handleChange} required/>
                                                     <button type="submit" className="signupbtn" name="submit" disabled={disabled()} onClick={handleSubmit}>Register</button>
                             </form>
-
                         </div>
                     </div>
                 </div>
