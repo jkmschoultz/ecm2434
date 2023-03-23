@@ -66,7 +66,6 @@ const Shop = () => {
         console.log("Updating items: " + localStorage.getItem('access_token'));
         axiosInstance.get(`shop/auth-available/${itemType}/`)
             .then(response => {
-                console.log(response);
                 setItems(response.data.data);
             })
             .catch(error => {

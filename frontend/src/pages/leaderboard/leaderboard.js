@@ -21,13 +21,10 @@ const Leaderboard = () => {
         const body = {building : code};
         axiosInstance.post('questions/auth',body)
             .then(response => {
-                console.log(response.data);
                 if(response.data.data.minutes) {
                     setButtonText(`You have ${response.data.data.minutes} min and ${response.data.data.seconds}s left`)
                     return;
                 }
-                console.log("Here go the");
-                console.log(response.data);
                 navigate("/quiz",{state:{location:code,questions:response.data.data}})
             })
             .catch(error => {
@@ -46,7 +43,6 @@ const Leaderboard = () => {
                     }
                 });
                 const responseData = await response.json();
-                console.log(responseData);
                 let changedData = responseData.data;
                 setLeaders(changedData);
             }

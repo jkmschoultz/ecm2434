@@ -18,7 +18,6 @@ const Profile = () => {
     const {userId} = useParams();
 
     useEffect(() => {
-        console.log("Username"+userId)
         if(userId) {
             axiosInstance.get(`users/${userId}`)
                 .then(response => {
@@ -34,7 +33,6 @@ const Profile = () => {
         console.log("Updating items: " + localStorage.getItem('access_token'));
         axiosInstance.get(`users/data`)
             .then(response => {
-                console.log(response);
                 setItems(response.data);
             })
             .catch(error => {

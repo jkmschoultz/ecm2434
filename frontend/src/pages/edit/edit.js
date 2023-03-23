@@ -15,7 +15,6 @@ const Edit = () => {
         // Fetch items from backend based on current itemType
         axiosInstance.get(`users/data`)
             .then(response => {
-                console.log(response.data.profile_background);
                 switch (itemType) { //switch because itemType is different at endpoint and json
                     case 'Background':
                         setItems(response.data.profile_background)
@@ -38,7 +37,6 @@ const Edit = () => {
         axiosInstance.get("/shop/auth-owned/"+itemType+"/")
             .then(response => {
                 console.log("Got an owned response")
-                console.log(response);
                 setAvailable(response.data.data);
             })
             .catch(error => {
@@ -50,8 +48,6 @@ const Edit = () => {
     const handleItemClick = (item) => {
         axiosInstance.get(`users/setPic/${item.name}/${item.item_type}/`)
             .then(response => {
-                console.log("Changed Successfully to");
-                console.log(item);
                 setItems(item.image);
             })
             .catch(error => {
