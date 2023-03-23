@@ -63,6 +63,7 @@ const Profile = () => {
                             <h2>{items.username}</h2>
                             <div className={classes.quoteContainer}>
                                 <h3>{`Level:${items.level}`}</h3>
+                                <h3>{`Overall saved: ${items.bottles_filled} bottles🚰🚰🚰`}</h3>
                             </div>
                         </div>
                     </div>

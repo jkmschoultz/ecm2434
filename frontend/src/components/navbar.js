@@ -5,6 +5,7 @@ import classes from "./navbar.module.css";
 
 import uniLogo from "../assets/uniLogo.svg";
 import axiosInstance from '../axios';
+import droplet from "../assets/droplet.png";
 
 const Navbar = ({flag}) => {
     const [points, setPoints] = useState(0);
@@ -46,7 +47,7 @@ const Navbar = ({flag}) => {
                         </Link>
                     </li>
                     <li>
-                        <div className={classes.points}>{points} droplets</div>
+                        <div className={classes.points}>{points}<img src={droplet} className={classes.pointsDroplet}/></div>
                     </li>
                 </ul>
             </div>
