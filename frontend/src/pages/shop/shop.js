@@ -91,15 +91,15 @@ const Shop = () => {
                 </div>
                 <div className={styles.items}>
                     {items.map((item, _) => (
-                        <div key={item.name} className={styles.item} onClick={() => handleItemClick(item)}>
-                            <img src={"http://"+item.image} alt={item.name} className={styles.itemImage} />
-                            <div className={styles.itemPrice}>
-                                <div className={styles.priceText}>
-                                    {item.price}
+                            <div key={item.name} className={styles.item} onClick={() => handleItemClick(item)}>
+                                <img src={"http://"+item.image} alt={item.name} className={styles.itemImage} />
+                                <div className={styles.itemPrice}>
+                                    <div className={styles.priceText}>
+                                        {item.price}
+                                    </div>
+                                    <img src={droplet} className={styles.droplet}/>
                                 </div>
-                                <img src={droplet} className={styles.droplet}/>
                             </div>
-                        </div>
                     ))}
                 </div>
                 {selectedItem && (

@@ -4,12 +4,7 @@
     src: url("../../assets/fonts/Roboto-Medium.ttf");
 }
 
-/* styles for all devices */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+
 
 /* to  set background image to cover whole page */
 .background-image {

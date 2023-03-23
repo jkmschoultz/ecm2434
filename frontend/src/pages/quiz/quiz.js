@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import Navbar from "../../components/navbar";
 import ProgressBar from "../../components/progressBar";
+import axiosInstance from "../../axios";
 import {useLocation} from "react-router-dom";
 
 function Quiz() {
@@ -13,36 +14,14 @@ function Quiz() {
     const [score, setScore] = useState(0);
     const [error, setError] = useState(null);
     const [hasSumbitted , setHasSubmitted] = useState(false);
-    const [questions, setQuestions] = useState(null);
-
-    const areaCode = useLocation();
+    const {state} = useLocation();
+    const [questions, setQuestions] = useState(state.questions);
     let maxScore;
-
-    useEffect( () => {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('http://localhost:8000/questions/', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    const responseData = await response.json();
-                    console.log(responseData);
-                    let changedData = responseData.data;
-                    console.log(changedData);
-                    setQuestions(changedData);
-                }
-                catch (error) {
-                    setError(error);
-                }
-            }
-            fetchData();
-    }, []);
+    let areaCode = state.location;
 
     useEffect(() => {
         if (hasSumbitted) {
-            sendValues(score,areaCode.state.location)
+            sendValues(score,areaCode)
         }
     },[hasSumbitted])
 
@@ -63,42 +42,14 @@ function Quiz() {
         }
     };
 
-    const sendValues = (correct, building) =>{
-        // Get the access token from local storage
-        const access_token = localStorage.getItem('access_token');
+    const sendValues = (correct, building) => {
+        const body = { correct, building };
 
-        // Set up the request headers
-        const headers = {
-            'Authorization': `Bearer ${access_token}`,
-            'Content-Type': 'application/json'
-        };
-
-        // Set up the request body
-        const body = JSON.stringify({
-            correct: correct,
-            building: building
-        });
-
-        // Send the POST request using fetch()
-        fetch('http://localhost:8000/quiz/', {
-            method: 'POST',
-            headers: headers,
-            body: body
-        })
+        axiosInstance.post('quiz/', body)
             .then(response => {
-                // Handle the response
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to send POST request');
-                }
-            })
-            .then(data => {
-                // Handle the response data
-                console.log(data);
+                console.log(response.data);
             })
             .catch(error => {
-                // Handle any errors
                 console.error(error);
             });
     }

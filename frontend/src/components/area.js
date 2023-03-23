@@ -5,14 +5,14 @@ import classes from "./area.module.css";
 import mockPhoto from "../assets/image 3.png";
 
 
-const AreaPhoto = ({link,imgPath,active,name}) => {
+const AreaPhoto = ({link,imgPath,active,name,floors}) => {
     
     const navigate = useNavigate();
 
     const handleClick = () => {
-      navigate(link,{state:{active:active }});
+      navigate(link,{state:{active:active , floors:floors}});
     };
-
+        
     return(<div className={classes.area} onClick={handleClick}>
         <div className={classes.name}>{name}</div>
         <img src={imgPath} className={classes.imageArea}></img>

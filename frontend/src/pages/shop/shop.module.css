@@ -7,11 +7,11 @@
 
 
 .itemTypes{
-    width: 15%;
+    grid-column: 1/1;
     background-color: #F8F8F8;
-    height: 100%;
-        margin-top: -1%;
     border-right: 1px solid #000000;
+    position: sticky;
+    top: 50px;
 }
 
 .itemTypes button {
@@ -34,20 +34,28 @@
     background-color: gray;
     color: white;
 }
-
 .items {
-    width: 85%;
+    padding:1%;
+    grid-column: 2/3;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-row-gap: 30px;
-    grid-column-gap: 10%;
-    max-height: 100%;   /* Increase the max-height to show 4 rows */
+    grid-template-columns: repeat(4,1fr);
     overflow-y: scroll;
-    padding: 3%;
-    margin-top: -1%;
-    justify-content: center;
-    align-content: space-around;
+    grid-column-gap: 10%;
+    grid-row-gap: 30px;
 }
+/*.items {*/
+/*    width: 85%;*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(4, 1fr);*/
+/*    grid-row-gap: 30px;*/
+/*    grid-column-gap: 10%;*/
+/*    max-height: 100%;   !* Increase the max-height to show 4 rows *!*/
+/*    overflow-y: scroll;*/
+/*    padding: 3%;*/
+/*    margin-top: -1%;*/
+/*    justify-content: center;*/
+/*    align-content: space-around;*/
+/*}*/
 
 @media (max-width: 768px) {
     .items {
@@ -102,9 +110,11 @@
 
 .shop {
     height: 100%;
-    display: flex;
-    flex-direction: row;
+    display:grid;
+    grid-template-columns: 1fr 6fr;
+    margin-top: -1%;
 }
+
 .background {
     display: flex;
     flex-direction: column;

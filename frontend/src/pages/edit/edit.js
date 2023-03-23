@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axiosInstance from "../../axios";
-import styles from "../shop/shop.module.css";
 import Navbar from "../../components/navbar";
 import droplet from "../../assets/droplet.png";
 
+import styles from "./edit.module.css";
 
 const Edit = () => {
 //get user info
@@ -13,23 +13,34 @@ const Edit = () => {
 
     useEffect(() => {
         // Fetch items from backend based on current itemType
-        console.log("Updating items: " + localStorage.getItem('access_token'));
+        let newType;
         axiosInstance.get(`users/data`)
             .then(response => {
-                console.log(response);
-                setItems(response.data);
+                console.log(response.data.profile_background);
+                switch (itemType) {
+                    case 'Background':
+                        setItems(response.data.profile_background)
+                        break;
+                    case 'Profile Picture':
+                        setItems(response.data.profile_pic)
+                        break;
+                    case 'Border':
+                        setItems(response.data.profile_border)
+                        break;
+                }
             })
             .catch(error => {
                 console.error(error);
             });
-    }, []);
+    }, [itemType]);
 
     useEffect(() => {
         // Fetch available items from backend based on current itemType
-        axiosInstance.get("/shop/auth-available/"+itemType+"/")
+        axiosInstance.get("/shop/auth-owned/"+itemType+"/")
             .then(response => {
+                console.log("Got an owned response")
                 console.log(response);
-                setAvailable(response.data);
+                setAvailable(response.data.data);
             })
             .catch(error => {
                 console.error(error);
@@ -37,6 +48,15 @@ const Edit = () => {
     }, [itemType]);
 
     const handleItemClick = (item) => {
+        axiosInstance.get(`users/setPic/${item.name}/${item.item_type}/`)
+            .then(response => {
+                console.log("Changed Successfully to");
+                console.log(item);
+                setItems(<item className="image"></item>);
+            })
+            .catch(error => {
+                console.error(error);
+            })
     };
 
     if(!items||!available){
@@ -56,18 +76,17 @@ const Edit = () => {
                     <button onClick={() => setItemType('Profile Picture')} className={itemType === 'Profile Picture' ? styles.active : ''}>Profile Pictures</button>
                 </div>
                 <div className={styles.chosen}>
-
+                    <div className={styles.item} className={styles.itemAvailable}>
+                        <img src={"http://"+items} className={styles.itemImage} />
+                        <div className={styles.blueAvailable}>
+                            Equiped
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.items}>
                     {available.map((item, _) => (
                         <div key={item.name} className={styles.item} onDoubleClick={() => handleItemClick(item)}>
                             <img src={"http://"+item.image} alt={item.name} className={styles.itemImage} />
-                            <div className={styles.itemPrice}>
-                                <div className={styles.priceText}>
-                                    {item.price}
-                                </div>
-                                <img src={droplet} className={styles.droplet}/>
-                            </div>
                         </div>
                     ))}
                 </div>

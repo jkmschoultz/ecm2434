@@ -5,6 +5,7 @@ import AreaPhoto from '../../components/area';
 import mockPhoto from "../../assets/image 3.png";
 import Navbar from '../../components/navbar';
 import { useState, useEffect } from 'react';
+import axiosInstance from "../../axios";
 
 
 const Location = () => {
@@ -12,26 +13,20 @@ const Location = () => {
         const [data, setData] = useState(null);
         const [error, setError] = useState(null);
 
-        const fetchData = async (coords) => {
-            try {
-                const response = await fetch('http://localhost:8000/buildings/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(coords)
-                });
-                const responseData = await response.json();
-                let changedData = responseData.data;
-                let toChange = changedData[0]
-                changedData[0] = changedData[1]
-                changedData[1] = toChange
-                setData(changedData)
-                console.log(data)
-            } catch (error) {
-                setError(error);
-            }
-        };
+
+    const fetchData = async (coords) => {
+        try {
+            const response = await axiosInstance.post('buildings/', coords);
+            const responseData = response.data;
+            let changedData = responseData.data;
+            let toChange = changedData[0];
+            changedData[0] = changedData[1];
+            changedData[1] = toChange;
+            setData(changedData);
+        } catch (error) {
+            setError(error);
+        }
+    };
 
         useEffect(() => {
             if (!navigator.geolocation) {
@@ -78,6 +73,7 @@ const Location = () => {
                                     key={j}
                                     link={"/leaderboard/" + data[3 * i + j].name}
                                       imgPath={"http://"+data[3*i+j].image_path} active={data[3*i+j].is_accessible} name={data[3 * i + j].name}
+                                    floors = {data[3*i+j].floors}
                                 ></AreaPhoto>
                             ))}
                     </div>

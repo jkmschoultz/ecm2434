@@ -2,14 +2,17 @@ import React, {useEffect, useState} from 'react';
 
 import classes from "./leaderboard.module.css";
 
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
 import {render} from "react-dom";
+import axiosInstance from "../../axios";
+import FloorPlans from "../../components/floorPlans";
 const Leaderboard = () => {
     // fetch top players for certain period , sorted by points
     //make button active or not depending on person location. Send a request to server that
     // will check if a user is close to geolocation or not
     const [leaders,setLeaders] = useState(null);
     const [error, setError] = useState(null);
+    const [buttonText, setButtonText] = useState('Fill the bottle!');
 
     const {code} = useParams();
 
@@ -18,7 +21,21 @@ const Leaderboard = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate("/quiz",{state:{location:code}})
+        const body = {building : code};
+        axiosInstance.post('questions/auth',body)
+            .then(response => {
+                console.log(response.data);
+                if(response.data.data.minutes) {
+                    setButtonText(`You have ${response.data.data.minutes} min and ${response.data.data.seconds}s left`)
+                    return;
+                }
+                console.log("Here go the");
+                console.log(response.data);
+                navigate("/quiz",{state:{location:code,questions:response.data.data}})
+            })
+            .catch(error => {
+                console.error(error)
+            })
     };
 
     useEffect( () => {
@@ -48,7 +65,7 @@ const Leaderboard = () => {
         isAble = (
             <div className={classes.containerButton} id="pnt">
                 <button className={classes.pulseButton} onClick={handleClick}>
-                    Fill the bottle!🚰
+                    {buttonText}
                 </button>
             </div>
         );
@@ -79,13 +96,19 @@ const Leaderboard = () => {
         else {
             getLeaders = (
                 <div className={classes.leadersList}>
-                    <div className={classes.first}>
-                        <div className={classes.userName}>{leaders[0].username}</div>
+                    <div className={classes.first} style={{borderImage:`url(http://${leaders[0].border}) 360 repeat`,borderImageOutset: '5px'}}>
+                        <div className={classes.userPic}>
+                            <img src={'http://'+leaders[0].profile_pic} className={classes.userImg}/>
+                        </div>
+                        <Link to={`/profile/${leaders[0].username}`}><div className={classes.userName}>{leaders[0].username}</div></Link>
                         <div className={classes.points}> {leaders[0].points}</div>
                     </div>
                     {leaders.slice(1).map((leader, index) => (
-                        <div className={classes.notFirst}>
-                            <div className={classes.userName}>{leader.username}</div>
+                        <div className={classes.notFirst} style={{borderImage:`url(http://${leader.border}) 360 repeat`,borderImageOutset: '5px'}}>
+                            <div className={classes.userPic}>
+                                <img src={'http://'+leader.profile_pic} className={classes.userImg}/>
+                            </div>
+                            <Link to={`/profile/${leader.username}`}><div className={classes.userName}>{leader.username}</div></Link>
                             <div className={classes.points}> {leader.points}</div>
                         </div>
                     ))}
@@ -103,6 +126,7 @@ const Leaderboard = () => {
             </div>
             <div className={classes.right}>
                 <div className={classes.logo}>{code}</div>
+                <FloorPlans floors={state.floors}/>
             </div>
         </div>
 

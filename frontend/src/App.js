@@ -29,6 +29,9 @@ function App() {
             <Route path = "/" element = {<Main></Main>}></Route>
             <Route path='/location' element = {<Location></Location>}></Route>
             <Route path="/leaderboard/:code" element ={<Leaderboard></Leaderboard>} />
+            <Route path = "/profile/:userId" element = {<ProtectedRoute/>}>
+              <Route index element = {<Profile></Profile>}></Route>
+            </Route>
             <Route path = "/profile" element = {<ProtectedRoute/>}>
               <Route index element = {<Profile></Profile>}></Route>
             </Route>
