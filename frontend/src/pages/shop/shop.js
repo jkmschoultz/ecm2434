@@ -107,11 +107,11 @@ const Shop = () => {
                         <div className={styles.popupContent} onClick={(event) => event.stopPropagation()}>
                             <div className={styles.popupItem}>
                                 <img src={"http://"+selectedItem.image} alt={selectedItem.name} className={styles.itemImage}/>
-                                <div className={styles.itemPrice}>
+                                <div className={styles.itemPriceBig}>
                                     <div className={styles.priceText}>
                                         {selectedItem.price}
                                     </div>
-                                    <img src={droplet} className={styles.droplet}/>
+                                    <img src={droplet} className={styles.dropletBig}/>
                                 </div>
                                 <button onClick={handlePurchase}>Purchase</button>
                             </div>

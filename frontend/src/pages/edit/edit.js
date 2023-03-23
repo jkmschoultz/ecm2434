@@ -52,7 +52,7 @@ const Edit = () => {
             .then(response => {
                 console.log("Changed Successfully to");
                 console.log(item);
-                setItems(<item className="image"></item>);
+                setItems(item.image);
             })
             .catch(error => {
                 console.error(error);

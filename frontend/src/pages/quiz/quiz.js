@@ -16,12 +16,14 @@ function Quiz() {
     const [hasSumbitted , setHasSubmitted] = useState(false);
     const {state} = useLocation();
     const [questions, setQuestions] = useState(state.questions);
+    const [flag, setFlag] = useState(false);
     let maxScore;
     let areaCode = state.location;
 
     useEffect(() => {
         if (hasSumbitted) {
             sendValues(score,areaCode)
+            setFlag(!flag);
         }
     },[hasSumbitted])
 
@@ -64,7 +66,7 @@ function Quiz() {
     if (questionIndex >= questions.length) {
         return (
             <div className={classes.background}>
-                <Navbar/>
+                <Navbar flag={flag}/>
                 <div className={classes.congrats}>
                     You earned {score} points
                 </div>
@@ -78,7 +80,7 @@ function Quiz() {
     const question = questions[questionIndex];
     return (
         <div className={classes.background}>
-            <Navbar/>
+            <Navbar flag={flag}/>
             <div className={classes.centre}>
                 <div className={classes.question}>{question.text}</div>
                 {question.answers.map((answer, index) => (
