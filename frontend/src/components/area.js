@@ -11,7 +11,7 @@ const AreaPhoto = ({link,imgPath,active,name,floors}) => {
 
     //function to navigate to other page
     const handleClick = () => {
-      navigate(link,{state:{active:true , floors:floors}});
+      navigate(link,{state:{active:active , floors:floors}});
     };
     //shows additional div if you are close to location
     return(<div className={classes.area} onClick={handleClick}>

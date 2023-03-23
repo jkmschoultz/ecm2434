@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import classes from "./floorPlans.module.css";
 
+//component that shows floor plans and buttons to choose which one to show
 const FloorPlans = ({floors}) => {
     const [floor,setFloor] = useState(0);
     console.log(floors)

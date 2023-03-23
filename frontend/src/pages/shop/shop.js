@@ -3,10 +3,13 @@ import Navbar from "../../components/navbar";
 import styles from './shop.module.css';
 import droplet from "../../assets/droplet.png";
 import axiosInstance from "../../axios";
+
+//shop page that shows all purchasable items out of 3 types
 const Shop = () => {
     const [itemType, setItemType] = useState('Background');
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null); //set chosen type
     const [flag, setFlag] = useState(false);
+    //set placeholder items if no items are downloaded
     const testItems = [
         {
             id: 1,
@@ -42,6 +45,7 @@ const Shop = () => {
 
     const [items, setItems] = useState(testItems);
 
+    //function send post request to buy an item
     const handlePurchase = () => {
         // Make a post request to purchase the selected item
         const body = { item_name: selectedItem.name, price: selectedItem.price };
@@ -56,7 +60,7 @@ const Shop = () => {
             });
     };
 
-
+    //on render gets the data about items for the chosen type
     useEffect(() => {
         // Fetch items from backend based on current itemType
         console.log("Updating items: " + localStorage.getItem('access_token'));
@@ -77,7 +81,6 @@ const Shop = () => {
     const handlePopupClose = () => {
         setSelectedItem(null);
     };
-
 
 
     return (

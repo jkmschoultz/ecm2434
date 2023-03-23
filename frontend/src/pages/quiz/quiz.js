@@ -8,18 +8,20 @@ import ProgressBar from "../../components/progressBar";
 import axiosInstance from "../../axios";
 import {useLocation} from "react-router-dom";
 
+//page responds for handling quizz data from backend, showing quizz questions and counting the final score
 function Quiz() {
-    const [questionIndex, setQuestionIndex] = useState(0);
+    const [questionIndex, setQuestionIndex] = useState(0); //index of question (out of 5)
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [score, setScore] = useState(0);
     const [error, setError] = useState(null);
     const [hasSumbitted , setHasSubmitted] = useState(false);
-    const {state} = useLocation();
+    const {state} = useLocation(); //use parameters that were given by Leaderboard
     const [questions, setQuestions] = useState(state.questions);
-    const [flag, setFlag] = useState(false);
+    const [flag, setFlag] = useState(false); //flag for navbar changes
     let maxScore;
     let areaCode = state.location;
 
+    //useEffect to sumbit results only once
     useEffect(() => {
         if (hasSumbitted) {
             sendValues(score,areaCode)
@@ -31,6 +33,7 @@ function Quiz() {
         setSelectedAnswer(index);
     };
 
+    //function is triggered when questions are answered
     const handleNext = () => {
         const question = questions[questionIndex];
         if (selectedAnswer !== null && question.answers[selectedAnswer].correct) {
@@ -43,7 +46,7 @@ function Quiz() {
             setHasSubmitted(true);
         }
     };
-
+    //function sends data of the quiz to log in scores
     const sendValues = (correct, building) => {
         const body = { correct, building };
 
@@ -59,10 +62,14 @@ function Quiz() {
     if(error) {
         return <div>{error.message}</div>;
     }
+    //wait until json is loaded
     if(!questions) {
-        return (<div>Loading</div>)
+        return (<div>
+            Loading... Saving turtles meanwhile...🐢🐢🐢
+        </div>)
     }
     maxScore = questions.length;
+    //return other view if all questions are answered
     if (questionIndex >= questions.length) {
         return (
             <div className={classes.background}>

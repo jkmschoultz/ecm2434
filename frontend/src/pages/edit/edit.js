@@ -5,19 +5,18 @@ import droplet from "../../assets/droplet.png";
 
 import styles from "./edit.module.css";
 
+//This code contains a functional component named Edit which is used to edit user profile elements.
 const Edit = () => {
-//get user info
     const [items, setItems] = useState(null);
     const [available,setAvailable] = useState(null);
-    const [itemType, setItemType] = useState('Background');
+    const [itemType, setItemType] = useState('Background'); //Initial type of item is Background
 
     useEffect(() => {
         // Fetch items from backend based on current itemType
-        let newType;
         axiosInstance.get(`users/data`)
             .then(response => {
                 console.log(response.data.profile_background);
-                switch (itemType) {
+                switch (itemType) { //switch because itemType is different at endpoint and json
                     case 'Background':
                         setItems(response.data.profile_background)
                         break;
@@ -47,6 +46,7 @@ const Edit = () => {
             });
     }, [itemType]);
 
+    //function to change chosen time of a chosen type
     const handleItemClick = (item) => {
         axiosInstance.get(`users/setPic/${item.name}/${item.item_type}/`)
             .then(response => {
@@ -59,10 +59,11 @@ const Edit = () => {
             })
     };
 
+    //wait until json is ready
     if(!items||!available){
         return (
             <div>
-                Loading...
+                Loading... Saving turtles meanwhile...🐢🐢🐢
             </div>
         )
     }

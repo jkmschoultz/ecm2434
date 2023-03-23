@@ -1,15 +1,12 @@
 import React, {useEffect, useState} from 'react';
 
 import classes from "./leaderboard.module.css";
-
 import {Link, useLocation, useNavigate, useParams} from "react-router-dom";
-import {render} from "react-dom";
 import axiosInstance from "../../axios";
 import FloorPlans from "../../components/floorPlans";
+
+//
 const Leaderboard = () => {
-    // fetch top players for certain period , sorted by points
-    //make button active or not depending on person location. Send a request to server that
-    // will check if a user is close to geolocation or not
     const [leaders,setLeaders] = useState(null);
     const [error, setError] = useState(null);
     const [buttonText, setButtonText] = useState('Fill the bottle!');
@@ -38,6 +35,7 @@ const Leaderboard = () => {
             })
     };
 
+    // fetch top players for certain period , sorted by points
     useEffect( () => {
         const fetchData = async () => {
             try {
@@ -59,7 +57,7 @@ const Leaderboard = () => {
         fetchData();
     }, []);
 
-
+    //is button active or not depending on person location.
     let isAble;
     if (state.active) {
         isAble = (
@@ -79,6 +77,7 @@ const Leaderboard = () => {
 
     let getLeaders;
 
+    //custom message if there are no players yet
     if (!leaders) {
         getLeaders = (
             <div className={classes.leadersList}>

@@ -10,6 +10,7 @@ import editLogo from "../../assets/editLogo.png";
 import {Link, useParams} from "react-router-dom";
 import ProgressBar from "../../components/progressBar";
 
+//page shows
 const Profile = () => {
     //get list of achievements ,and whether they are completed or not
     //get user info
@@ -41,10 +42,11 @@ const Profile = () => {
             });
     }, []);
 
+    //wait until json is ready
     if(!items){
         return (
             <div>
-                Loading...
+                Loading... Saving turtles meanwhile...🐢🐢🐢
             </div>
         )
     }

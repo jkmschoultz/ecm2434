@@ -9,6 +9,7 @@ import axiosInstance from '../axios';
 const Navbar = ({flag}) => {
     const [points, setPoints] = useState(0);
 
+    //use effect on changes of flag to update the number of points dynamically
     useEffect(() => {
         // Fetch user data from backend
         axiosInstance.get(`users/data`)

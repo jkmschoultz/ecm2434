@@ -1,6 +1,7 @@
 import React from 'react';
 
 import classes from "./progressBar.module.css";
+//progressBar component that displays Progress bar
 const ProgressBar = ({currentPoints,maxPoints}) => {
 
     const percentage = Math.round((currentPoints / maxPoints) * 100);

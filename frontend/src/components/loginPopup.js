@@ -23,11 +23,13 @@ const LoginPopup= () =>  {
     };
 
 
+    // Define an openForm function to show the login form when the login button is clicked
     const openForm = () => {
         setFormVisible(true);
-        console.log(formVisible)
+        console.log(formVisible);
     };
 
+    // Define a closeForm function to hide the login form when the "Close" button is clicked
     const closeForm = () => {
         setFormVisible(false);
     };
@@ -38,10 +40,12 @@ const LoginPopup= () =>  {
         console.log(formData);
 
         axiosInstance
+            // send a POST request to the server with the username and password from the form data
             .post(`/auth/token`, {
                 username: formData.username ,
                 password: formData.password,
             })
+            // if the request is successful, set the access and refresh tokens in local storage and navigate to the location page
             .then((res) => {
                 localStorage.setItem('access_token', res.data.access);
                 localStorage.setItem('refresh_token', res.data.refresh);
@@ -52,7 +56,7 @@ const LoginPopup= () =>  {
                 //console.log(res.data);
             });
     };
-
+    // Render a button that shows the login form when clicked, and a hidden login form that displays when the formVisible state variable is true
     return (
         <>
             <button className="open-button" onClick={openForm}>Login</button>
