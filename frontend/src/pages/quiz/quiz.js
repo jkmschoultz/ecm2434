@@ -5,44 +5,27 @@ import { useState } from 'react';
 
 import Navbar from "../../components/navbar";
 import ProgressBar from "../../components/progressBar";
+import axiosInstance from "../../axios";
 import {useLocation} from "react-router-dom";
 
+//page responds for handling quizz data from backend, showing quizz questions and counting the final score
 function Quiz() {
-    const [questionIndex, setQuestionIndex] = useState(0);
+    const [questionIndex, setQuestionIndex] = useState(0); //index of question (out of 5)
     const [selectedAnswer, setSelectedAnswer] = useState(null);
     const [score, setScore] = useState(0);
     const [error, setError] = useState(null);
     const [hasSumbitted , setHasSubmitted] = useState(false);
-    const [questions, setQuestions] = useState(null);
-
-    const areaCode = useLocation();
+    const {state} = useLocation(); //use parameters that were given by Leaderboard
+    const [questions, setQuestions] = useState(state.questions);
+    const [flag, setFlag] = useState(false); //flag for navbar changes
     let maxScore;
+    let areaCode = state.location;
 
-    useEffect( () => {
-            const fetchData = async () => {
-                try {
-                    const response = await fetch('http://localhost:8000/questions/', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                    const responseData = await response.json();
-                    console.log(responseData);
-                    let changedData = responseData.data;
-                    console.log(changedData);
-                    setQuestions(changedData);
-                }
-                catch (error) {
-                    setError(error);
-                }
-            }
-            fetchData();
-    }, []);
-
+    //useEffect to sumbit results only once
     useEffect(() => {
         if (hasSumbitted) {
-            sendValues(score,areaCode.state.location)
+            sendValues(score,areaCode)
+            setFlag(!flag);
         }
     },[hasSumbitted])
 
@@ -50,6 +33,7 @@ function Quiz() {
         setSelectedAnswer(index);
     };
 
+    //function is triggered when questions are answered
     const handleNext = () => {
         const question = questions[questionIndex];
         if (selectedAnswer !== null && question.answers[selectedAnswer].correct) {
@@ -62,43 +46,14 @@ function Quiz() {
             setHasSubmitted(true);
         }
     };
+    //function sends data of the quiz to log in scores
+    const sendValues = (correct, building) => {
+        const body = { correct, building };
 
-    const sendValues = (correct, building) =>{
-        // Get the access token from local storage
-        const access_token = localStorage.getItem('access_token');
-
-        // Set up the request headers
-        const headers = {
-            'Authorization': `Bearer ${access_token}`,
-            'Content-Type': 'application/json'
-        };
-
-        // Set up the request body
-        const body = JSON.stringify({
-            correct: correct,
-            building: building
-        });
-
-        // Send the POST request using fetch()
-        fetch('http://localhost:8000/quiz/', {
-            method: 'POST',
-            headers: headers,
-            body: body
-        })
+        axiosInstance.post('quiz/', body)
             .then(response => {
-                // Handle the response
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Failed to send POST request');
-                }
-            })
-            .then(data => {
-                // Handle the response data
-                console.log(data);
             })
             .catch(error => {
-                // Handle any errors
                 console.error(error);
             });
     }
@@ -106,14 +61,18 @@ function Quiz() {
     if(error) {
         return <div>{error.message}</div>;
     }
+    //wait until json is loaded
     if(!questions) {
-        return (<div>Loading</div>)
+        return (<div>
+            Loading... Saving turtles meanwhile...🐢🐢🐢
+        </div>)
     }
     maxScore = questions.length;
+    //return other view if all questions are answered
     if (questionIndex >= questions.length) {
         return (
             <div className={classes.background}>
-                <Navbar/>
+                <Navbar flag={flag}/>
                 <div className={classes.congrats}>
                     You earned {score} points
                 </div>
@@ -127,7 +86,7 @@ function Quiz() {
     const question = questions[questionIndex];
     return (
         <div className={classes.background}>
-            <Navbar/>
+            <Navbar flag={flag}/>
             <div className={classes.centre}>
                 <div className={classes.question}>{question.text}</div>
                 {question.answers.map((answer, index) => (

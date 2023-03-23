@@ -3,10 +3,13 @@ import Navbar from "../../components/navbar";
 import styles from './shop.module.css';
 import droplet from "../../assets/droplet.png";
 import axiosInstance from "../../axios";
+
+//shop page that shows all purchasable items out of 3 types
 const Shop = () => {
     const [itemType, setItemType] = useState('Background');
-    const [selectedItem, setSelectedItem] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null); //set chosen type
     const [flag, setFlag] = useState(false);
+    //set placeholder items if no items are downloaded
     const testItems = [
         {
             id: 1,
@@ -42,6 +45,7 @@ const Shop = () => {
 
     const [items, setItems] = useState(testItems);
 
+    //function send post request to buy an item
     const handlePurchase = () => {
         // Make a post request to purchase the selected item
         const body = { item_name: selectedItem.name, price: selectedItem.price };
@@ -56,13 +60,12 @@ const Shop = () => {
             });
     };
 
-
+    //on render gets the data about items for the chosen type
     useEffect(() => {
         // Fetch items from backend based on current itemType
         console.log("Updating items: " + localStorage.getItem('access_token'));
         axiosInstance.get(`shop/auth-available/${itemType}/`)
             .then(response => {
-                console.log(response);
                 setItems(response.data.data);
             })
             .catch(error => {
@@ -79,7 +82,6 @@ const Shop = () => {
     };
 
 
-
     return (
         <div className={styles.background}>
             <Navbar flag={flag}></Navbar>
@@ -91,15 +93,15 @@ const Shop = () => {
                 </div>
                 <div className={styles.items}>
                     {items.map((item, _) => (
-                        <div key={item.name} className={styles.item} onClick={() => handleItemClick(item)}>
-                            <img src={"http://"+item.image} alt={item.name} className={styles.itemImage} />
-                            <div className={styles.itemPrice}>
-                                <div className={styles.priceText}>
-                                    {item.price}
+                            <div key={item.name} className={styles.item} onClick={() => handleItemClick(item)}>
+                                <img src={"http://"+item.image} alt={item.name} className={styles.itemImage} />
+                                <div className={styles.itemPrice}>
+                                    <div className={styles.priceText}>
+                                        {item.price}
+                                    </div>
+                                    <img src={droplet} className={styles.droplet}/>
                                 </div>
-                                <img src={droplet} className={styles.droplet}/>
                             </div>
-                        </div>
                     ))}
                 </div>
                 {selectedItem && (
@@ -107,11 +109,11 @@ const Shop = () => {
                         <div className={styles.popupContent} onClick={(event) => event.stopPropagation()}>
                             <div className={styles.popupItem}>
                                 <img src={"http://"+selectedItem.image} alt={selectedItem.name} className={styles.itemImage}/>
-                                <div className={styles.itemPrice}>
+                                <div className={styles.itemPriceBig}>
                                     <div className={styles.priceText}>
                                         {selectedItem.price}
                                     </div>
-                                    <img src={droplet} className={styles.droplet}/>
+                                    <img src={droplet} className={styles.dropletBig}/>
                                 </div>
                                 <button onClick={handlePurchase}>Purchase</button>
                             </div>

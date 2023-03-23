@@ -7,19 +7,32 @@ import axiosInstance from "../../axios";
 import styles from "../shop/shop.module.css";
 import droplet from "../../assets/droplet.png";
 import editLogo from "../../assets/editLogo.png";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import ProgressBar from "../../components/progressBar";
 
+//page shows
 const Profile = () => {
     //get list of achievements ,and whether they are completed or not
     //get user info
     const [items, setItems] = useState(null);
+    const {userId} = useParams();
 
     useEffect(() => {
+        if(userId) {
+            axiosInstance.get(`users/${userId}`)
+                .then(response => {
+                    console.log(response);
+                    setItems(response.data);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+            return;
+        }
         // Fetch items from backend based on current itemType
         console.log("Updating items: " + localStorage.getItem('access_token'));
         axiosInstance.get(`users/data`)
             .then(response => {
-                console.log(response);
                 setItems(response.data);
             })
             .catch(error => {
@@ -27,10 +40,11 @@ const Profile = () => {
             });
     }, []);
 
+    //wait until json is ready
     if(!items){
         return (
             <div>
-                Loading...
+                Loading... Saving turtles meanwhile...🐢🐢🐢
             </div>
         )
     }
@@ -48,7 +62,8 @@ const Profile = () => {
                         <div className={classes.profileText}>
                             <h2>{items.username}</h2>
                             <div className={classes.quoteContainer}>
-                                <h3>Quote of the day</h3>
+                                <h3>{`Level:${items.level}`}</h3>
+                                <h3>{`Overall saved: ${items.bottles_filled} bottles🚰🚰🚰`}</h3>
                             </div>
                         </div>
                     </div>
@@ -67,7 +82,9 @@ const Profile = () => {
                         ))}
                     </div>
                 </div>
+                {!userId && (
                     <Link to="/edit" className={classes.edit}><img src={editLogo} className={classes.editPhoto}></img></Link>
+                    )}
             </div>
         </div>
     );

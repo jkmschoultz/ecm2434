@@ -5,10 +5,12 @@ import classes from "./navbar.module.css";
 
 import uniLogo from "../assets/uniLogo.svg";
 import axiosInstance from '../axios';
+import droplet from "../assets/droplet.png";
 
 const Navbar = ({flag}) => {
     const [points, setPoints] = useState(0);
 
+    //use effect on changes of flag to update the number of points dynamically
     useEffect(() => {
         // Fetch user data from backend
         axiosInstance.get(`users/data`)
@@ -45,7 +47,7 @@ const Navbar = ({flag}) => {
                         </Link>
                     </li>
                     <li>
-                        <div className={classes.points}>{points} droplets</div>
+                        <div className={classes.points}>{points}<img src={droplet} className={classes.pointsDroplet}/></div>
                     </li>
                 </ul>
             </div>

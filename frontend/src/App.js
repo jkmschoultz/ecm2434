@@ -12,16 +12,9 @@ import protectedRoute from "./components/protectedRoute";
 import ProtectedRoute from "./components/protectedRoute";
 import Shop from "./pages/shop/shop";
 import Edit from "./pages/edit/edit";
+
+//Using react router we specify path for every other page.
 function App() {
-  // const [currentTime, setCurrentTime] = useState(0);
-  // const [currentDate, setCurrentDate] = useState(0);
-  // useEffect(() => {
-  // fetch(' http://127.0.0.1:8000/').then(res => res.json()).then(data => {
-  //     setCurrentTime(data.time);
-  //     setCurrentDate(data.date);
-  //     console.log("dfdf");
-  //   });
-  // }, []);
   return (
     <>
         <Router>
@@ -29,6 +22,9 @@ function App() {
             <Route path = "/" element = {<Main></Main>}></Route>
             <Route path='/location' element = {<Location></Location>}></Route>
             <Route path="/leaderboard/:code" element ={<Leaderboard></Leaderboard>} />
+            <Route path = "/profile/:userId" element = {<ProtectedRoute/>}>
+              <Route index element = {<Profile></Profile>}></Route>
+            </Route>
             <Route path = "/profile" element = {<ProtectedRoute/>}>
               <Route index element = {<Profile></Profile>}></Route>
             </Route>

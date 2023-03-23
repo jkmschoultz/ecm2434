@@ -5,6 +5,7 @@ import classes from "./register.module.css";
 import {useNavigate} from "react-router-dom";
 import axiosInstance from "../../axios";
 
+//Shows register page and handles the form
 const Register = () => {
 
     const navigate = useNavigate();
@@ -40,8 +41,6 @@ const Register = () => {
                 console.log(res.data);
             });
     };
-
-
 
     const disabled = () => {
         if(formData.password) {

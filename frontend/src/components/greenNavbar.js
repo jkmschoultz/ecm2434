@@ -4,6 +4,7 @@ import "./greenNavbar.css";
 
 import uniLogoWhite from "../assets/uniLogoWhite.png";
 
+//basic green navbar that is presented on main page!
 const greenNavbar = () => {
 
     return (
